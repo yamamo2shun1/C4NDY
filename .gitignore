@@ -6,3 +6,6 @@ KiCad/tmp/
 .metadata
 .settings
 Debug
+
+*.swp
+*.launch
