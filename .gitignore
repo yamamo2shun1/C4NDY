@@ -1,6 +1,8 @@
-
+### KiCad
 C4NDY-backups/
+KiCad/tmp/
 
-C4NDY_Gerber_230609/
-
-C4NDY_Gerber_230614/
+### STM32CubeIDE
+.metadata
+.settings
+Debug
