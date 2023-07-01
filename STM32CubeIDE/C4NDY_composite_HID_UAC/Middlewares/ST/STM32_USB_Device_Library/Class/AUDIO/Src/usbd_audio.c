@@ -170,6 +170,16 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZ] __ALI
   USBD_MAX_POWER,                       /* bMaxPower = 100 mA */
   /* 09 byte*/
 
+  /******** IAD to associate the interfaces */
+  0x08,                        /* bLength */
+  0x0B,                        /* bDescriptorType */
+  0x00,                        /* bFirstInterface */
+  0x02,                        /* bInterfaceCount */
+  USB_DEVICE_CLASS_AUDIO,      /* bFunctionClass */
+  AUDIO_SUBCLASS_AUDIOCONTROL, /* bFunctionSubClass */
+  AUDIO_PROTOCOL_UNDEFINED,    /* bFunctionProtocol */
+  0x00,                        /* iFunction (Index of string descriptor describing this function) */
+
   /* USB Speaker Standard interface descriptor */
   AUDIO_INTERFACE_DESC_SIZE,            /* bLength */
   USB_DESC_TYPE_INTERFACE,              /* bDescriptorType */

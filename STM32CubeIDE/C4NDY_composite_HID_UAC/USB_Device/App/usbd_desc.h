@@ -104,7 +104,7 @@
   * @{
   */
 
-extern USBD_DescriptorsTypeDef     Composiet_Desc;
+extern USBD_DescriptorsTypeDef     Composite_Desc;
 
 /* USER CODE BEGIN EXPORTED_VARIABLES */
 

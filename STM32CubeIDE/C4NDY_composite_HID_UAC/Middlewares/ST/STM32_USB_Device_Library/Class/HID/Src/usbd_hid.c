@@ -140,6 +140,16 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
 #endif
   USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
 
+  /******** IAD to associate the interfaces */
+  0x08,                        /* bLength */
+  0x0B,                        /* bDescriptorType */
+  0x00,                        /* bFirstInterface */
+  0x02,                        /* bInterfaceCount */
+  0x03,                        /* bFunctionClass */
+  0x01,                        /* bFunctionSubClass */
+  0x01,                        /* bFunctionProtocol */
+  0x00,                        /* iFunction (Index of string descriptor describing this function) */
+
   /************** Descriptor of Joystick Mouse interface ****************/
   /* 09 */
   0x09,                                               /* bLength: Interface Descriptor size */
@@ -192,6 +202,16 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgHSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
 #endif
   USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
 
+  /******** IAD to associate the interfaces */
+  0x08,                        /* bLength */
+  0x0B,                        /* bDescriptorType */
+  0x00,                        /* bFirstInterface */
+  0x02,                        /* bInterfaceCount */
+  0x03,                        /* bFunctionClass */
+  0x01,                        /* bFunctionSubClass */
+  0x01,                        /* bFunctionProtocol */
+  0x00,                        /* iFunction (Index of string descriptor describing this function) */
+
   /************** Descriptor of Joystick Mouse interface ****************/
   /* 09 */
   0x09,                                               /* bLength: Interface Descriptor size */
@@ -243,6 +263,16 @@ __ALIGN_BEGIN static uint8_t USBD_HID_OtherSpeedCfgDesc[USB_HID_CONFIG_DESC_SIZ]
   0xA0,                                               /* bmAttributes: Bus Powered according to user configuration */
 #endif
   USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
+
+  /******** IAD to associate the interfaces */
+  0x08,                        /* bLength */
+  0x0B,                        /* bDescriptorType */
+  0x00,                        /* bFirstInterface */
+  0x02,                        /* bInterfaceCount */
+  0x03,                        /* bFunctionClass */
+  0x01,                        /* bFunctionSubClass */
+  0x01,                        /* bFunctionProtocol */
+  0x00,                        /* iFunction (Index of string descriptor describing this function) */
 
   /************** Descriptor of Joystick Mouse interface ****************/
   /* 09 */
