@@ -417,13 +417,15 @@ void USBD_COMPOSITE_Mount_Class(void)
   USBD_Update_HID_DESC(ptr, interface_no_track, in_ep_track, USBD_Track_String_Index);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
 
+#if 0
   ptr = USBD_HID.GetHSConfigDescriptor(&len);
   USBD_Update_HID_DESC(ptr, interface_no_track, in_ep_track, USBD_Track_String_Index);
   memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
+#endif
 
   in_ep_track += 1;
   out_ep_track += 1;
-  interface_no_track += 1;
+  interface_no_track += 2;
   USBD_Track_String_Index += 1;
 
   ptr = USBD_AUDIO.GetFSConfigDescriptor(&len);
@@ -435,6 +437,7 @@ void USBD_COMPOSITE_Mount_Class(void)
                          USBD_Track_String_Index);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
 
+#if 0
   ptr = USBD_AUDIO.GetHSConfigDescriptor(&len);
   USBD_Update_AUDIO_DESC(ptr,
                          interface_no_track,
@@ -447,8 +450,10 @@ void USBD_COMPOSITE_Mount_Class(void)
   in_ep_track += 1;
   interface_no_track += 2;
   USBD_Track_String_Index += 1;
+#endif
 
   uint16_t CFG_SIZE = sizeof(USBD_COMPOSITE_CFG_DESC_t);
+#if 0
   ptr = USBD_COMPOSITE_HSCfgDesc.CONFIG_DESC;
   /* Configuration Descriptor */
   ptr[0] = 0x09;                        /* bLength: Configuration Descriptor size */
@@ -464,6 +469,7 @@ void USBD_COMPOSITE_Mount_Class(void)
   ptr[7] = 0x80; /* bmAttributes: Bus Powered according to user configuration */
 #endif
   ptr[8] = USBD_MAX_POWER; /* MaxPower 100 mA */
+#endif
 
   ptr = USBD_COMPOSITE_FSCfgDesc.CONFIG_DESC;
   /* Configuration Descriptor */
