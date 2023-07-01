@@ -387,8 +387,8 @@ void USBD_COMPOSITE_Mount_Class(void)
 #endif
 
   in_ep_track += 1;
-  out_ep_track += 1;
-  interface_no_track += 2;
+  //out_ep_track += 1;
+  interface_no_track += 1;
   USBD_Track_String_Index += 1;
 
   ptr = USBD_AUDIO.GetFSConfigDescriptor(&len);
@@ -411,6 +411,7 @@ void USBD_COMPOSITE_Mount_Class(void)
 
   memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
   in_ep_track += 1;
+  out_ep_track += 1;
   interface_no_track += 2;
   USBD_Track_String_Index += 1;
 #endif
