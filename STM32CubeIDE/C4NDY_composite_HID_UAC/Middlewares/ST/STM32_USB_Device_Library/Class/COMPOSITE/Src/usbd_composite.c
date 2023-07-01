@@ -90,7 +90,6 @@ static uint8_t *USBD_COMPOSITE_GetHSCfgDesc(uint16_t *length);
 static uint8_t *USBD_COMPOSITE_GetFSCfgDesc(uint16_t *length);
 static uint8_t *USBD_COMPOSITE_GetOtherSpeedCfgDesc(uint16_t *length);
 static uint8_t *USBD_COMPOSITE_GetDeviceQualifierDesc(uint16_t *length);
-static uint8_t *USBD_COMPOSITE_GetUsrStringDesc(USBD_HandleTypeDef *pdev, uint8_t index, uint16_t *length);
 
 /**
   * @}
@@ -115,8 +114,8 @@ USBD_ClassTypeDef USBD_COMPOSITE =
         USBD_COMPOSITE_GetHSCfgDesc,
         USBD_COMPOSITE_GetFSCfgDesc,
         USBD_COMPOSITE_GetOtherSpeedCfgDesc,
-        USBD_COMPOSITE_GetDeviceQualifierDesc,
-        USBD_COMPOSITE_GetUsrStringDesc};
+        USBD_COMPOSITE_GetDeviceQualifierDesc
+    };
 
 typedef struct USBD_COMPOSITE_CFG_DESC_t
 {
@@ -368,42 +367,6 @@ uint8_t *USBD_COMPOSITE_GetDeviceQualifierDesc(uint16_t *length)
   return USBD_COMPOSITE_DeviceQualifierDesc;
 }
 
-/**
-  * @brief  USBD_COMPOSITE_GetUsrStringDesc
-  *         Manages the transfer of memory interfaces string descriptors.
-  * @param  speed : current device speed
-  * @param  index: descriptor index
-  * @param  length : pointer data length
-  * @retval pointer to the descriptor table or NULL if the descriptor is not supported.
-  */
-#if (USBD_SUPPORT_USER_STRING_DESC == 1U)
-static uint8_t *USBD_COMPOSITE_GetUsrStringDesc(USBD_HandleTypeDef *pdev, uint8_t index, uint16_t *length)
-{
-  static uint8_t USBD_StrDesc[64];
-
-  /* Check if the requested string interface is supported */
-  if (index <= USBD_Track_String_Index)
-  {
-    if (index == HID_STR_DESC_IDX)
-    {
-      USBD_GetString((uint8_t *)HID_STR_DESC, USBD_StrDesc, length);
-    }
-
-    if (index == AUDIO_STR_DESC_IDX)
-    {
-      USBD_GetString((uint8_t *)AUDIO_STR_DESC, USBD_StrDesc, length);
-    }
-
-    return USBD_StrDesc;
-  }
-  else
-  {
-    /* Not supported Interface Descriptor index */
-    return NULL;
-  }
-}
-#endif
-
 void USBD_COMPOSITE_Mount_Class(void)
 {
   uint16_t len = 0;
@@ -417,7 +380,7 @@ void USBD_COMPOSITE_Mount_Class(void)
   USBD_Update_HID_DESC(ptr, interface_no_track, in_ep_track, USBD_Track_String_Index);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
 
-#if 0
+#if 1
   ptr = USBD_HID.GetHSConfigDescriptor(&len);
   USBD_Update_HID_DESC(ptr, interface_no_track, in_ep_track, USBD_Track_String_Index);
   memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
@@ -437,7 +400,7 @@ void USBD_COMPOSITE_Mount_Class(void)
                          USBD_Track_String_Index);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
 
-#if 0
+#if 1
   ptr = USBD_AUDIO.GetHSConfigDescriptor(&len);
   USBD_Update_AUDIO_DESC(ptr,
                          interface_no_track,
@@ -453,7 +416,7 @@ void USBD_COMPOSITE_Mount_Class(void)
 #endif
 
   uint16_t CFG_SIZE = sizeof(USBD_COMPOSITE_CFG_DESC_t);
-#if 0
+#if 1
   ptr = USBD_COMPOSITE_HSCfgDesc.CONFIG_DESC;
   /* Configuration Descriptor */
   ptr[0] = 0x09;                        /* bLength: Configuration Descriptor size */
