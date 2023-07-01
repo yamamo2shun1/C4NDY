@@ -740,10 +740,15 @@ void USBD_LL_Delay(uint32_t Delay)
   * @param  size: Size of allocated memory
   * @retval None
   */
-void *USBD_static_malloc(uint32_t size)
+void *USBD_HID_static_malloc(uint32_t size)
 {
-  //static uint32_t mem[(sizeof(USBD_HID_HandleTypeDef)/4)+1];/* On 32-bit boundary */
-  static uint32_t mem[(sizeof(USBD_HID_HandleTypeDef)/4)+(sizeof(USBD_AUDIO_HandleTypeDef)/4)+1];
+  static uint32_t mem[(sizeof(USBD_HID_HandleTypeDef)/4)+1];/* On 32-bit boundary */
+  return mem;
+}
+
+void *USBD_AUDIO_static_malloc(uint32_t size)
+{
+  static uint32_t mem[(sizeof(USBD_AUDIO_HandleTypeDef)/4)+1];/* On 32-bit boundary */
   return mem;
 }
 

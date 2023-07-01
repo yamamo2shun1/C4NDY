@@ -23,6 +23,7 @@
 #include "usb_device.h"
 #include "usbd_core.h"
 #include "usbd_desc.h"
+#include "usbd_composite.h"
 #include "usbd_hid.h"
 #include "usbd_audio.h"
 #include "usbd_audio_if.h"
@@ -67,18 +68,14 @@ extern USBD_DescriptorsTypeDef Composite_Desc;
 void MX_USB_Device_Init(void)
 {
   /* USER CODE BEGIN USB_Device_Init_PreTreatment */
-
+  USBD_COMPOSITE_Mount_Class();
   /* USER CODE END USB_Device_Init_PreTreatment */
 
   /* Init Device Library, add supported class and start the library. */
   if (USBD_Init(&hUsbDeviceFS, &Composite_Desc, DEVICE_FS) != USBD_OK) {
     Error_Handler();
   }
-  if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_HID) != USBD_OK) {
-    Error_Handler();
-  }
-  /* Init Device Library, add supported class and start the library. */
-  if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_AUDIO) != USBD_OK) {
+  if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_COMPOSITE) != USBD_OK) {
     Error_Handler();
   }
   if (USBD_AUDIO_RegisterInterface(&hUsbDeviceFS, &USBD_AUDIO_fops_FS) != USBD_OK) {

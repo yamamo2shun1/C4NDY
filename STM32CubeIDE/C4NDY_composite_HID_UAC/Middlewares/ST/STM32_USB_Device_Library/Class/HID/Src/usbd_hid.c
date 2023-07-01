@@ -78,6 +78,13 @@ EndBSPDependencies */
 /** @defgroup USBD_HID_Private_Macros
   * @{
   */
+#define _HID_IN_EP 0x81U
+#define _HID_ITF_NBR 0x00
+#define _HID_STR_DESC_IDX 0x00U
+
+uint8_t HID_IN_EP = _HID_IN_EP;
+uint8_t HID_ITF_NBR = _HID_ITF_NBR;
+uint8_t HID_STR_DESC_IDX = _HID_STR_DESC_IDX;
 /**
   * @}
   */
@@ -144,7 +151,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   0x08,                        /* bLength */
   0x0B,                        /* bDescriptorType */
   0x00,                        /* bFirstInterface */
-  0x02,                        /* bInterfaceCount */
+  0x01,                        /* bInterfaceCount */
   0x03,                        /* bFunctionClass */
   0x01,                        /* bFunctionSubClass */
   0x01,                        /* bFunctionProtocol */
@@ -206,7 +213,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgHSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   0x08,                        /* bLength */
   0x0B,                        /* bDescriptorType */
   0x00,                        /* bFirstInterface */
-  0x02,                        /* bInterfaceCount */
+  0x01,                        /* bInterfaceCount */
   0x03,                        /* bFunctionClass */
   0x01,                        /* bFunctionSubClass */
   0x01,                        /* bFunctionProtocol */
@@ -268,7 +275,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_OtherSpeedCfgDesc[USB_HID_CONFIG_DESC_SIZ]
   0x08,                        /* bLength */
   0x0B,                        /* bDescriptorType */
   0x00,                        /* bFirstInterface */
-  0x02,                        /* bInterfaceCount */
+  0x01,                        /* bInterfaceCount */
   0x03,                        /* bFunctionClass */
   0x01,                        /* bFunctionSubClass */
   0x01,                        /* bFunctionProtocol */
@@ -444,7 +451,7 @@ static uint8_t USBD_HID_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 
   USBD_HID_HandleTypeDef *hhid;
 
-  hhid = USBD_malloc(sizeof(USBD_HID_HandleTypeDef));
+  hhid = USBD_HID_malloc(sizeof(USBD_HID_HandleTypeDef));
 
   if (hhid == NULL)
   {
@@ -752,6 +759,16 @@ static uint8_t *USBD_HID_GetDeviceQualifierDesc(uint16_t *length)
   return USBD_HID_DeviceQualifierDesc;
 }
 
+void USBD_Update_HID_DESC(uint8_t *desc, uint8_t itf_no, uint8_t in_ep, uint8_t str_idx)
+{
+  desc[11] = itf_no;
+  desc[17] = str_idx;
+  desc[29] = in_ep;
+
+  HID_IN_EP = in_ep;
+  HID_ITF_NBR = itf_no;
+  HID_STR_DESC_IDX = str_idx;
+}
 /**
   * @}
   */

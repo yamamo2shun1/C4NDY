@@ -97,7 +97,8 @@
 /* Memory management macros */
 
 /** Alias for memory allocation. */
-#define USBD_malloc         (void *)USBD_static_malloc
+#define USBD_HID_malloc         (void *)USBD_HID_static_malloc
+#define USBD_AUDIO_malloc       (void *)USBD_AUDIO_static_malloc
 
 /** Alias for memory release. */
 #define USBD_free           USBD_static_free

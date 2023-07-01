@@ -98,6 +98,18 @@ EndBSPDependencies */
 #define AUDIO_PACKET_SZE(frq)          (uint8_t)(((frq * 2U * 2U)/1000U) & 0xFFU), \
                                        (uint8_t)((((frq * 2U * 2U)/1000U) >> 8) & 0xFFU)
 
+#define _AUDIO_IN_EP 0x81U
+#define _AUDIO_OUT_EP 0x01U
+#define _AUDIO_AC_ITF_NBR 0x00U
+#define _AUDIO_AS_ITF_NBR 0x01U
+#define _AUDIO_STR_DESC_IDX 0x00U
+
+uint8_t AUDIO_IN_EP = _AUDIO_IN_EP;
+uint8_t AUDIO_OUT_EP = _AUDIO_OUT_EP;
+uint8_t AUDIO_AC_ITF_NBR = _AUDIO_AC_ITF_NBR;
+uint8_t AUDIO_AS_ITF_NBR = _AUDIO_AS_ITF_NBR;
+uint8_t AUDIO_STR_DESC_IDX = _AUDIO_STR_DESC_IDX;
+
 /**
   * @}
   */
@@ -152,13 +164,13 @@ USBD_ClassTypeDef USBD_AUDIO =
 };
 
 /* USB AUDIO device Configuration Descriptor */
-__ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZ] __ALIGN_END =
+__ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZE] __ALIGN_END =
 {
   /* Configuration 1 */
   0x09,                                 /* bLength */
   USB_DESC_TYPE_CONFIGURATION,          /* bDescriptorType */
-  LOBYTE(USB_AUDIO_CONFIG_DESC_SIZ),    /* wTotalLength  109 bytes*/
-  HIBYTE(USB_AUDIO_CONFIG_DESC_SIZ),
+  LOBYTE(USB_AUDIO_CONFIG_DESC_SIZE),    /* wTotalLength  109 bytes*/
+  HIBYTE(USB_AUDIO_CONFIG_DESC_SIZE),
   0x02,                                 /* bNumInterfaces */
   0x01,                                 /* bConfigurationValue */
   0x00,                                 /* iConfiguration */
@@ -295,12 +307,12 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZ] __ALI
   /* Endpoint 1 - Standard Descriptor */
   AUDIO_STANDARD_ENDPOINT_DESC_SIZE,    /* bLength */
   USB_DESC_TYPE_ENDPOINT,               /* bDescriptorType */
-  AUDIO_OUT_EP,                         /* bEndpointAddress 1 out endpoint */
+  _AUDIO_OUT_EP,                         /* bEndpointAddress 1 out endpoint */
   USBD_EP_TYPE_ISOC,//USBD_EP_TYPE_ISOC_ASYNC,//USBD_EP_TYPE_ISOC,                    /* bmAttributes */
   AUDIO_PACKET_SZE(USBD_AUDIO_FREQ),//AUDIO_PACKET_SZE(USBD_AUDIO_FREQ_MAX),//AUDIO_PACKET_SZE(USBD_AUDIO_FREQ),    /* wMaxPacketSize in Bytes (Freq(Samples)*2(Stereo)*2(HalfWord)) */
   AUDIO_FS_BINTERVAL,                   /* bInterval */
   0x00,                                 /* bRefresh */
-  AUDIO_IN_EP,//0x00,                                 /* bSynchAddress */
+  _AUDIO_IN_EP,//0x00,                                 /* bSynchAddress */
   /* 09 byte*/
 
   /* Endpoint - Audio Streaming Descriptor*/
@@ -318,7 +330,7 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZ] __ALI
   // 3byte 10.14 sampling frequency feedback to host
   AUDIO_STANDARD_ENDPOINT_DESC_SIZE, /* bLength */
   USB_DESC_TYPE_ENDPOINT,            /* bDescriptorType */
-  AUDIO_IN_EP,                       /* bEndpointAddress */
+  _AUDIO_IN_EP,                       /* bEndpointAddress */
   0x11,                              /* bmAttributes */
   0x03, 0x00,                        /* wMaxPacketSize in Bytes */
   0x01,                              /* bInterval 1ms */
@@ -364,7 +376,7 @@ static uint8_t USBD_AUDIO_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
   USBD_AUDIO_HandleTypeDef *haudio;
 
   /* Allocate Audio structure */
-  haudio = USBD_malloc(sizeof(USBD_AUDIO_HandleTypeDef));
+  haudio = USBD_AUDIO_malloc(sizeof(USBD_AUDIO_HandleTypeDef));
 
   if (haudio == NULL)
   {
@@ -880,6 +892,30 @@ uint8_t USBD_AUDIO_RegisterInterface(USBD_HandleTypeDef *pdev,
   pdev->pUserData = fops;
 
   return (uint8_t)USBD_OK;
+}
+
+void USBD_Update_AUDIO_DESC(uint8_t *desc,
+                                 uint8_t ac_itf,
+                                 uint8_t as_itf,
+								 uint8_t in_ep,
+                                 uint8_t out_ep,
+                                 uint8_t str_idx)
+{
+  desc[11] = ac_itf;
+  desc[19] = ac_itf;
+  desc[25] = str_idx;
+  desc[34] = as_itf;
+  desc[67] = as_itf;
+  desc[76] = as_itf;
+  desc[102] = in_ep;
+  desc[103] = out_ep;
+
+  AUDIO_IN_EP = in_ep;
+  AUDIO_OUT_EP = out_ep;
+  AUDIO_AC_ITF_NBR = ac_itf;
+  AUDIO_AS_ITF_NBR = as_itf;
+
+  AUDIO_STR_DESC_IDX = str_idx;
 }
 /**
   * @}

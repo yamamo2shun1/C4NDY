@@ -109,6 +109,10 @@ typedef struct
 
 extern USBD_ClassTypeDef USBD_HID;
 #define USBD_HID_CLASS &USBD_HID
+
+extern uint8_t HID_IN_EP;
+extern uint8_t HID_ITF_NBR;
+extern uint8_t HID_STR_DESC_IDX;
 /**
   * @}
   */
@@ -118,6 +122,7 @@ extern USBD_ClassTypeDef USBD_HID;
   */
 uint8_t USBD_HID_SendReport(USBD_HandleTypeDef *pdev, uint8_t *report, uint16_t len);
 uint32_t USBD_HID_GetPollingInterval(USBD_HandleTypeDef *pdev);
+void USBD_Update_HID_DESC(uint8_t *desc, uint8_t itf_no, uint8_t in_ep, uint8_t str_idx);
 
 /**
   * @}

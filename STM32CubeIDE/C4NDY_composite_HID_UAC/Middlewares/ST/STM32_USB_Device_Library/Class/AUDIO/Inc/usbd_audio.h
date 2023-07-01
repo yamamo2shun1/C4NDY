@@ -58,12 +58,9 @@ extern "C" {
 #define AUDIO_FS_BINTERVAL                            0x01U
 #endif /* AUDIO_FS_BINTERVAL */
 
-#define AUDIO_OUT_EP                                  0x01U
-#define AUDIO_IN_EP                                   0x81U
-
 #define SOF_RATE                                      0x02U
 
-#define USB_AUDIO_CONFIG_DESC_SIZ                     0x84U//0x6DU
+#define USB_AUDIO_CONFIG_DESC_SIZE                    0x84U//0x6DU
 #define AUDIO_INTERFACE_DESC_SIZE                     0x09U
 #define USB_AUDIO_DESC_SIZ                            0x09U
 #define AUDIO_STANDARD_ENDPOINT_DESC_SIZE             0x09U
@@ -192,6 +189,12 @@ typedef struct
 
 extern USBD_ClassTypeDef USBD_AUDIO;
 #define USBD_AUDIO_CLASS &USBD_AUDIO
+
+extern uint8_t AUDIO_IN_EP;
+extern uint8_t AUDIO_OUT_EP;
+extern uint8_t AUDIO_AC_ITF_NBR;
+extern uint8_t AUDIO_AS_ITF_NBR;
+extern uint8_t AUDIO_STR_DESC_IDX;
 /**
   * @}
   */
@@ -203,6 +206,13 @@ uint8_t USBD_AUDIO_RegisterInterface(USBD_HandleTypeDef *pdev,
                                      USBD_AUDIO_ItfTypeDef *fops);
 
 void USBD_AUDIO_Sync(USBD_HandleTypeDef *pdev, AUDIO_OffsetTypeDef offset);
+
+void USBD_Update_AUDIO_DESC(uint8_t *desc,
+                            uint8_t ac_itf,
+                            uint8_t as_itf,
+							uint8_t in_ep,
+                            uint8_t out_ep,
+                            uint8_t str_idx);
 /**
   * @}
   */
