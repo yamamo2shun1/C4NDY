@@ -148,7 +148,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
   /* 09 byte*/
 
-#if 1
+#if 0
   /******** IAD to associate the interfaces */
   0x08,                        /* bLength */
   0x0B,                        /* bDescriptorType */
@@ -171,7 +171,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   0x01,                                               /* bInterfaceSubClass : 1=BOOT, 0=no boot */
   0x01,                                               /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
   0,                                                  /* iInterface: Index of string descriptor */
-  /* 09 byte 26*/
+  /* 09 byte 26 18*/
 
   /******************** Descriptor of Joystick Mouse HID ********************/
   0x09,                                               /* bLength: HID Descriptor size */
@@ -183,7 +183,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   0x22,                                               /* bDescriptorType */
   HID_MOUSE_REPORT_DESC_SIZE,                         /* wItemLength: Total length of Report descriptor */
   0x00,
-  /* 09 byte 35*/
+  /* 09 byte 35 27*/
 
   /******************** Descriptor of Mouse endpoint ********************/
   0x07,                                               /* bLength: Endpoint Descriptor size */
@@ -194,7 +194,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   HID_EPIN_SIZE,                                      /* wMaxPacketSize: 4 Byte max */
   0x00,
   HID_FS_BINTERVAL,                                   /* bInterval: Polling Interval */
-  /* 07 byte 42*/
+  /* 07 byte 42 34*/
 };
 
 /* USB HID device HS Configuration Descriptor */
@@ -214,7 +214,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgHSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
 #endif
   USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
 
-#if 1
+#if 0
   /******** IAD to associate the interfaces */
   0x08,                        /* bLength */
   0x0B,                        /* bDescriptorType */
@@ -278,7 +278,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_OtherSpeedCfgDesc[USB_HID_CONFIG_DESC_SIZ]
 #endif
   USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
 
-#if 1
+#if 0
   /******** IAD to associate the interfaces */
   0x08,                        /* bLength */
   0x0B,                        /* bDescriptorType */
@@ -771,9 +771,9 @@ static uint8_t *USBD_HID_GetDeviceQualifierDesc(uint16_t *length)
 void USBD_Update_HID_DESC(uint8_t *desc, uint8_t itf_no, uint8_t in_ep, uint8_t str_idx)
 {
   desc[11] = itf_no;
-  desc[16] = str_idx;
-  desc[19] = in_ep;
-  desc[25] = str_idx;
+  desc[17] = str_idx;
+  desc[29] = in_ep;
+  //desc[25] = str_idx;
 
   HID_IN_EP = in_ep;
   HID_ITF_NBR = itf_no;
