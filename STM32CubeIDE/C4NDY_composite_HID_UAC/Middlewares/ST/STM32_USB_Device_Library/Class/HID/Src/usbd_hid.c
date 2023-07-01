@@ -148,6 +148,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
   /* 09 byte*/
 
+#if 1
   /******** IAD to associate the interfaces */
   0x08,                        /* bLength */
   0x0B,                        /* bDescriptorType */
@@ -158,6 +159,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   0x01,                        /* bFunctionProtocol */
   0x00,                        /* iFunction (Index of string descriptor describing this function) */
   /* 08 byte 17*/
+#endif
 
   /************** Descriptor of Joystick Mouse interface ****************/
   0x09,                                               /* bLength: Interface Descriptor size */
@@ -212,6 +214,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgHSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
 #endif
   USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
 
+#if 1
   /******** IAD to associate the interfaces */
   0x08,                        /* bLength */
   0x0B,                        /* bDescriptorType */
@@ -221,6 +224,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgHSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   0x01,                        /* bFunctionSubClass */
   0x01,                        /* bFunctionProtocol */
   0x00,                        /* iFunction (Index of string descriptor describing this function) */
+#endif
 
   /************** Descriptor of Joystick Mouse interface ****************/
   /* 09 */
@@ -274,6 +278,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_OtherSpeedCfgDesc[USB_HID_CONFIG_DESC_SIZ]
 #endif
   USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
 
+#if 1
   /******** IAD to associate the interfaces */
   0x08,                        /* bLength */
   0x0B,                        /* bDescriptorType */
@@ -283,6 +288,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_OtherSpeedCfgDesc[USB_HID_CONFIG_DESC_SIZ]
   0x01,                        /* bFunctionSubClass */
   0x01,                        /* bFunctionProtocol */
   0x00,                        /* iFunction (Index of string descriptor describing this function) */
+#endif
 
   /************** Descriptor of Joystick Mouse interface ****************/
   /* 09 */
@@ -767,6 +773,7 @@ void USBD_Update_HID_DESC(uint8_t *desc, uint8_t itf_no, uint8_t in_ep, uint8_t 
   desc[11] = itf_no;
   desc[16] = str_idx;
   desc[19] = in_ep;
+  desc[25] = str_idx;
 
   HID_IN_EP = in_ep;
   HID_ITF_NBR = itf_no;

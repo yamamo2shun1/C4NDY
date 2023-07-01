@@ -905,6 +905,7 @@ void USBD_Update_AUDIO_DESC(uint8_t *desc,
   desc[11] = ac_itf;
   desc[19] = ac_itf;
   desc[16] = str_idx;
+  desc[25] = str_idx;
   desc[34] = as_itf;
   desc[67] = as_itf;
   desc[76] = as_itf;
