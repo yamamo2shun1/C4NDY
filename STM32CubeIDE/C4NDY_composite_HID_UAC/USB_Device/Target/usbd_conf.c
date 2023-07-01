@@ -25,6 +25,7 @@
 #include "usbd_core.h"
 
 #include "usbd_hid.h"
+#include "usbd_audio.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -446,6 +447,9 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
   /* USER CODE BEGIN EndPoint_Configuration_HID */
   HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x81 , PCD_SNG_BUF, 0x100);
   /* USER CODE END EndPoint_Configuration_HID */
+  /* USER CODE BEGIN EndPoint_Configuration_AUDIO */
+  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData, AUDIO_OUT_EP, PCD_DBL_BUF, 0x01500090);
+  /* USER CODE END EndPoint_Configuration_AUDIO */
   return USBD_OK;
 }
 
@@ -738,7 +742,8 @@ void USBD_LL_Delay(uint32_t Delay)
   */
 void *USBD_static_malloc(uint32_t size)
 {
-  static uint32_t mem[(sizeof(USBD_HID_HandleTypeDef)/4)+1];/* On 32-bit boundary */
+  //static uint32_t mem[(sizeof(USBD_HID_HandleTypeDef)/4)+1];/* On 32-bit boundary */
+  static uint32_t mem[(sizeof(USBD_HID_HandleTypeDef)/4)+(sizeof(USBD_AUDIO_HandleTypeDef)/4)+1];
   return mem;
 }
 
