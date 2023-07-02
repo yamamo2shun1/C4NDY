@@ -210,16 +210,20 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZ] __ALI
   /* 12 byte*/
 
   /* USB Speaker Audio Feature Unit Descriptor */
-  0x09,                                 /* bLength */
+  0x07 + (2 + 1) * 2,                   /* bLength */
   AUDIO_INTERFACE_DESCRIPTOR_TYPE,      /* bDescriptorType */
   AUDIO_CONTROL_FEATURE_UNIT,           /* bDescriptorSubtype */
   AUDIO_OUT_STREAMING_CTRL,             /* bUnitID */
   0x01,                                 /* bSourceID */
-  0x01,                                 /* bControlSize */
-  AUDIO_CONTROL_MUTE,//(AUDIO_CONTROL_MUTE | AUDIO_CONTROL_VOL),//AUDIO_CONTROL_MUTE,                   /* bmaControls(0) */
-  0,                                    /* bmaControls(1) */
+  0x02,                                 /* bControlSize */
+  0x00,
+  0x03,
+  0x00,
+  0x03,                                 /* bmaControls(0) */
+  0x00,
+  0x03,                                 /* bmaControls(1) */
   0x00,                                 /* iTerminal */
-  /* 09 byte*/
+  /* 13 byte*/
 
   /*USB Speaker Output Terminal Descriptor */
   0x09,      /* bLength */
@@ -232,6 +236,22 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZ] __ALI
   0x02,                                 /* bSourceID */
   0x00,                                 /* iTerminal */
   /* 09 byte*/
+
+  /* USB Speaker Audio Feature Unit Descriptor */
+  0x07 + (2 + 1) * 2,                   /* bLength */
+  AUDIO_INTERFACE_DESCRIPTOR_TYPE,      /* bDescriptorType */
+  AUDIO_CONTROL_FEATURE_UNIT,           /* bDescriptorSubtype */
+  AUDIO_OUT_STREAMING_CTRL,             /* bUnitID */
+  0x03,                                 /* bSourceID */
+  0x02,                                 /* bControlSize */
+  0x00,
+  0x03,
+  0x00,
+  0x03,                                 /* bmaControls(0) */
+  0x00,
+  0x03,                                 /* bmaControls(1) */
+  0x00,                                 /* iTerminal */
+  /* 13 byte*/
 
   /* USB Speaker Standard AS Interface Descriptor - Audio Streaming Zero Bandwidth */
   /* Interface 1, Alternate Setting 0                                             */
@@ -302,20 +322,6 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZ] __ALI
   0x00,                                 /* wLockDelay */
   0x00,
   /* 07 byte*/
-
-  // add
-  // Endpoint 2 - Standard Descriptor - See UAC Spec 1.0 p.63 4.6.2.1 Standard AS Isochronous Synch Endpoint Descriptor
-  // 3byte 10.14 sampling frequency feedback to host
-  AUDIO_STANDARD_ENDPOINT_DESC_SIZE, /* bLength */
-  USB_DESC_TYPE_ENDPOINT,            /* bDescriptorType */
-  AUDIO_IN_EP,                       /* bEndpointAddress */
-  0x11,                              /* bmAttributes */
-  0x03, 0x00,                        /* wMaxPacketSize in Bytes */
-  0x01,                              /* bInterval 1ms */
-  SOF_RATE,                          /* bRefresh 4ms = 2^2 */
-  0x00,                              /* bSynchAddress */
-  // 09 byte
-
 } ;
 
 /* USB Standard Device Descriptor */
