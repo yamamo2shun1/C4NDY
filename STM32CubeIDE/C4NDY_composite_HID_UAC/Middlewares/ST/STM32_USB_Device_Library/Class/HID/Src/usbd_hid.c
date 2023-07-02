@@ -164,13 +164,13 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   /************** Descriptor of Joystick Mouse interface ****************/
   0x09,                                               /* bLength: Interface Descriptor size */
   USB_DESC_TYPE_INTERFACE,                            /* bDescriptorType: Interface descriptor type */
-  0x00,                                               /* bInterfaceNumber: Number of Interface */
+  0x00,                                               /* bInterfaceNumber: Number of Interface 11*/
   0x00,                                               /* bAlternateSetting: Alternate setting */
   0x01,                                               /* bNumEndpoints */
   0x03,                                               /* bInterfaceClass: HID */
   0x01,                                               /* bInterfaceSubClass : 1=BOOT, 0=no boot */
   0x01,                                               /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
-  0,                                                  /* iInterface: Index of string descriptor */
+  0,                                                  /* iInterface: Index of string descriptor 17*/
   /* 09 byte 26 18*/
 
   /******************** Descriptor of Joystick Mouse HID ********************/
@@ -189,7 +189,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   0x07,                                               /* bLength: Endpoint Descriptor size */
   USB_DESC_TYPE_ENDPOINT,                             /* bDescriptorType:*/
 
-  HID_EPIN_ADDR,                                      /* bEndpointAddress: Endpoint Address (IN) */
+  HID_EPIN_ADDR,                                      /* bEndpointAddress: Endpoint Address (IN) 29*/
   0x03,                                               /* bmAttributes: Interrupt endpoint */
   HID_EPIN_SIZE,                                      /* wMaxPacketSize: 4 Byte max */
   0x00,
