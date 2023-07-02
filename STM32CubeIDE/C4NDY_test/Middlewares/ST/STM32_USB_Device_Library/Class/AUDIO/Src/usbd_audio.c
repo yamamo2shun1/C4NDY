@@ -310,7 +310,7 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZ] __ALI
   AUDIO_PACKET_SZE(USBD_AUDIO_FREQ),//AUDIO_PACKET_SZE(USBD_AUDIO_FREQ_MAX),//AUDIO_PACKET_SZE(USBD_AUDIO_FREQ),    /* wMaxPacketSize in Bytes (Freq(Samples)*2(Stereo)*2(HalfWord)) */
   AUDIO_FS_BINTERVAL,                   /* bInterval */
   0x00,                                 /* bRefresh */
-  AUDIO_IN_EP,//0x00,                                 /* bSynchAddress */
+  0x00,                                 /* bSynchAddress */
   /* 09 byte*/
 
   /* Endpoint - Audio Streaming Descriptor*/
