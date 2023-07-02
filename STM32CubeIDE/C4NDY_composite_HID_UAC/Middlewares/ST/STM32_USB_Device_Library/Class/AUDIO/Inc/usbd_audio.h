@@ -60,7 +60,8 @@ extern "C" {
 
 #define SOF_RATE                                      0x02U
 
-#define USB_AUDIO_CONFIG_DESC_SIZE                    126U//0x84U//0x6DU
+#define AUDIO_IN_CHANNELS                             0x02U
+#define USB_AUDIO_CONFIG_DESC_SIZE                    (132U + AUDIO_IN_CHANNELS)//0x84U//0x6DU
 #define AUDIO_INTERFACE_DESC_SIZE                     0x09U
 #define USB_AUDIO_DESC_SIZ                            0x09U
 #define AUDIO_STANDARD_ENDPOINT_DESC_SIZE             0x09U
@@ -100,6 +101,7 @@ extern "C" {
 #define AUDIO_REQ_SET_CUR                             0x01U
 
 #define AUDIO_OUT_STREAMING_CTRL                      0x02U
+#define AUDIO_IN_STREAMING_CTRL                       0x05U
 
 #define AUDIO_OUT_TC                                  0x01U
 #define AUDIO_IN_TC                                   0x02U
@@ -210,7 +212,6 @@ void USBD_AUDIO_Sync(USBD_HandleTypeDef *pdev, AUDIO_OffsetTypeDef offset);
 void USBD_Update_AUDIO_DESC(uint8_t *desc,
                             uint8_t ac_itf,
                             uint8_t as_itf,
-							uint8_t in_ep,
                             uint8_t out_ep,
                             uint8_t str_idx);
 /**

@@ -773,7 +773,6 @@ void USBD_Update_HID_DESC(uint8_t *desc, uint8_t itf_no, uint8_t in_ep, uint8_t 
   desc[11] = itf_no;
   desc[17] = str_idx;
   desc[29] = in_ep;
-  //desc[25] = str_idx;
 
   HID_IN_EP = in_ep;
   HID_ITF_NBR = itf_no;
