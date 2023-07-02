@@ -377,27 +377,25 @@ void USBD_COMPOSITE_Mount_Class(void)
   uint8_t interface_no_track = 0x00;
 
   ptr = USBD_HID.GetFSConfigDescriptor(&len);
-  USBD_Update_HID_DESC(ptr, interface_no_track, in_ep_track, USBD_Track_String_Index);
+  USBD_Update_HID_DESC(ptr, interface_no_track, in_ep_track, 0);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
 
 #if 1
   ptr = USBD_HID.GetHSConfigDescriptor(&len);
-  USBD_Update_HID_DESC(ptr, interface_no_track, in_ep_track, USBD_Track_String_Index);
+  USBD_Update_HID_DESC(ptr, interface_no_track, in_ep_track, 0);
   memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
 #endif
 
   in_ep_track += 1;
-  //out_ep_track += 1;
   interface_no_track += 1;
-  USBD_Track_String_Index += 1;
+  //USBD_Track_String_Index += 1;
 
   ptr = USBD_AUDIO.GetFSConfigDescriptor(&len);
   USBD_Update_AUDIO_DESC(ptr,
                          interface_no_track,
                          interface_no_track + 1,
-                         in_ep_track,
 						 out_ep_track,
-                         USBD_Track_String_Index);
+                         0);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
 
 #if 1
@@ -405,15 +403,14 @@ void USBD_COMPOSITE_Mount_Class(void)
   USBD_Update_AUDIO_DESC(ptr,
                          interface_no_track,
                          interface_no_track + 1,
-                         in_ep_track,
 						 out_ep_track,
-                         USBD_Track_String_Index);
+                         0);
 
   memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
-  in_ep_track += 1;
+
   out_ep_track += 1;
   interface_no_track += 2;
-  USBD_Track_String_Index += 1;
+  //USBD_Track_String_Index += 1;
 #endif
 
   uint16_t CFG_SIZE = sizeof(USBD_COMPOSITE_CFG_DESC_t);
