@@ -67,7 +67,7 @@
 /*---------- -----------*/
 #define USBD_MAX_NUM_INTERFACES     3U //2+1
 /*---------- -----------*/
-#define USBD_MAX_NUM_CONFIGURATION     3U//2+1
+#define USBD_MAX_NUM_CONFIGURATION     1U//2+1
 /*---------- -----------*/
 #define USBD_MAX_STR_DESC_SIZ     512U
 /*---------- -----------*/
@@ -75,7 +75,7 @@
 /*---------- -----------*/
 #define USBD_LPM_ENABLED     1U
 /*---------- -----------*/
-#define USBD_SELF_POWERED     1U
+#define USBD_SELF_POWERED     0U
 /*---------- -----------*/
 #define HID_FS_BINTERVAL     0x0AU
 #define USBD_AUDIO_FREQ     48000U
