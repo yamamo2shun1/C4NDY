@@ -111,9 +111,9 @@ USBD_ClassTypeDef USBD_COMPOSITE =
         USBD_COMPOSITE_SOF,
         USBD_COMPOSITE_IsoINIncomplete,
         USBD_COMPOSITE_IsoOutIncomplete,
-        USBD_COMPOSITE_GetHSCfgDesc,
         USBD_COMPOSITE_GetFSCfgDesc,
-        USBD_COMPOSITE_GetOtherSpeedCfgDesc,
+        USBD_COMPOSITE_GetFSCfgDesc,
+        USBD_COMPOSITE_GetFSCfgDesc,
         USBD_COMPOSITE_GetDeviceQualifierDesc
     };
 
