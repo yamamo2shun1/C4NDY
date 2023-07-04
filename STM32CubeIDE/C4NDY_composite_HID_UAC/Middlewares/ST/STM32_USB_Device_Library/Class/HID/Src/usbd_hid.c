@@ -212,7 +212,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgHSDesc[USB_HID_CONFIG_DESC_SIZE] __ALIG
 #else
   0xA0,                                               /* bmAttributes: Bus Powered according to user configuration */
 #endif
-  USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
+  USBD_MAX_POWER,                                     /* MaxPower 500 mA: this current is used for detecting Vbus */
 
 #if 0
   /******** IAD to associate the interfaces */
@@ -276,7 +276,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_OtherSpeedCfgDesc[USB_HID_CONFIG_DESC_SIZE
 #else
   0xA0,                                               /* bmAttributes: Bus Powered according to user configuration */
 #endif
-  USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
+  USBD_MAX_POWER,                                     /* MaxPower 500 mA: this current is used for detecting Vbus */
 
 #if 0
   /******** IAD to associate the interfaces */
