@@ -62,13 +62,13 @@
   * @{
   */
 
-#define USBD_VID     1155
+#define USBD_VID     0x31BF
 #define USBD_LANGID_STRING     1033
-#define USBD_MANUFACTURER_STRING     "STMicroelectronics"
-#define USBD_PID     22315
-#define USBD_PRODUCT_STRING     "STM32 Human interface"
+#define USBD_MANUFACTURER_STRING     "Yamamoto Works Ltd."
+#define USBD_PID     0x0002
+#define USBD_PRODUCT_STRING     "C4NDY KVL"
 #define USBD_CONFIGURATION_STRING     "HID Config"
-#define USBD_INTERFACE_STRING     "HID Interface"
+#define USBD_INTERFACE_STRING     "HID Keyboard"
 
 /* USER CODE BEGIN PRIVATE_DEFINES */
 
