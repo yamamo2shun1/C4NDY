@@ -63,9 +63,9 @@
   */
 
 #define USBD_VID     0x31BF
-#define USBD_LANGID_STRING     1041
+#define USBD_LANGID_STRING     1033
 #define USBD_MANUFACTURER_STRING     "Yamamoto Works Ltd."
-#define USBD_PID     22315
+#define USBD_PID     0x0003
 #define USBD_PRODUCT_STRING     "C4NDY Composite HID_UAC"
 #define USBD_CONFIGURATION_STRING     "Composite Config"
 #define USBD_INTERFACE_STRING     "Composite Interface"
