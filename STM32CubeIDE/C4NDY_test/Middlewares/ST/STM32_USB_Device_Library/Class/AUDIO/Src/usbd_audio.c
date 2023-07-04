@@ -152,13 +152,13 @@ USBD_ClassTypeDef USBD_AUDIO =
 };
 
 /* USB AUDIO device Configuration Descriptor */
-__ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZ] __ALIGN_END =
+__ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZE] __ALIGN_END =
 {
   /* Configuration 1 */
   0x09,                                 /* bLength */
   USB_DESC_TYPE_CONFIGURATION,          /* bDescriptorType */
-  LOBYTE(USB_AUDIO_CONFIG_DESC_SIZ),    /* wTotalLength  109 bytes*/
-  HIBYTE(USB_AUDIO_CONFIG_DESC_SIZ),
+  LOBYTE(USB_AUDIO_CONFIG_DESC_SIZE),   /* wTotalLength  109 bytes*/
+  HIBYTE(USB_AUDIO_CONFIG_DESC_SIZE),
   0x02,                                 /* bNumInterfaces */
   0x01,                                 /* bConfigurationValue */
   0x00,                                 /* iConfiguration */
@@ -493,7 +493,7 @@ static uint8_t USBD_AUDIO_Setup(USBD_HandleTypeDef *pdev,
           if ((req->wValue >> 8) == AUDIO_DESCRIPTOR_TYPE)
           {
             pbuf = USBD_AUDIO_CfgDesc + 18;
-            len = MIN(USB_AUDIO_DESC_SIZ, req->wLength);
+            len = MIN(USB_AUDIO_DESC_SIZE, req->wLength);
 
             (void)USBD_CtlSendData(pdev, pbuf, len);
           }
