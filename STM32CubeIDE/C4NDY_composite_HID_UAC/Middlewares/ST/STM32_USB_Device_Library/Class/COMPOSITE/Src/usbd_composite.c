@@ -111,16 +111,16 @@ USBD_ClassTypeDef USBD_COMPOSITE =
         USBD_COMPOSITE_SOF,
         USBD_COMPOSITE_IsoINIncomplete,
         USBD_COMPOSITE_IsoOutIncomplete,
-        USBD_COMPOSITE_GetHSCfgDesc,
         USBD_COMPOSITE_GetFSCfgDesc,
-        USBD_COMPOSITE_GetOtherSpeedCfgDesc,
+        USBD_COMPOSITE_GetFSCfgDesc,
+        USBD_COMPOSITE_GetFSCfgDesc,
         USBD_COMPOSITE_GetDeviceQualifierDesc
     };
 
 typedef struct USBD_COMPOSITE_CFG_DESC_t
 {
   uint8_t CONFIG_DESC[USB_CONF_DESC_SIZE];
-  uint8_t USBD_HID_DESC[USB_HID_CONFIG_DESC_SIZ - 0x09];
+  uint8_t USBD_HID_DESC[USB_HID_CONFIG_DESC_SIZE - 0x09];
   uint8_t USBD_AUDIO_DESC[USB_AUDIO_CONFIG_DESC_SIZE - 0x09];
 } __PACKED USBD_COMPOSITE_CFG_DESC_t;
 
@@ -372,73 +372,30 @@ void USBD_COMPOSITE_Mount_Class(void)
   uint16_t len = 0;
   uint8_t *ptr = NULL;
 
-  uint8_t in_ep_track = 0x81;
-  uint8_t out_ep_track = 0x01;
-  uint8_t interface_no_track = 0x00;
-
   ptr = USBD_HID.GetFSConfigDescriptor(&len);
-  USBD_Update_HID_DESC(ptr, interface_no_track, in_ep_track, 0);
+  USBD_Update_HID_DESC(ptr,
+		  	  	  	   0x00,// interfaceNum
+					   0x84,// epdpointAddr
+					   0);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
-
-#if 1
-  ptr = USBD_HID.GetHSConfigDescriptor(&len);
-  USBD_Update_HID_DESC(ptr, interface_no_track, in_ep_track, 0);
-  memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
-#endif
-
-  in_ep_track += 1;
-  interface_no_track += 1;
-  //USBD_Track_String_Index += 1;
 
   ptr = USBD_AUDIO.GetFSConfigDescriptor(&len);
   USBD_Update_AUDIO_DESC(ptr,
-                         interface_no_track,
-                         interface_no_track + 1,
-						 out_ep_track,
+                         0x01,// interfaceNum
+                         0x02,// interfaceNum
+						 0x01,// endpointAddr
                          0);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
 
-#if 1
-  ptr = USBD_AUDIO.GetHSConfigDescriptor(&len);
-  USBD_Update_AUDIO_DESC(ptr,
-                         interface_no_track,
-                         interface_no_track + 1,
-						 out_ep_track,
-                         0);
-
-  memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
-
-  out_ep_track += 1;
-  interface_no_track += 2;
-  //USBD_Track_String_Index += 1;
-#endif
-
   uint16_t CFG_SIZE = sizeof(USBD_COMPOSITE_CFG_DESC_t);
-#if 1
-  ptr = USBD_COMPOSITE_HSCfgDesc.CONFIG_DESC;
-  /* Configuration Descriptor */
-  ptr[0] = 0x09;                        /* bLength: Configuration Descriptor size */
-  ptr[1] = USB_DESC_TYPE_CONFIGURATION; /* bDescriptorType: Configuration */
-  ptr[2] = LOBYTE(CFG_SIZE);            /* wTotalLength:no of returned bytes */
-  ptr[3] = HIBYTE(CFG_SIZE);
-  ptr[4] = interface_no_track; /* bNumInterfaces: 2 interface */
-  ptr[5] = 0x01;               /* bConfigurationValue: Configuration value */
-  ptr[6] = 0x00;               /* iConfiguration: Index of string descriptor describing the configuration */
-#if (USBD_SELF_POWERED == 1U)
-  ptr[7] = 0xC0; /* bmAttributes: Bus Powered according to user configuration */
-#else
-  ptr[7] = 0x80; /* bmAttributes: Bus Powered according to user configuration */
-#endif
-  ptr[8] = USBD_MAX_POWER; /* MaxPower 100 mA */
-#endif
-
   ptr = USBD_COMPOSITE_FSCfgDesc.CONFIG_DESC;
+
   /* Configuration Descriptor */
   ptr[0] = 0x09;                        /* bLength: Configuration Descriptor size */
   ptr[1] = USB_DESC_TYPE_CONFIGURATION; /* bDescriptorType: Configuration */
   ptr[2] = LOBYTE(CFG_SIZE);            /* wTotalLength:no of returned bytes */
   ptr[3] = HIBYTE(CFG_SIZE);
-  ptr[4] = interface_no_track; /* bNumInterfaces: 2 interface */
+  ptr[4] = 0x03;               /* bNumInterfaces: 1+2 interface */
   ptr[5] = 0x01;               /* bConfigurationValue: Configuration value */
   ptr[6] = 0x00;               /* iConfiguration: Index of string descriptor describing the configuration */
 #if (USBD_SELF_POWERED == 1U)
@@ -446,10 +403,7 @@ void USBD_COMPOSITE_Mount_Class(void)
 #else
   ptr[7] = 0x80; /* bmAttributes: Bus Powered according to user configuration */
 #endif
-  ptr[8] = USBD_MAX_POWER; /* MaxPower 100 mA */
-
-  (void)out_ep_track;
-  (void)in_ep_track;
+  ptr[8] = USBD_MAX_POWER; /* MaxPower 500 mA */
 }
 
 /**
