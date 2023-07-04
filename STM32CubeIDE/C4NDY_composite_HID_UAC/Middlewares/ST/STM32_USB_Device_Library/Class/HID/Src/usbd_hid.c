@@ -131,11 +131,11 @@ USBD_ClassTypeDef USBD_HID =
 };
 
 /* USB HID device FS Configuration Descriptor */
-__ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN_END =
+__ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZE] __ALIGN_END =
 {
   0x09,                                               /* bLength: Configuration Descriptor size */
   USB_DESC_TYPE_CONFIGURATION,                        /* bDescriptorType: Configuration */
-  USB_HID_CONFIG_DESC_SIZ,                            /* wTotalLength: Bytes returned */
+  USB_HID_CONFIG_DESC_SIZE,                           /* wTotalLength: Bytes returned */
   0x00,
   0x01,                                               /* bNumInterfaces: 1 interface */
   0x01,                                               /* bConfigurationValue: Configuration value */
@@ -145,7 +145,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
 #else
   0xA0,                                               /* bmAttributes: Bus Powered according to user configuration */
 #endif
-  USBD_MAX_POWER,                                     /* MaxPower 100 mA: this current is used for detecting Vbus */
+  USBD_MAX_POWER,                                     /* MaxPower 500 mA: this current is used for detecting Vbus */
   /* 09 byte*/
 
 #if 0
@@ -161,7 +161,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   /* 08 byte 17*/
 #endif
 
-  /************** Descriptor of Joystick Mouse interface ****************/
+  /************** Descriptor of Keyboard interface ****************/
   0x09,                                               /* bLength: Interface Descriptor size */
   USB_DESC_TYPE_INTERFACE,                            /* bDescriptorType: Interface descriptor type */
   0x00,                                               /* bInterfaceNumber: Number of Interface 11*/
@@ -173,7 +173,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   0,                                                  /* iInterface: Index of string descriptor 17*/
   /* 09 byte 26 18*/
 
-  /******************** Descriptor of Joystick Mouse HID ********************/
+  /******************** Descriptor of Keyboard HID ********************/
   0x09,                                               /* bLength: HID Descriptor size */
   HID_DESCRIPTOR_TYPE,                                /* bDescriptorType: HID */
   0x11,                                               /* bcdHID: HID Class Spec release number */
@@ -185,10 +185,9 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
   0x00,
   /* 09 byte 35 27*/
 
-  /******************** Descriptor of Mouse endpoint ********************/
+  /******************** Descriptor of Keyboard endpoint ********************/
   0x07,                                               /* bLength: Endpoint Descriptor size */
   USB_DESC_TYPE_ENDPOINT,                             /* bDescriptorType:*/
-
   HID_EPIN_ADDR,                                      /* bEndpointAddress: Endpoint Address (IN) 29*/
   0x03,                                               /* bmAttributes: Interrupt endpoint */
   HID_EPIN_SIZE,                                      /* wMaxPacketSize: 4 Byte max */
@@ -198,11 +197,11 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
 };
 
 /* USB HID device HS Configuration Descriptor */
-__ALIGN_BEGIN static uint8_t USBD_HID_CfgHSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN_END =
+__ALIGN_BEGIN static uint8_t USBD_HID_CfgHSDesc[USB_HID_CONFIG_DESC_SIZE] __ALIGN_END =
 {
   0x09,                                               /* bLength: Configuration Descriptor size */
   USB_DESC_TYPE_CONFIGURATION,                        /* bDescriptorType: Configuration */
-  USB_HID_CONFIG_DESC_SIZ,                            /* wTotalLength: Bytes returned */
+  USB_HID_CONFIG_DESC_SIZE,                            /* wTotalLength: Bytes returned */
   0x00,
   0x01,                                               /* bNumInterfaces: 1 interface */
   0x01,                                               /* bConfigurationValue: Configuration value */
@@ -262,11 +261,11 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgHSDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN
 };
 
 /* USB HID device Other Speed Configuration Descriptor */
-__ALIGN_BEGIN static uint8_t USBD_HID_OtherSpeedCfgDesc[USB_HID_CONFIG_DESC_SIZ] __ALIGN_END =
+__ALIGN_BEGIN static uint8_t USBD_HID_OtherSpeedCfgDesc[USB_HID_CONFIG_DESC_SIZE] __ALIGN_END =
 {
   0x09,                                               /* bLength: Configuration Descriptor size */
   USB_DESC_TYPE_CONFIGURATION,                        /* bDescriptorType: Configuration */
-  USB_HID_CONFIG_DESC_SIZ,                            /* wTotalLength: Bytes returned */
+  USB_HID_CONFIG_DESC_SIZE,                            /* wTotalLength: Bytes returned */
   0x00,
   0x01,                                               /* bNumInterfaces: 1 interface */
   0x01,                                               /* bConfigurationValue: Configuration value */
@@ -327,7 +326,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_OtherSpeedCfgDesc[USB_HID_CONFIG_DESC_SIZ]
 
 
 /* USB HID device Configuration Descriptor */
-__ALIGN_BEGIN static uint8_t USBD_HID_Desc[USB_HID_DESC_SIZ] __ALIGN_END =
+__ALIGN_BEGIN static uint8_t USBD_HID_Desc[USB_HID_DESC_SIZE] __ALIGN_END =
 {
   /* 18 */
   0x09,                                               /* bLength: HID Descriptor size */
@@ -585,7 +584,7 @@ static uint8_t USBD_HID_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *re
           else if ((req->wValue >> 8) == HID_DESCRIPTOR_TYPE)
           {
             pbuf = USBD_HID_Desc;
-            len = MIN(USB_HID_DESC_SIZ, req->wLength);
+            len = MIN(USB_HID_DESC_SIZE, req->wLength);
           }
           else
           {
