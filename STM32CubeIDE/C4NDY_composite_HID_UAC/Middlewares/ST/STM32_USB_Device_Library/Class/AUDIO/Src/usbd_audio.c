@@ -179,7 +179,7 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZE] __AL
 #else
   0x80,                                 /* bmAttributes: Bus Powered according to user configuration */
 #endif
-  USBD_MAX_POWER,                       /* bMaxPower = 500 mA */
+  USBD_MAX_POWER,                       /* bMaxPower = 100 mA */
   /* 09 byte*/
 
   /******** IAD to associate the interfaces */
