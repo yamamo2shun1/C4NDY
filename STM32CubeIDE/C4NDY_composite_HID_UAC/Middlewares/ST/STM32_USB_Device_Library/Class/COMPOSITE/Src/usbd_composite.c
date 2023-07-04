@@ -429,7 +429,7 @@ void USBD_COMPOSITE_Mount_Class(void)
 #else
   ptr[7] = 0x80; /* bmAttributes: Bus Powered according to user configuration */
 #endif
-  ptr[8] = USBD_MAX_POWER; /* MaxPower 100 mA */
+  ptr[8] = USBD_MAX_POWER; /* MaxPower 500 mA */
 #endif
 
   ptr = USBD_COMPOSITE_FSCfgDesc.CONFIG_DESC;
@@ -446,7 +446,7 @@ void USBD_COMPOSITE_Mount_Class(void)
 #else
   ptr[7] = 0x80; /* bmAttributes: Bus Powered according to user configuration */
 #endif
-  ptr[8] = USBD_MAX_POWER; /* MaxPower 100 mA */
+  ptr[8] = USBD_MAX_POWER; /* MaxPower 500 mA */
 
   (void)out_ep_track;
   (void)in_ep_track;
