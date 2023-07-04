@@ -211,7 +211,7 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZE] __AL
   AUDIO_CONTROL_HEADER,                 /* bDescriptorSubtype */
   0x00,          /* 1.00 */             /* bcdADC */
   0x01,
-  0x38,                                 /* wTotalLength = 56*/
+  0x27,                                 /* wTotalLength = 39*/
   0x00,
   0x01,                                 /* bInCollection */
   0x01,                                 /* baInterfaceNr 34*/
