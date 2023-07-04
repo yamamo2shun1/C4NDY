@@ -75,7 +75,7 @@
 /*---------- -----------*/
 #define USBD_LPM_ENABLED     1U
 /*---------- -----------*/
-#define USBD_MAX_POWER       0x32U /* 500 mA */
+#define USBD_MAX_POWER       0x32U /* 100 mA */
 #define USBD_SELF_POWERED       1U
 /*---------- -----------*/
 #define HID_FS_BINTERVAL     0x0AU

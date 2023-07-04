@@ -179,7 +179,7 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZE] __AL
 #else
   0x80,                                 /* bmAttributes: Bus Powered according to user configuration */
 #endif
-  USBD_MAX_POWER,                       /* bMaxPower = 500 mA */
+  USBD_MAX_POWER,                       /* bMaxPower = 100 mA */
   /* 09 byte*/
 
   /******** IAD to associate the interfaces */
@@ -211,11 +211,11 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZE] __AL
   AUDIO_CONTROL_HEADER,                 /* bDescriptorSubtype */
   0x00,          /* 1.00 */             /* bcdADC */
   0x01,
-  0x25 + AUDIO_IN_CHANNELS,             /* wTotalLength = 39*/
+  0x38,                                 /* wTotalLength = 56*/
   0x00,
   0x01,                                 /* bInCollection */
   0x01,                                 /* baInterfaceNr 34*/
-  /* 09 byte 35*/
+  /* 09 byte 35 9*/
 
   /* USB Speaker Input Terminal Descriptor */
   AUDIO_INPUT_TERMINAL_DESC_SIZE,       /* bLength */
@@ -230,7 +230,7 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZE] __AL
   0x00,
   0x00,                                 /* iChannelNames */
   0x00,                                 /* iTerminal */
-  /* 12 byte 47*/
+  /* 12 byte 47 21*/
 
   /* USB Speaker Audio Feature Unit Descriptor */
   0x07 + (AUDIO_IN_CHANNELS + 1) * 2,   /* bLength */
@@ -246,7 +246,7 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZE] __AL
   0x00,
   0x03,                                 /* bmaControls(1) */
   0x00,                                 /* iTerminal */
-  /* 13 byte 60*/
+  /* 13 byte 60 34*/
 
   /*USB Speaker Output Terminal Descriptor */
   0x09,                                 /* bLength */
@@ -258,7 +258,7 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZE] __AL
   0x00,                                 /* bAssocTerminal */
   0x02,                                 /* bSourceID */
   0x00,                                 /* iTerminal */
-  /* 09 byte 69*/
+  /* 09 byte 69 43*/
 
   /* USB Speaker Audio Feature Unit Descriptor */
   0x07 + (AUDIO_IN_CHANNELS + 1) * 2,   /* bLength */
@@ -274,7 +274,7 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZE] __AL
   0x00,
   0x03,                                 /* bmaControls(1) */
   0x00,                                 /* iTerminal */
-  /* 13 byte 82*/
+  /* 13 byte 82 56*/
 
   /* USB Speaker Standard AS Interface Descriptor - Audio Streaming Zero Bandwidth */
   /* Interface 1, Alternate Setting 0                                             */
