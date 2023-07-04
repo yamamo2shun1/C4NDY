@@ -109,7 +109,7 @@ USBD_ClassTypeDef USBD_COMPOSITE =
         USBD_COMPOSITE_DataIn,
         USBD_COMPOSITE_DataOut,
         USBD_COMPOSITE_SOF,
-        USBD_COMPOSITE_IsoINIncomplete,
+		USBD_COMPOSITE_IsoINIncomplete,
         USBD_COMPOSITE_IsoOutIncomplete,
         USBD_COMPOSITE_GetFSCfgDesc,
         USBD_COMPOSITE_GetFSCfgDesc,
@@ -201,7 +201,7 @@ static uint8_t USBD_COMPOSITE_Setup(USBD_HandleTypeDef *pdev,
     return USBD_HID.Setup(pdev, req);
   }
 
-  if (LOBYTE(req->wIndex) == AUDIO_AC_ITF_NBR || LOBYTE(req->wIndex) == AUDIO_AS_ITF_NBR)//shun
+  if (LOBYTE(req->wIndex) == AUDIO_AC_ITF_NBR || LOBYTE(req->wIndex) == AUDIO_AS_ITF_NBR)
   {
     return USBD_AUDIO.Setup(pdev, req);
   }
@@ -221,10 +221,6 @@ static uint8_t USBD_COMPOSITE_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
   if (epnum == (HID_IN_EP & 0x7F))
   {
     return USBD_HID.DataIn(pdev, epnum);
-  }
-  if (epnum == (AUDIO_IN_EP & 0x7F))//shun
-  {
-    return USBD_AUDIO.DataIn(pdev, epnum);
   }
 
   return USBD_FAIL;
@@ -278,11 +274,6 @@ static uint8_t USBD_COMPOSITE_SOF(USBD_HandleTypeDef *pdev)
   */
 static uint8_t USBD_COMPOSITE_IsoINIncomplete(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-  if (epnum == (AUDIO_IN_EP & 0x7F))//shun
-  {
-    USBD_AUDIO.IsoINIncomplete(pdev, epnum);
-  }
-
   return (uint8_t)USBD_OK;
 }
 
@@ -295,7 +286,7 @@ static uint8_t USBD_COMPOSITE_IsoINIncomplete(USBD_HandleTypeDef *pdev, uint8_t 
   */
 static uint8_t USBD_COMPOSITE_IsoOutIncomplete(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-  if (epnum == AUDIO_OUT_EP)//shun
+  if (epnum == AUDIO_OUT_EP)
   {
     USBD_AUDIO.IsoOUTIncomplete(pdev, epnum);
   }
@@ -311,7 +302,7 @@ static uint8_t USBD_COMPOSITE_IsoOutIncomplete(USBD_HandleTypeDef *pdev, uint8_t
   */
 static uint8_t USBD_COMPOSITE_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-  if (epnum == AUDIO_OUT_EP)//shun
+  if (epnum == AUDIO_OUT_EP)
   {
     return USBD_AUDIO.DataOut(pdev, epnum);
   }
