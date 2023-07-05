@@ -86,9 +86,7 @@ static uint8_t USBD_COMPOSITE_SOF(USBD_HandleTypeDef *pdev);
 static uint8_t USBD_COMPOSITE_IsoINIncomplete(USBD_HandleTypeDef *pdev, uint8_t epnum);
 static uint8_t USBD_COMPOSITE_IsoOutIncomplete(USBD_HandleTypeDef *pdev, uint8_t epnum);
 
-static uint8_t *USBD_COMPOSITE_GetHSCfgDesc(uint16_t *length);
 static uint8_t *USBD_COMPOSITE_GetFSCfgDesc(uint16_t *length);
-static uint8_t *USBD_COMPOSITE_GetOtherSpeedCfgDesc(uint16_t *length);
 static uint8_t *USBD_COMPOSITE_GetDeviceQualifierDesc(uint16_t *length);
 
 /**
@@ -311,18 +309,6 @@ static uint8_t USBD_COMPOSITE_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
 }
 
 /**
-  * @brief  USBD_COMPOSITE_GetHSCfgDesc
-  *         return configuration descriptor
-  * @param  length : pointer data length
-  * @retval pointer to descriptor buffer
-  */
-static uint8_t *USBD_COMPOSITE_GetHSCfgDesc(uint16_t *length)
-{
-  *length = (uint16_t)sizeof(USBD_COMPOSITE_HSCfgDesc);
-  return (uint8_t *)&USBD_COMPOSITE_HSCfgDesc;
-}
-
-/**
   * @brief  USBD_COMPOSITE_GetFSCfgDesc
   *         return configuration descriptor
   * @param  length : pointer data length
@@ -332,18 +318,6 @@ static uint8_t *USBD_COMPOSITE_GetFSCfgDesc(uint16_t *length)
 {
   *length = (uint16_t)sizeof(USBD_COMPOSITE_FSCfgDesc);
   return (uint8_t *)&USBD_COMPOSITE_FSCfgDesc;
-}
-
-/**
-  * @brief  USBD_COMPOSITE_GetOtherSpeedCfgDesc
-  *         return configuration descriptor
-  * @param  length : pointer data length
-  * @retval pointer to descriptor buffer
-  */
-static uint8_t *USBD_COMPOSITE_GetOtherSpeedCfgDesc(uint16_t *length)
-{
-  *length = (uint16_t)sizeof(USBD_COMPOSITE_HSCfgDesc);
-  return (uint8_t *)&USBD_COMPOSITE_HSCfgDesc;
 }
 
 /**
