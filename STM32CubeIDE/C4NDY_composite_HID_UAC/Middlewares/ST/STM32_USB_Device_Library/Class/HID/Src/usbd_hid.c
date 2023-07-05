@@ -159,7 +159,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZE] __ALIG
   /* 08 byte 17*/
 #endif
 
-  /************** Descriptor of Joystick Mouse interface ****************/
+  /************** Descriptor of Keyboard interface ****************/
   0x09,                                               /* bLength: Interface Descriptor size */
   USB_DESC_TYPE_INTERFACE,                            /* bDescriptorType: Interface descriptor type */
   0x00,                                               /* bInterfaceNumber: Number of Interface 11*/
@@ -171,7 +171,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZE] __ALIG
   0,                                                  /* iInterface: Index of string descriptor 17*/
   /* 09 byte 26 18*/
 
-  /******************** Descriptor of Joystick Mouse HID ********************/
+  /******************** Descriptor of Keyboard HID ********************/
   0x09,                                               /* bLength: HID Descriptor size */
   HID_DESCRIPTOR_TYPE,                                /* bDescriptorType: HID */
   0x11,                                               /* bcdHID: HID Class Spec release number */
@@ -183,13 +183,13 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZE] __ALIG
   0x00,
   /* 09 byte 35 27*/
 
-  /******************** Descriptor of Mouse endpoint ********************/
+  /******************** Descriptor of Keyboard endpoint ********************/
   0x07,                                               /* bLength: Endpoint Descriptor size */
   USB_DESC_TYPE_ENDPOINT,                             /* bDescriptorType:*/
 
   HID_EPIN_ADDR,                                      /* bEndpointAddress: Endpoint Address (IN) 29*/
   0x03,                                               /* bmAttributes: Interrupt endpoint */
-  HID_EPIN_SIZE,                                      /* wMaxPacketSize: 4 Byte max */
+  HID_EPIN_SIZE,                                      /* wMaxPacketSize: 8 Byte max */
   0x00,
   HID_FS_BINTERVAL,                                   /* bInterval: Polling Interval */
   /* 07 byte 42 34*/
