@@ -223,7 +223,7 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZE] __AL
   /* 10 byte 49*/
 
   /*USB Speaker Output Terminal Descriptor */
-  0x09,      /* bLength */
+  0x09,                                 /* bLength */
   AUDIO_INTERFACE_DESCRIPTOR_TYPE,      /* bDescriptorType */
   AUDIO_CONTROL_OUTPUT_TERMINAL,        /* bDescriptorSubtype */
   0x03,                                 /* bTerminalID */
