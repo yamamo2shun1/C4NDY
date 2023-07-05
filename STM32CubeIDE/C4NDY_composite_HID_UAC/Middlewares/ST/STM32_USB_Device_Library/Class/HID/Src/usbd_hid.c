@@ -186,6 +186,7 @@ __ALIGN_BEGIN static uint8_t USBD_HID_CfgFSDesc[USB_HID_CONFIG_DESC_SIZE] __ALIG
   /******************** Descriptor of Keyboard endpoint ********************/
   0x07,                                               /* bLength: Endpoint Descriptor size */
   USB_DESC_TYPE_ENDPOINT,                             /* bDescriptorType:*/
+
   HID_EPIN_ADDR,                                      /* bEndpointAddress: Endpoint Address (IN) 29*/
   0x03,                                               /* bmAttributes: Interrupt endpoint */
   HID_EPIN_SIZE,                                      /* wMaxPacketSize: 8 Byte max */

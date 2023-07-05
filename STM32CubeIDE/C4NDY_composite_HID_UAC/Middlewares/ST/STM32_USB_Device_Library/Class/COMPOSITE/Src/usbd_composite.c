@@ -386,7 +386,6 @@ void USBD_COMPOSITE_Mount_Class(void)
 #endif
 
   ptr = USBD_COMPOSITE_FSCfgDesc.CONFIG_DESC;
-
   /* Configuration Descriptor */
   ptr[0] = 0x09;                        /* bLength: Configuration Descriptor size */
   ptr[1] = USB_DESC_TYPE_CONFIGURATION; /* bDescriptorType: Configuration */
