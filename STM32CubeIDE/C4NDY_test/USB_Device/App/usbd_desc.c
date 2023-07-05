@@ -65,8 +65,8 @@
 #define USBD_VID     0x31BF
 #define USBD_LANGID_STRING     1033
 #define USBD_MANUFACTURER_STRING     "Yamamoto Works Ltd."
-#define USBD_PID     22336
-#define USBD_PRODUCT_STRING     "STM32 Audio Class"
+#define USBD_PID     0x0004
+#define USBD_PRODUCT_STRING     "C4NDY Audio"
 #define USBD_CONFIGURATION_STRING     "AUDIO Config"
 #define USBD_INTERFACE_STRING     "AUDIO Interface"
 

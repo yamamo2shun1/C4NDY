@@ -88,7 +88,6 @@
   */
 
 /* USER CODE BEGIN PRIVATE_VARIABLES */
-extern SAI_HandleTypeDef hsai_BlockA1;
 extern SAI_HandleTypeDef hsai_BlockB1;
 /* USER CODE END PRIVATE_VARIABLES */
 
@@ -235,8 +234,6 @@ static int8_t AUDIO_MuteCtl_FS(uint8_t cmd)
 static int8_t AUDIO_PeriodicTC_FS(uint8_t *pbuf, uint32_t size, uint8_t cmd)
 {
   /* USER CODE BEGIN 5 */
-  UNUSED(pbuf);
-  UNUSED(size);
   UNUSED(cmd);
 
   //SEGGER_RTT_printf(0, "size = %d\n", size);

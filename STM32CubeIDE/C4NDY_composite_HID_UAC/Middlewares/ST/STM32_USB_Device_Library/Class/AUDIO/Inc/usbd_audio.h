@@ -61,7 +61,7 @@ extern "C" {
 #define SOF_RATE                                      0x02U
 
 #define AUDIO_IN_CHANNELS                             0x02U
-#define USB_AUDIO_CONFIG_DESC_SIZE                    (118U)//0x84U//0x6DU
+#define USB_AUDIO_CONFIG_DESC_SIZE                    (128U)
 #define AUDIO_INTERFACE_DESC_SIZE                     0x09U
 #define USB_AUDIO_DESC_SIZ                            0x09U
 #define AUDIO_STANDARD_ENDPOINT_DESC_SIZE             0x09U

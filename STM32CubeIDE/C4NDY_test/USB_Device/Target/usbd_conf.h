@@ -65,17 +65,18 @@
   */
 
 /*---------- -----------*/
-#define USBD_MAX_NUM_INTERFACES     2U
+#define USBD_MAX_NUM_INTERFACES 2U
 /*---------- -----------*/
-#define USBD_MAX_NUM_CONFIGURATION     2U
+#define USBD_MAX_NUM_CONFIGURATION 2U
 /*---------- -----------*/
-#define USBD_MAX_STR_DESC_SIZ     512U
+#define USBD_MAX_STR_DESC_SIZ 512U
 /*---------- -----------*/
-#define USBD_DEBUG_LEVEL     0U
+#define USBD_DEBUG_LEVEL  0U
 /*---------- -----------*/
-#define USBD_LPM_ENABLED     1U
+#define USBD_LPM_ENABLED  1U
 /*---------- -----------*/
-#define USBD_SELF_POWERED     1U
+#define USBD_MAX_POWER    0xFAU
+#define USBD_SELF_POWERED 0U
 /*---------- -----------*/
 #define USBD_AUDIO_FREQ     48000U
 #define USBD_AUDIO_FREQ_MAX 96000U

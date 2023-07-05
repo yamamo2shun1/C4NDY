@@ -86,9 +86,7 @@ static uint8_t USBD_COMPOSITE_SOF(USBD_HandleTypeDef *pdev);
 static uint8_t USBD_COMPOSITE_IsoINIncomplete(USBD_HandleTypeDef *pdev, uint8_t epnum);
 static uint8_t USBD_COMPOSITE_IsoOutIncomplete(USBD_HandleTypeDef *pdev, uint8_t epnum);
 
-static uint8_t *USBD_COMPOSITE_GetHSCfgDesc(uint16_t *length);
 static uint8_t *USBD_COMPOSITE_GetFSCfgDesc(uint16_t *length);
-static uint8_t *USBD_COMPOSITE_GetOtherSpeedCfgDesc(uint16_t *length);
 static uint8_t *USBD_COMPOSITE_GetDeviceQualifierDesc(uint16_t *length);
 
 /**
@@ -109,7 +107,7 @@ USBD_ClassTypeDef USBD_COMPOSITE =
         USBD_COMPOSITE_DataIn,
         USBD_COMPOSITE_DataOut,
         USBD_COMPOSITE_SOF,
-        USBD_COMPOSITE_IsoINIncomplete,
+		USBD_COMPOSITE_IsoINIncomplete,
         USBD_COMPOSITE_IsoOutIncomplete,
         USBD_COMPOSITE_GetFSCfgDesc,
         USBD_COMPOSITE_GetFSCfgDesc,
@@ -201,7 +199,7 @@ static uint8_t USBD_COMPOSITE_Setup(USBD_HandleTypeDef *pdev,
     return USBD_HID.Setup(pdev, req);
   }
 
-  if (LOBYTE(req->wIndex) == AUDIO_AC_ITF_NBR || LOBYTE(req->wIndex) == AUDIO_AS_ITF_NBR)//shun
+  if (LOBYTE(req->wIndex) == AUDIO_AC_ITF_NBR || LOBYTE(req->wIndex) == AUDIO_AS_ITF_NBR)
   {
     return USBD_AUDIO.Setup(pdev, req);
   }
@@ -221,10 +219,6 @@ static uint8_t USBD_COMPOSITE_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
   if (epnum == (HID_IN_EP & 0x7F))
   {
     return USBD_HID.DataIn(pdev, epnum);
-  }
-  if (epnum == (AUDIO_IN_EP & 0x7F))//shun
-  {
-    return USBD_AUDIO.DataIn(pdev, epnum);
   }
 
   return USBD_FAIL;
@@ -278,11 +272,6 @@ static uint8_t USBD_COMPOSITE_SOF(USBD_HandleTypeDef *pdev)
   */
 static uint8_t USBD_COMPOSITE_IsoINIncomplete(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-  if (epnum == (AUDIO_IN_EP & 0x7F))//shun
-  {
-    USBD_AUDIO.IsoINIncomplete(pdev, epnum);
-  }
-
   return (uint8_t)USBD_OK;
 }
 
@@ -295,7 +284,7 @@ static uint8_t USBD_COMPOSITE_IsoINIncomplete(USBD_HandleTypeDef *pdev, uint8_t 
   */
 static uint8_t USBD_COMPOSITE_IsoOutIncomplete(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-  if (epnum == AUDIO_OUT_EP)//shun
+  if (epnum == AUDIO_OUT_EP)
   {
     USBD_AUDIO.IsoOUTIncomplete(pdev, epnum);
   }
@@ -311,24 +300,12 @@ static uint8_t USBD_COMPOSITE_IsoOutIncomplete(USBD_HandleTypeDef *pdev, uint8_t
   */
 static uint8_t USBD_COMPOSITE_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-  if (epnum == AUDIO_OUT_EP)//shun
+  if (epnum == AUDIO_OUT_EP)
   {
     return USBD_AUDIO.DataOut(pdev, epnum);
   }
 
   return USBD_FAIL;
-}
-
-/**
-  * @brief  USBD_COMPOSITE_GetHSCfgDesc
-  *         return configuration descriptor
-  * @param  length : pointer data length
-  * @retval pointer to descriptor buffer
-  */
-static uint8_t *USBD_COMPOSITE_GetHSCfgDesc(uint16_t *length)
-{
-  *length = (uint16_t)sizeof(USBD_COMPOSITE_HSCfgDesc);
-  return (uint8_t *)&USBD_COMPOSITE_HSCfgDesc;
 }
 
 /**
@@ -341,18 +318,6 @@ static uint8_t *USBD_COMPOSITE_GetFSCfgDesc(uint16_t *length)
 {
   *length = (uint16_t)sizeof(USBD_COMPOSITE_FSCfgDesc);
   return (uint8_t *)&USBD_COMPOSITE_FSCfgDesc;
-}
-
-/**
-  * @brief  USBD_COMPOSITE_GetOtherSpeedCfgDesc
-  *         return configuration descriptor
-  * @param  length : pointer data length
-  * @retval pointer to descriptor buffer
-  */
-static uint8_t *USBD_COMPOSITE_GetOtherSpeedCfgDesc(uint16_t *length)
-{
-  *length = (uint16_t)sizeof(USBD_COMPOSITE_HSCfgDesc);
-  return (uint8_t *)&USBD_COMPOSITE_HSCfgDesc;
 }
 
 /**
@@ -373,29 +338,43 @@ void USBD_COMPOSITE_Mount_Class(void)
   uint8_t *ptr = NULL;
 
   ptr = USBD_HID.GetFSConfigDescriptor(&len);
-  USBD_Update_HID_DESC(ptr,
-		  	  	  	   0x00,// interfaceNum
-					   0x84,// epdpointAddr
-					   0);
+  USBD_Update_HID_DESC(ptr, 0x00, 0x81, 0);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
+
+#if 1
+  ptr = USBD_HID.GetHSConfigDescriptor(&len);
+  USBD_Update_HID_DESC(ptr, 0x00, 0x81, 0);
+  memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
+#endif
 
   ptr = USBD_AUDIO.GetFSConfigDescriptor(&len);
   USBD_Update_AUDIO_DESC(ptr,
-                         0x01,// interfaceNum
-                         0x02,// interfaceNum
-						 0x01,// endpointAddr
+                         0x01,
+                         0x02,
+						 0x02,
                          0);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
 
-  uint16_t CFG_SIZE = sizeof(USBD_COMPOSITE_CFG_DESC_t);
-  ptr = USBD_COMPOSITE_FSCfgDesc.CONFIG_DESC;
+#if 1
+  ptr = USBD_AUDIO.GetHSConfigDescriptor(&len);
+  USBD_Update_AUDIO_DESC(ptr,
+                         0x01,
+                         0x02,
+						 0x02,
+                         0);
 
+  memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
+#endif
+
+  uint16_t CFG_SIZE = sizeof(USBD_COMPOSITE_CFG_DESC_t);
+#if 1
+  ptr = USBD_COMPOSITE_HSCfgDesc.CONFIG_DESC;
   /* Configuration Descriptor */
   ptr[0] = 0x09;                        /* bLength: Configuration Descriptor size */
   ptr[1] = USB_DESC_TYPE_CONFIGURATION; /* bDescriptorType: Configuration */
   ptr[2] = LOBYTE(CFG_SIZE);            /* wTotalLength:no of returned bytes */
   ptr[3] = HIBYTE(CFG_SIZE);
-  ptr[4] = 0x03;               /* bNumInterfaces: 1+2 interface */
+  ptr[4] = 0x03;               /* bNumInterfaces: 3 interface */
   ptr[5] = 0x01;               /* bConfigurationValue: Configuration value */
   ptr[6] = 0x00;               /* iConfiguration: Index of string descriptor describing the configuration */
 #if (USBD_SELF_POWERED == 1U)
@@ -403,7 +382,25 @@ void USBD_COMPOSITE_Mount_Class(void)
 #else
   ptr[7] = 0x80; /* bmAttributes: Bus Powered according to user configuration */
 #endif
-  ptr[8] = USBD_MAX_POWER; /* MaxPower 100 mA */
+  ptr[8] = USBD_MAX_POWER; /* MaxPower 500 mA */
+#endif
+
+  ptr = USBD_COMPOSITE_FSCfgDesc.CONFIG_DESC;
+
+  /* Configuration Descriptor */
+  ptr[0] = 0x09;                        /* bLength: Configuration Descriptor size */
+  ptr[1] = USB_DESC_TYPE_CONFIGURATION; /* bDescriptorType: Configuration */
+  ptr[2] = LOBYTE(CFG_SIZE);            /* wTotalLength:no of returned bytes */
+  ptr[3] = HIBYTE(CFG_SIZE);
+  ptr[4] = 0x03;               /* bNumInterfaces: 3 interface */
+  ptr[5] = 0x01;               /* bConfigurationValue: Configuration value */
+  ptr[6] = 0x00;               /* iConfiguration: Index of string descriptor describing the configuration */
+#if (USBD_SELF_POWERED == 1U)
+  ptr[7] = 0xC0; /* bmAttributes: Bus Powered according to user configuration */
+#else
+  ptr[7] = 0x80; /* bmAttributes: Bus Powered according to user configuration */
+#endif
+  ptr[8] = USBD_MAX_POWER; /* MaxPower 500 mA */
 }
 
 /**
