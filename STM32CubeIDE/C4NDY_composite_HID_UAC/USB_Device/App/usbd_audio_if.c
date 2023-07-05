@@ -88,7 +88,6 @@
   */
 
 /* USER CODE BEGIN PRIVATE_VARIABLES */
-extern SAI_HandleTypeDef hsai_BlockA1;
 extern SAI_HandleTypeDef hsai_BlockB1;
 /* USER CODE END PRIVATE_VARIABLES */
 
