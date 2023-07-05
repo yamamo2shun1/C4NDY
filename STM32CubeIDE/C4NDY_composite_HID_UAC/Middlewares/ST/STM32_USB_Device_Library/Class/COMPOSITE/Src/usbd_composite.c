@@ -351,7 +351,7 @@ void USBD_COMPOSITE_Mount_Class(void)
   USBD_Update_AUDIO_DESC(ptr,
                          0x01,
                          0x02,
-						 0x01,
+						 0x02,
                          0);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
 
@@ -360,7 +360,7 @@ void USBD_COMPOSITE_Mount_Class(void)
   USBD_Update_AUDIO_DESC(ptr,
                          0x01,
                          0x02,
-						 0x01,
+						 0x02,
                          0);
 
   memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
