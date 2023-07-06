@@ -171,6 +171,8 @@ void HAL_QSPI_MspDeInit(QSPI_HandleTypeDef* hqspi)
 
 }
 
+extern DMA_HandleTypeDef hdma_sai1_b;
+
 static uint32_t SAI1_client =0;
 
 void HAL_SAI_MspInit(SAI_HandleTypeDef* hsai)
@@ -222,6 +224,26 @@ void HAL_SAI_MspInit(SAI_HandleTypeDef* hsai)
     GPIO_InitStruct.Alternate = GPIO_AF12_SAI1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+      /* Peripheral DMA init*/
+
+    hdma_sai1_b.Instance = DMA1_Channel1;
+    hdma_sai1_b.Init.Request = DMA_REQUEST_SAI1_B;
+    hdma_sai1_b.Init.Direction = DMA_MEMORY_TO_PERIPH;
+    hdma_sai1_b.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_sai1_b.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_sai1_b.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+    hdma_sai1_b.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+    hdma_sai1_b.Init.Mode = DMA_CIRCULAR;
+    hdma_sai1_b.Init.Priority = DMA_PRIORITY_HIGH;
+    if (HAL_DMA_Init(&hdma_sai1_b) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+    /* Several peripheral DMA handle pointers point to the same DMA handle.
+     Be aware that there is only one channel to perform all the requested DMAs. */
+    __HAL_LINKDMA(hsai,hdmarx,hdma_sai1_b);
+    __HAL_LINKDMA(hsai,hdmatx,hdma_sai1_b);
     }
 }
 
@@ -247,6 +269,9 @@ void HAL_SAI_MspDeInit(SAI_HandleTypeDef* hsai)
     */
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6);
 
+    /* SAI1 DMA Deinit */
+    HAL_DMA_DeInit(hsai->hdmarx);
+    HAL_DMA_DeInit(hsai->hdmatx);
     }
 }
 
