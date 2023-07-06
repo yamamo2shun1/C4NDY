@@ -338,53 +338,18 @@ void USBD_COMPOSITE_Mount_Class(void)
   uint8_t *ptr = NULL;
 
   ptr = USBD_HID.GetFSConfigDescriptor(&len);
-  USBD_Update_HID_DESC(ptr, 0x00, 0x81, 0);
+  USBD_Update_HID_DESC(ptr, 0x02, 0x81, 0);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
-
-#if 1
-  ptr = USBD_HID.GetHSConfigDescriptor(&len);
-  USBD_Update_HID_DESC(ptr, 0x00, 0x81, 0);
-  memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_HID_DESC, ptr + 0x09, len - 0x09);
-#endif
 
   ptr = USBD_AUDIO.GetFSConfigDescriptor(&len);
   USBD_Update_AUDIO_DESC(ptr,
+                         0x00,
                          0x01,
-                         0x02,
 						 0x02,
                          0);
   memcpy(USBD_COMPOSITE_FSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
 
-#if 1
-  ptr = USBD_AUDIO.GetHSConfigDescriptor(&len);
-  USBD_Update_AUDIO_DESC(ptr,
-                         0x01,
-                         0x02,
-						 0x02,
-                         0);
-
-  memcpy(USBD_COMPOSITE_HSCfgDesc.USBD_AUDIO_DESC, ptr + 0x09, len - 0x09);
-#endif
-
   uint16_t CFG_SIZE = sizeof(USBD_COMPOSITE_CFG_DESC_t);
-#if 1
-  ptr = USBD_COMPOSITE_HSCfgDesc.CONFIG_DESC;
-  /* Configuration Descriptor */
-  ptr[0] = 0x09;                        /* bLength: Configuration Descriptor size */
-  ptr[1] = USB_DESC_TYPE_CONFIGURATION; /* bDescriptorType: Configuration */
-  ptr[2] = LOBYTE(CFG_SIZE);            /* wTotalLength:no of returned bytes */
-  ptr[3] = HIBYTE(CFG_SIZE);
-  ptr[4] = 0x03;               /* bNumInterfaces: 3 interface */
-  ptr[5] = 0x01;               /* bConfigurationValue: Configuration value */
-  ptr[6] = 0x00;               /* iConfiguration: Index of string descriptor describing the configuration */
-#if (USBD_SELF_POWERED == 1U)
-  ptr[7] = 0xC0; /* bmAttributes: Bus Powered according to user configuration */
-#else
-  ptr[7] = 0x80; /* bmAttributes: Bus Powered according to user configuration */
-#endif
-  ptr[8] = USBD_MAX_POWER; /* MaxPower 500 mA */
-#endif
-
   ptr = USBD_COMPOSITE_FSCfgDesc.CONFIG_DESC;
   /* Configuration Descriptor */
   ptr[0] = 0x09;                        /* bLength: Configuration Descriptor size */
