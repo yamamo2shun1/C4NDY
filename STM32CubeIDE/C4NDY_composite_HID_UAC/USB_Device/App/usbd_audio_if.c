@@ -187,6 +187,7 @@ static int8_t AUDIO_AudioCmd_FS(uint8_t* pbuf, uint32_t size, uint8_t cmd)
   {
     case AUDIO_CMD_START:
     	//SEGGER_RTT_printf(0, "start\n");
+    	HAL_SAI_Transmit_DMA(&hsai_BlockB1, pbuf, size);
     break;
 
     case AUDIO_CMD_PLAY:
@@ -237,7 +238,7 @@ static int8_t AUDIO_PeriodicTC_FS(uint8_t *pbuf, uint32_t size, uint8_t cmd)
   UNUSED(cmd);
 
   //SEGGER_RTT_printf(0, "size = %d\n", size);
-  HAL_SAI_Transmit(&hsai_BlockB1, pbuf, size / 2, 0x0000FFFF);
+  //HAL_SAI_Transmit(&hsai_BlockB1, pbuf, size / 2, 0x0000FFFF);
 
   return (USBD_OK);
   /* USER CODE END 5 */

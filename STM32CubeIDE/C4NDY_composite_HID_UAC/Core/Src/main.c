@@ -18,6 +18,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
+#include "i2c.h"
 #include "quadspi.h"
 #include "sai.h"
 #include "usb_device.h"
@@ -273,9 +275,11 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_SAI1_Init();
   MX_QUADSPI1_Init();
   MX_USB_Device_Init();
+  MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -284,8 +288,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	detectSwitches();
     /* USER CODE END WHILE */
-	  detectSwitches();
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
