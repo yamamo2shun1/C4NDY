@@ -79,6 +79,7 @@
 #define USBD_SELF_POWERED       0U
 /*---------- -----------*/
 #define HID_FS_BINTERVAL     0x05U
+#define AUDIO_FS_BINTERVAL   0x01U
 #define USBD_AUDIO_FREQ     48000U
 
 /****************************************/
