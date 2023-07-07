@@ -216,12 +216,7 @@ static uint8_t USBD_COMPOSITE_Setup(USBD_HandleTypeDef *pdev,
   */
 static uint8_t USBD_COMPOSITE_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-  if (epnum == (HID_IN_EP & 0x7F))
-  {
-    return USBD_HID.DataIn(pdev, epnum);
-  }
-
-  return USBD_FAIL;
+  return USBD_HID.DataIn(pdev, epnum);
 }
 
 /**
@@ -272,6 +267,9 @@ static uint8_t USBD_COMPOSITE_SOF(USBD_HandleTypeDef *pdev)
   */
 static uint8_t USBD_COMPOSITE_IsoINIncomplete(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
+  UNUSED(pdev);
+  UNUSED(epnum);
+
   return (uint8_t)USBD_OK;
 }
 
@@ -284,10 +282,7 @@ static uint8_t USBD_COMPOSITE_IsoINIncomplete(USBD_HandleTypeDef *pdev, uint8_t 
   */
 static uint8_t USBD_COMPOSITE_IsoOutIncomplete(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-  if (epnum == AUDIO_OUT_EP)
-  {
-    USBD_AUDIO.IsoOUTIncomplete(pdev, epnum);
-  }
+  USBD_AUDIO.IsoOUTIncomplete(pdev, epnum);
 
   return (uint8_t)USBD_OK;
 }
@@ -300,12 +295,7 @@ static uint8_t USBD_COMPOSITE_IsoOutIncomplete(USBD_HandleTypeDef *pdev, uint8_t
   */
 static uint8_t USBD_COMPOSITE_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-  if (epnum == AUDIO_OUT_EP)
-  {
-    return USBD_AUDIO.DataOut(pdev, epnum);
-  }
-
-  return USBD_FAIL;
+  return USBD_AUDIO.DataOut(pdev, epnum);
 }
 
 /**
