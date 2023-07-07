@@ -112,6 +112,15 @@ uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y)
 	}
 }
 
+void resetKeys(void)
+{
+	keyboardHID.modifiers = 0;
+	for (int k = 0; k < 6; k++)
+	{
+		keyboardHID.key[k] = 0;
+	}
+}
+
 void clearKeys(uint8_t code)
 {
 	if (code == 0xFF)
@@ -289,6 +298,14 @@ int main(void)
   while (1)
   {
 	detectSwitches();
+
+	if (!HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin))
+	{
+		SEGGER_RTT_printf(0, "press!\n");
+		resetKeys();
+		USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
+	}
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
