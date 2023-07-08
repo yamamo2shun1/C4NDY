@@ -31,7 +31,12 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "usbd_core.h"
+#include "usbd_desc.h"
+#include "usbd_audio.h"
+#include "usbd_hid.h"
+#include "usbd_audio_if.h"
+#include "usbd_composite_builder.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

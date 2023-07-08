@@ -1,30 +1,25 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file           : usbd_conf.h
-  * @version        : v3.0_Cube
-  * @brief          : Header for usbd_conf.c file.
+  * @file    usbd_conf.h
+  * @author  MCD Application Team
+  * @brief   General low level driver configuration
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_CONF__H__
-#define __USBD_CONF__H__
-
-#ifdef __cplusplus
- extern "C" {
-#endif
+#ifndef __USBD_CONF_H
+#define __USBD_CONF_H
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
@@ -33,90 +28,57 @@
 #include "stm32g4xx.h"
 #include "stm32g4xx_hal.h"
 
-/* USER CODE BEGIN INCLUDE */
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
+/* Use the USBD Librairy V2.10.0 */
+#define USE_USB_DEVICE_LIB_V2_10_0
 
-/* USER CODE END INCLUDE */
+#define USE_USB_FS
 
-/** @addtogroup USBD_OTG_DRIVER
-  * @brief Driver for Usb device.
-  * @{
-  */
+/* Activate the IAD option */
+#define USBD_COMPOSITE_USE_IAD                        1U
 
-/** @defgroup USBD_CONF USBD_CONF
-  * @brief Configuration file for Usb otg low level driver.
-  * @{
-  */
+/* Activate the composite builder */
+#define USE_USBD_COMPOSITE
 
-/** @defgroup USBD_CONF_Exported_Variables USBD_CONF_Exported_Variables
-  * @brief Public variables.
-  * @{
-  */
+/* Activate HID and Audio classes in composite builder */
+#define USBD_CMPSIT_ACTIVATE_AUDIO                    1U
+#define USBD_CMPSIT_ACTIVATE_HID                      1U
 
-/* Private variables ---------------------------------------------------------*/
-/* USER CODE BEGIN PV */
-/* USER CODE END PV */
-/**
-  * @}
-  */
+/* The definition of endpoint numbers must respect the order of classes instantiation  */
+#define AUDIO_OUT_EP                                  0x01U
+#define HID_EPIN_ADDR                                 0x81U
 
-/** @defgroup USBD_CONF_Exported_Defines USBD_CONF_Exported_Defines
-  * @brief Defines for configuration of the Usb device.
-  * @{
-  */
+/* Exported constants --------------------------------------------------------*/
+/* Common Config */
+#define USBD_MAX_NUM_INTERFACES               3
+#define USBD_MAX_NUM_CONFIGURATION            1
+#define USBD_MAX_STR_DESC_SIZ                 64
+#define USBD_SELF_POWERED                     0
+#define USBD_DEBUG_LEVEL                      0
 
-/*---------- -----------*/
-#define USBD_MAX_NUM_INTERFACES    3U
-/*---------- -----------*/
-#define USBD_MAX_NUM_CONFIGURATION 1U
-/*---------- -----------*/
-#define USBD_MAX_STR_DESC_SIZ     512U
-/*---------- -----------*/
-#define USBD_DEBUG_LEVEL     0U
-/*---------- -----------*/
-#define USBD_LPM_ENABLED     1U
-/*---------- -----------*/
-#define USBD_MAX_POWER       0xFAU /* 500 mA */
-#define USBD_SELF_POWERED       0U
-/*---------- -----------*/
-#define HID_FS_BINTERVAL     0x05U
-#define AUDIO_FS_BINTERVAL   0x01U
-#define USBD_AUDIO_FREQ     48000U
+/* AUDIO Class Config */
+#define USBD_AUDIO_FREQ                       48000
 
-/****************************************/
-/* #define for FS and HS identification */
-#define DEVICE_FS 		0
-
-/**
-  * @}
-  */
-
-/** @defgroup USBD_CONF_Exported_Macros USBD_CONF_Exported_Macros
-  * @brief Aliases.
-  * @{
-  */
-
+/* Exported macro ------------------------------------------------------------*/
 /* Memory management macros */
-
 /** Alias for memory allocation. */
-#define USBD_HID_malloc         (void *)USBD_HID_static_malloc
-#define USBD_AUDIO_malloc       (void *)USBD_AUDIO_static_malloc
+#define USBD_malloc         malloc
 
 /** Alias for memory release. */
-#define USBD_free           USBD_static_free
+#define USBD_free           free
 
 /** Alias for memory set. */
 #define USBD_memset         memset
 
 /** Alias for memory copy. */
 #define USBD_memcpy         memcpy
-
 /** Alias for delay. */
 #define USBD_Delay          HAL_Delay
 
 /* DEBUG macros */
-
 #if (USBD_DEBUG_LEVEL > 0)
-#define USBD_UsrLog(...)    printf(__VA_ARGS__);\
+#define  USBD_UsrLog(...)   printf(__VA_ARGS__);\
                             printf("\n");
 #else
 #define USBD_UsrLog(...)
@@ -124,7 +86,7 @@
 
 #if (USBD_DEBUG_LEVEL > 1)
 
-#define USBD_ErrLog(...)    printf("ERROR: ") ;\
+#define  USBD_ErrLog(...)   printf("ERROR: ") ;\
                             printf(__VA_ARGS__);\
                             printf("\n");
 #else
@@ -132,50 +94,17 @@
 #endif
 
 #if (USBD_DEBUG_LEVEL > 2)
-#define USBD_DbgLog(...)    printf("DEBUG : ") ;\
+#define  USBD_DbgLog(...)   printf("DEBUG : ") ;\
                             printf(__VA_ARGS__);\
                             printf("\n");
 #else
 #define USBD_DbgLog(...)
 #endif
 
-/**
-  * @}
-  */
-
-/** @defgroup USBD_CONF_Exported_Types USBD_CONF_Exported_Types
-  * @brief Types.
-  * @{
-  */
-
-/**
-  * @}
-  */
-
-/** @defgroup USBD_CONF_Exported_FunctionsPrototype USBD_CONF_Exported_FunctionsPrototype
-  * @brief Declaration of public functions for Usb device.
-  * @{
-  */
-
 /* Exported functions -------------------------------------------------------*/
 void *USBD_static_malloc(uint32_t size);
 void USBD_static_free(void *p);
 
-/**
-  * @}
-  */
+#endif /* __USBD_CONF_H */
 
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* __USBD_CONF__H__ */
-
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

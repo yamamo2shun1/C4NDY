@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2015 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2015 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                      www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -41,7 +40,9 @@ extern "C" {
 /** @defgroup USBD_HID_Exported_Defines
   * @{
   */
+#ifndef HID_EPIN_ADDR
 #define HID_EPIN_ADDR                              0x81U
+#endif /* HID_EPIN_ADDR */
 #define HID_EPIN_SIZE                              0x08U
 
 #define USB_HID_CONFIG_DESC_SIZE                   34U
@@ -89,6 +90,23 @@ typedef struct
   uint32_t AltSetting;
   HID_StateTypeDef state;
 } USBD_HID_HandleTypeDef;
+
+/*
+ * HID Class specification version 1.1
+ * 6.2.1 HID Descriptor
+ */
+
+typedef struct
+{
+  uint8_t           bLength;
+  uint8_t           bDescriptorType;
+  uint16_t          bcdHID;
+  uint8_t           bCountryCode;
+  uint8_t           bNumDescriptors;
+  uint8_t           bHIDDescriptorType;
+  uint16_t          wItemLength;
+} __PACKED USBD_HIDDescTypeDef;
+
 /**
   * @}
   */
@@ -109,10 +127,6 @@ typedef struct
 
 extern USBD_ClassTypeDef USBD_HID;
 #define USBD_HID_CLASS &USBD_HID
-
-extern uint8_t HID_IN_EP;
-extern uint8_t HID_ITF_NBR;
-extern uint8_t HID_STR_DESC_IDX;
 /**
   * @}
   */
@@ -122,7 +136,6 @@ extern uint8_t HID_STR_DESC_IDX;
   */
 uint8_t USBD_HID_SendReport(USBD_HandleTypeDef *pdev, uint8_t *report, uint16_t len);
 uint32_t USBD_HID_GetPollingInterval(USBD_HandleTypeDef *pdev);
-void USBD_Update_HID_DESC(uint8_t *desc, uint8_t itf_no, uint8_t in_ep, uint8_t str_idx);
 
 /**
   * @}
@@ -141,4 +154,3 @@ void USBD_Update_HID_DESC(uint8_t *desc, uint8_t itf_no, uint8_t in_ep, uint8_t 
   * @}
   */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

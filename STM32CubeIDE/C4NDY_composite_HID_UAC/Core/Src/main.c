@@ -22,7 +22,6 @@
 #include "i2c.h"
 #include "quadspi.h"
 #include "sai.h"
-#include "usb_device.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -49,7 +48,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-extern USBD_HandleTypeDef hUsbDeviceFS;
+USBD_HandleTypeDef USBD_Device;
+extern PCD_HandleTypeDef hpcd;
+
+uint8_t HID_EpAdress = HID_EPIN_ADDR;
+uint8_t AUDIO_EpAdress = AUDIO_OUT_EP;
+uint8_t AUDIO_InstID, HID_InstID = 0;
 
 struct keyboardHID_t {
 	uint8_t modifiers;
@@ -244,7 +248,7 @@ void detectSwitches(void)
 	{
 		if (keyState[i] != 0x0 || (keyState[i] == 0x0 && keyState[i] != prevKeyState[i]))
 		{
-			USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
+			USBD_HID_SendReport(&USBD_Device, &keyboardHID, sizeof(keyboardHID));
 			break;
 		}
 	}
@@ -287,10 +291,31 @@ int main(void)
   MX_DMA_Init();
   MX_SAI1_Init();
   MX_QUADSPI1_Init();
-  MX_USB_Device_Init();
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
+  /* Init Device Library */
+  USBD_Init(&USBD_Device, &COMPOSITE_Desc, 0);
 
+  /* Store AUDIO instance Class ID */
+  AUDIO_InstID = USBD_Device.classId;
+
+  /* Add Audio Class */
+  USBD_RegisterClassComposite(&USBD_Device, USBD_AUDIO_CLASS, CLASS_TYPE_AUDIO, &AUDIO_EpAdress);
+
+  /* Store HID instance Class ID */
+  HID_InstID = USBD_Device.classId;
+
+  /* Add HID Class */
+  USBD_RegisterClassComposite(&USBD_Device, USBD_HID_CLASS, CLASS_TYPE_HID, &HID_EpAdress);
+
+  /* Add Interface callbacks for AUDIO Class */
+  if (USBD_CMPSIT_SetClassID(&USBD_Device, CLASS_TYPE_AUDIO, 0) != 0xFF)
+  {
+    USBD_AUDIO_RegisterInterface(&USBD_Device, &USBD_AUDIO_fops);
+  }
+
+  /* Start Device Process */
+  USBD_Start(&USBD_Device);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -303,7 +328,7 @@ int main(void)
 	{
 		SEGGER_RTT_printf(0, "press!\n");
 		resetKeys();
-		USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
+		USBD_HID_SendReport(&USBD_Device, &keyboardHID, sizeof(keyboardHID));
 	}
 
     /* USER CODE END WHILE */
