@@ -67,6 +67,8 @@ void Error_Handler(void);
 #define USER_SW_GPIO_Port GPIOB
 #define USER_LED_Pin GPIO_PIN_12
 #define USER_LED_GPIO_Port GPIOB
+#define CODEC_RST_Pin GPIO_PIN_15
+#define CODEC_RST_GPIO_Port GPIOA
 #define HC165_SL_Pin GPIO_PIN_7
 #define HC165_SL_GPIO_Port GPIOB
 #define HC165_QH_Pin GPIO_PIN_9
