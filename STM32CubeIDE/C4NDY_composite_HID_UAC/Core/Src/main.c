@@ -299,6 +299,20 @@ int main(void)
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
   default_download_IC_1();
+
+  /* Run the ADC calibration in single-ended mode */
+  if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK)
+  {
+	  /* Calibration Error */
+      Error_Handler();
+  }
+
+  uint16_t pot_value[2] = {0};
+  if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *)pot_value, 2) != HAL_OK)
+  {
+      /* ADC conversion start error */
+      Error_Handler();
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -313,6 +327,8 @@ int main(void)
 		resetKeys();
 		USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
 	}
+
+	SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0], pot_value[1]);
 
     /* USER CODE END WHILE */
 
