@@ -17,13 +17,14 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include "app_threadx.h"
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
 #include "i2c.h"
 #include "quadspi.h"
 #include "sai.h"
-#include "usb_device.h"
+#include "usb.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -56,7 +57,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-extern USBD_HandleTypeDef hUsbDeviceFS;
+//extern USBD_HandleTypeDef hUsbDeviceFS;
 
 struct keyboardHID_t {
 	uint8_t modifiers;
@@ -80,7 +81,7 @@ uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS] = {
 		{0x39, 0x04, 0x16, 0x07, 0x09, 0x0A, 0x0B, 0x0D, 0x0E, 0x0F, 0x33, 0x34, 0x31},
 //       LSFT  z     x     c     v     b     n     m     ,<    .>    /?    RSFT  `~
 		{0xE1, 0x1D, 0x1B, 0x06, 0x19, 0x05, 0x11, 0x10, 0x36, 0x37, 0x38, 0xE5, 0x35},
-//       GUI               LALT  BS    ENT   SPC   Int4  RCTRL ◄     ▼     ▲     ►
+//       GUI               LALT  BS    ENT   SPC   Int4  RCTRL ?��?     ▼     ▲     ►
 		{0xE3, 0xFE, 0xFF, 0xE2, 0x2A, 0x28, 0x2C, 0x8A, 0xE4, 0x50, 0x51, 0x52, 0x4F}
 };
 
@@ -94,7 +95,7 @@ uint8_t keymaps_pinkyless[MATRIX_ROWS][MATRIX_COLUMNS] = {
 		{0xE0, 0x13, 0x0C, 0x08, 0x04, 0x37, 0x07, 0x16, 0x17, 0x0B, 0x1D, 0x2D, 0x31},
 //       LSFT  j     q     ;:    k     x     b     m     w     n     v     RSFT  `~
 		{0xE1, 0x0D, 0x14, 0x33, 0x0E, 0x1B, 0x05, 0x10, 0x1A, 0x11, 0x19, 0xE5, 0x35},
-//       GUI               LALT  BS    DEL   ENT   SPC   CAPS  ◄     ▼     ▲     ►
+//       GUI               LALT  BS    DEL   ENT   SPC   CAPS  ?��?     ▼     ▲     ►
 		{0xE3, 0xFE, 0xFF, 0xE2, 0x2A, 0x4C, 0x28, 0x2C, 0x39, 0x50, 0x51, 0x52, 0x4F}
 };
 /* USER CODE END PV */
@@ -251,7 +252,7 @@ void detectSwitches(void)
 	{
 		if (keyState[i] != 0x0 || (keyState[i] == 0x0 && keyState[i] != prevKeyState[i]))
 		{
-			USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
+			//USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
 			break;
 		}
 	}
@@ -294,11 +295,11 @@ int main(void)
   MX_DMA_Init();
   MX_SAI1_Init();
   MX_QUADSPI1_Init();
-  MX_USB_Device_Init();
   MX_I2C2_Init();
   MX_ADC1_Init();
+  MX_USB_PCD_Init();
   /* USER CODE BEGIN 2 */
-  default_download_IC_1();
+  //default_download_IC_1();
 
   /* Run the ADC calibration in single-ended mode */
   if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK)
@@ -315,19 +316,23 @@ int main(void)
   }
   /* USER CODE END 2 */
 
+  MX_ThreadX_Init();
+
+  /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
 	detectSwitches();
 
+#if 0
 	if (!HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin))
 	{
 		SEGGER_RTT_printf(0, "press!\n");
 		resetKeys();
 		USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
 	}
-
+#endif
 	SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0], pot_value[1]);
 
     /* USER CODE END WHILE */

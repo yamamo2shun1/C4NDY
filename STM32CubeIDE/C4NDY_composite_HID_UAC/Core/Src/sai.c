@@ -66,7 +66,7 @@ void MX_SAI1_Init(void)
   hsai_BlockB1.FrameInit.FSDefinition = SAI_FS_STARTFRAME;
   hsai_BlockB1.FrameInit.FSPolarity = SAI_FS_ACTIVE_LOW;
   hsai_BlockB1.FrameInit.FSOffset = SAI_FS_FIRSTBIT;
-  hsai_BlockB1.SlotInit.FirstBitOffset = 1;
+  hsai_BlockB1.SlotInit.FirstBitOffset = 0;
   hsai_BlockB1.SlotInit.SlotSize = SAI_SLOTSIZE_DATASIZE;
   hsai_BlockB1.SlotInit.SlotNumber = 2;
   hsai_BlockB1.SlotInit.SlotActive = 0x0000FFFF;
@@ -74,7 +74,6 @@ void MX_SAI1_Init(void)
   {
     Error_Handler();
   }
-
   /* USER CODE BEGIN SAI1_Init 2 */
 
   /* USER CODE END SAI1_Init 2 */
