@@ -823,10 +823,13 @@ static void  USBD_FrameWork_HID_Desc(USBD_DevClassHandleTypeDef *pdev,
     case INTERFACE_HID_KEYBOARD:
 
       /* Append HID Interface descriptor to Configuration descriptor */
-      __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[0], 0U,
+      __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[0],//diff 0->2
+    		  	  	  	      0U,
                               (uint8_t)(pdev->tclasslist[pdev->classId].NumEps),
                               UX_DEVICE_CLASS_HID_CLASS,
-                              0x01U, INTERFACE_HID_KEYBOARD, 0U);
+                              0x01U,
+							  INTERFACE_HID_KEYBOARD,
+							  0U);
 
       /* Append HID Functional descriptor to Configuration descriptor */
       pHidDesc = ((USBD_HIDDescTypedef *)(pConf + *Sze));
@@ -898,6 +901,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   static USBD_AUDIOInputTerminalDescTypeDef    *pSpeakerITDesc;
   static USBD_AUDIOFeatureUnitPlayDescTypeDef  *pSpeakerFUDesc;
   static USBD_AUDIOOutputTerminalDescTypeDef   *pSpeakerOTDesc;
+  static USBD_AUDIOFeatureUnitPlayDescTypeDef  *pSpeakerOFUDesc;
 
 #if USBD_COMPOSITE_USE_IAD == 1
   static USBD_IadDescTypedef                   *pIadDesc;
@@ -907,7 +911,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pIadDesc                          = ((USBD_IadDescTypedef *)(pConf + *Sze));
   pIadDesc->bLength                 = (uint8_t)sizeof(USBD_IadDescTypedef);
   pIadDesc->bDescriptorType         = USB_DESC_TYPE_IAD; /* IAD descriptor */
-  pIadDesc->bFirstInterface         = pdev->tclasslist[pdev->classId].Ifs[0];
+  pIadDesc->bFirstInterface         = pdev->tclasslist[pdev->classId].Ifs[0];//diff 1->0
   pIadDesc->bInterfaceCount         = 0x02U;
   pIadDesc->bFunctionClass          = UX_DEVICE_CLASS_AUDIO_FUNCTION_CLASS;
   pIadDesc->bFunctionSubClass       = UX_DEVICE_CLASS_AUDIO_SUBCLASS_CONTROL;
@@ -917,7 +921,9 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
 #endif /* USBD_COMPOSITE_USE_IAD == 1 */
 
   /* Append AUDIO Interface descriptor to Configuration descriptor */
-  __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[0], 0x00U, 0x00U,
+  __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[0],//diff 1->0
+		  	  	  	  	  0x00U,
+						  0x00U,
                           UX_DEVICE_CLASS_AUDIO_CLASS, \
                           UX_DEVICE_CLASS_AUDIO_SUBCLASS_CONTROL,
                           UX_DEVICE_CLASS_AUDIO_FUNCTION_PROTOCOL_UNDEFINED,
@@ -928,10 +934,10 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pSpeakerACCSIfDesc->bLength = (uint8_t)sizeof(USBD_AUDIOCCSIfDescTypeDef);
   pSpeakerACCSIfDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
   pSpeakerACCSIfDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO_AC_HEADER;
-  pSpeakerACCSIfDesc->bcdADC = 0x0200U;
+  pSpeakerACCSIfDesc->bcdADC = 0x0100U;//diff 0x0100U
   pSpeakerACCSIfDesc->wTotalLength = 0x27;//USBD_CONFIG_DESCRIPTOR_AC_TOTAL_SIZE;
   pSpeakerACCSIfDesc->bInCollection = 0x01;
-  pSpeakerACCSIfDesc->baInterfaceNr = 0x01;//kaeru
+  pSpeakerACCSIfDesc->baInterfaceNr = 0x02;//diff 2->1
   *Sze += (uint32_t)sizeof(USBD_AUDIOCCSIfDescTypeDef);
 
 #if 0
@@ -953,7 +959,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pSpeakerITDesc->bLength = (uint8_t)sizeof(USBD_AUDIOInputTerminalDescTypeDef);
   pSpeakerITDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
   pSpeakerITDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO_AC_INPUT_TERMINAL;
-  pSpeakerITDesc->bTerminalID = USB_AUDIO_CONFIG_PLAY_TERMINAL_INPUT_ID;
+  pSpeakerITDesc->bTerminalID = USB_AUDIO_CONFIG_PLAY_TERMINAL_INPUT_ID;//diff 0x12->0x01
   pSpeakerITDesc->wTerminalType = UX_DEVICE_CLASS_AUDIO_USB_STREAMING;
   pSpeakerITDesc->bAssocTerminal = 0x00U;
   pSpeakerITDesc->bNrChannels = USB_AUDIO_CONFIG_PLAY_CHANNEL_COUNT;
@@ -968,7 +974,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pSpeakerFUDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
   pSpeakerFUDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO_AC_FEATURE_UNIT;
   pSpeakerFUDesc->bUnitID = USB_AUDIO_CONFIG_PLAY_UNIT_FEATURE_ID;
-  pSpeakerFUDesc->bSourceID = USB_AUDIO_CONFIG_PLAY_TERMINAL_INPUT_ID;
+  pSpeakerFUDesc->bSourceID = USB_AUDIO_CONFIG_PLAY_TERMINAL_INPUT_ID;//diff 0x12->0x01
   pSpeakerFUDesc->bControlSize = 0x01;
   pSpeakerFUDesc->bmaControls[0] = USBD_AUDIO_FU_CONTROL_MUTE;
   pSpeakerFUDesc->bmaControls[1] = 0x00U;
@@ -981,16 +987,30 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pSpeakerOTDesc->bLength = (uint8_t)sizeof(USBD_AUDIOOutputTerminalDescTypeDef);
   pSpeakerOTDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
   pSpeakerOTDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO_AC_OUTPUT_TERMINAL;
-  pSpeakerOTDesc->bTerminalID = USB_AUDIO_CONFIG_PLAY_TERMINAL_OUTPUT_ID;
+  pSpeakerOTDesc->bTerminalID = USB_AUDIO_CONFIG_PLAY_TERMINAL_OUTPUT_ID;//diff 0x14->0x03
   pSpeakerOTDesc->wTerminalType = UX_DEVICE_CLASS_AUDIO_SPEAKER;
   pSpeakerOTDesc->bAssocTerminal = 0x00U;
-  pSpeakerOTDesc->bSourceID = USB_AUDIO_CONFIG_PLAY_UNIT_FEATURE_ID;
+  pSpeakerOTDesc->bSourceID = USB_AUDIO_CONFIG_PLAY_UNIT_FEATURE_ID;//diff 0x16->0x02
   pSpeakerOTDesc->iTerminal = 0x00U;
   *Sze += (uint32_t)sizeof(USBD_AUDIOOutputTerminalDescTypeDef);
 
+  /*Append USB Speaker Audio Feature Unit Descriptor to Configuration descriptor */
+  pSpeakerOFUDesc = ((USBD_AUDIOFeatureUnitPlayDescTypeDef *)(pConf + *Sze));
+  pSpeakerOFUDesc->bLength = (uint8_t)sizeof(USBD_AUDIOFeatureUnitPlayDescTypeDef);
+  pSpeakerOFUDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
+  pSpeakerOFUDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO_AC_FEATURE_UNIT;
+  pSpeakerOFUDesc->bUnitID = USB_AUDIO_CONFIG_PLAY_UNIT_FEATURE_ID;
+  pSpeakerOFUDesc->bSourceID = USB_AUDIO_CONFIG_PLAY_TERMINAL_OUTPUT_ID;//diff 0x14->0x03
+  pSpeakerOFUDesc->bControlSize = 0x01;
+  pSpeakerOFUDesc->bmaControls[0] = USBD_AUDIO_FU_CONTROL_MUTE;
+  pSpeakerOFUDesc->bmaControls[1] = 0x00U;
+  pSpeakerOFUDesc->bmaControls[2] = 0x00U;
+  pSpeakerOFUDesc->iFeature = 0x00;
+  *Sze += (uint32_t)sizeof(USBD_AUDIOFeatureUnitPlayDescTypeDef);
+
   /* USB Speaker Standard AS Interface Descriptor - Audio Streaming Zero Bandwidth */
   /* Interface 1, Alternate Setting 0*/
-  __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[USBD_AUDIO_AS_PLAY_INTERFACE],
+  __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[USBD_AUDIO_AS_PLAY_INTERFACE],//diff 2->1
                           0x00U,
                           0x00U,
                           UX_DEVICE_CLASS_AUDIO_CLASS, \
@@ -1000,7 +1020,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
 
   /* USB Speaker Standard AS Interface Descriptor -Audio Streaming Operational */
   /* Interface 1, Alternate Setting 1*/
-  __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[USBD_AUDIO_AS_PLAY_INTERFACE],
+  __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[USBD_AUDIO_AS_PLAY_INTERFACE],//diff 2->1
                           0x01U,
                           0x01U,
                           UX_DEVICE_CLASS_AUDIO_CLASS, \
@@ -1013,7 +1033,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pSpeakerASCSIfDesc->bLength = (uint8_t)sizeof(USBD_AUDIOSCSIfDescTypeDef);
   pSpeakerASCSIfDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
   pSpeakerASCSIfDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO_AS_GENERAL;
-  pSpeakerASCSIfDesc->bTerminalLink = USB_AUDIO_CONFIG_PLAY_TERMINAL_INPUT_ID;
+  pSpeakerASCSIfDesc->bTerminalLink = USB_AUDIO_CONFIG_PLAY_TERMINAL_INPUT_ID;//diff 0x12->0x01
   pSpeakerASCSIfDesc->wFormatTag = 0x0001;
   *Sze += (uint32_t)sizeof(USBD_AUDIOSCSIfDescTypeDef);
 
@@ -1033,7 +1053,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   *Sze += (uint32_t)sizeof(USBD_AUDIOSFormatIfDescTypeDef);
 
   /* Append Endpoint descriptor to Configuration descriptor */
-  __USBD_FRAMEWORK_SET_EP((pdev->tclasslist[pdev->classId].Eps[0].add),
+  __USBD_FRAMEWORK_SET_EP((pdev->tclasslist[pdev->classId].Eps[0].add),//diff 0x02->0x01
                           (USBD_EP_TYPE_ISOC|USBD_EP_ATTR_ISOC_SYNC),
                           (uint16_t)(pdev->tclasslist[pdev->classId].Eps[0].size),
                           (0x01U), (0x01U));

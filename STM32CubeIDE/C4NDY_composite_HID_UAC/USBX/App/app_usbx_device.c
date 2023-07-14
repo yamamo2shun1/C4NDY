@@ -270,7 +270,7 @@ VOID USBX_APP_Device_Init(VOID)
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x00, PCD_SNG_BUF, 0x20);
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x80, PCD_SNG_BUF, 0x60);
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x81, PCD_SNG_BUF, 0xA0);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x01, PCD_SNG_BUF, 0xE0);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x02, PCD_SNG_BUF, 0xE0);
   //HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x82, PCD_SNG_BUF, 0x120);
   //HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x83, PCD_SNG_BUF, 0x140);
 

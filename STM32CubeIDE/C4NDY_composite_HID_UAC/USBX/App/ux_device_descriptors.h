@@ -395,8 +395,8 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 
 /* Device HID Keyboard */
 #define USBD_HID_KEYBOARD_EPIN_ADDR                   0x81U
-#define USBD_HID_KEYBOARD_EPIN_FS_MPS                 4U
-#define USBD_HID_KEYBOARD_EPIN_HS_MPS                 4U
+#define USBD_HID_KEYBOARD_EPIN_FS_MPS                 8U
+#define USBD_HID_KEYBOARD_EPIN_HS_MPS                 8U
 #define USBD_HID_KEYBOARD_EPIN_FS_BINTERVAL           5U
 #define USBD_HID_KEYBOARD_EPIN_HS_BINTERVAL           5U
 
@@ -424,7 +424,7 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 #define USBD_CONFIG_DESCRIPTOR_AC_TOTAL_SIZE          sizeof(USBD_AUDIOCCSIfDescTypeDef)+\
                                                       USBD_PLAYBACK_AC_INTERFACE_SIZE\
 
-#define USBD_AUDIO_EPOUT_ADDR                         0x01
+#define USBD_AUDIO_EPOUT_ADDR                         0x02
 #define USBD_AUDIO_EPOUT_Feedback_ADDR                0x81
 #define USBD_AUDIO_EPIN_ADDR                          0x82
 
