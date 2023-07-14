@@ -23,7 +23,15 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "ux_api.h"
+#include "ux_system.h"
+#include "ux_utility.h"
+#include "ux_device_stack.h"
 #include "ux_dcd_stm32.h"
+#include "ux_device_audio.h"
+#include "ux_device_class_audio.h"
+#include "ux_device_class_audio20.h"
+#include "ux_device_descriptors.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -33,7 +41,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define USBX_APP_STACK_SIZE             1024
+#define USBX_MEMORY_SIZE                (40 * 1024)
+#define FRAME_BUFFER_NUNMBER            2
+#define AUDIO_OUT_INSTANCE              1
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -45,17 +56,26 @@
 
 static ULONG hid_keyboard_interface_number;
 static ULONG hid_keyboard_configuration_number;
+static ULONG audio_interface_number;
+static ULONG audio_configuration_number;
 static UX_SLAVE_CLASS_HID_PARAMETER hid_keyboard_parameter;
 static TX_THREAD ux_device_app_thread;
 
 /* USER CODE BEGIN PV */
+AUDIO_ProcessTypdef haudio;
+UX_DEVICE_CLASS_AUDIO                  *audio;
+UX_DEVICE_CLASS_AUDIO_STREAM           *stream_read;
+UX_DEVICE_CLASS_AUDIO_PARAMETER         audio_parameter;
+UX_DEVICE_CLASS_AUDIO_STREAM_PARAMETER  audio_stream_parameter[1];
+TX_THREAD       ux_app_thread;
+TX_THREAD       ux_audio_play_thread;
 extern PCD_HandleTypeDef hpcd_USB_FS;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 static VOID app_ux_device_thread_entry(ULONG thread_input);
 /* USER CODE BEGIN PFP */
-
+VOID  usbx_app_thread_entry(ULONG arg);
 /* USER CODE END PFP */
 
 /**
@@ -159,6 +179,36 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
     /* USER CODE END USBX_DEVICE_HID_KEYBOARD_REGISTER_ERORR */
   }
 
+  /* Set the parameters for Audio streams.  */
+  audio_stream_parameter[0].ux_device_class_audio_stream_parameter_callbacks.ux_device_class_audio_stream_change     = Audio_ReadChange;
+  audio_stream_parameter[0].ux_device_class_audio_stream_parameter_callbacks.ux_device_class_audio_stream_frame_done = Audio_ReadDone;
+  audio_stream_parameter[0].ux_device_class_audio_stream_parameter_max_frame_buffer_nb   = FRAME_BUFFER_NUNMBER;
+  audio_stream_parameter[0].ux_device_class_audio_stream_parameter_max_frame_buffer_size = USBD_AUDIO_EPIN_HS_MPS;
+  audio_stream_parameter[0].ux_device_class_audio_stream_parameter_thread_entry = ux_device_class_audio_read_thread_entry;
+  
+  /* Set the parameters for Audio device.  */
+  audio_parameter.ux_device_class_audio_parameter_streams_nb  = 1;
+  audio_parameter.ux_device_class_audio_parameter_streams     = audio_stream_parameter;
+  audio_parameter.ux_device_class_audio_parameter_callbacks.ux_slave_class_audio_instance_activate   = Audio_Init;
+  audio_parameter.ux_device_class_audio_parameter_callbacks.ux_slave_class_audio_instance_deactivate = Audio_DeInit;
+  audio_parameter.ux_device_class_audio_parameter_callbacks.ux_device_class_audio_control_process    = Audio_Control;
+  
+  /* Get audio configuration number */
+  audio_configuration_number = USBD_Get_Configuration_Number(CLASS_TYPE_AUDIO, 0);
+
+  /* Find audio interface number */
+  audio_interface_number = USBD_Get_Interface_Number(CLASS_TYPE_AUDIO, 0);
+
+  /* Initialize the device Audio class. This class owns interfaces starting with 0. */
+  if( ux_device_stack_class_register(_ux_system_slave_class_audio_name,
+		  	  	  	  	  	  	  	 ux_device_class_audio_entry,
+                                     1,
+									 0,
+									 &audio_parameter) != UX_SUCCESS)
+  {
+    Error_Handler();
+  }
+
   /* Allocate the stack for device application main thread */
   if (tx_byte_allocate(byte_pool, (VOID **) &pointer, UX_DEVICE_APP_THREAD_STACK_SIZE,
                        TX_NO_WAIT) != TX_SUCCESS)
@@ -220,7 +270,7 @@ VOID USBX_APP_Device_Init(VOID)
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x00, PCD_SNG_BUF, 0x20);
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x80, PCD_SNG_BUF, 0x60);
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x81, PCD_SNG_BUF, 0xA0);
-  //HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x01, PCD_SNG_BUF, 0xE0);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x01, PCD_SNG_BUF, 0xE0);
   //HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x82, PCD_SNG_BUF, 0x120);
   //HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x83, PCD_SNG_BUF, 0x140);
 
