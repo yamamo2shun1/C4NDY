@@ -371,7 +371,7 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 #define USBD_PID                                      0x0003
 #define USBD_LANGID_STRING                            1033
 #define USBD_MANUFACTURER_STRING                      "Yamamoto Works Ltd."
-#define USBD_PRODUCT_STRING                           "C4NDY Composite UAC_HID"
+#define USBD_PRODUCT_STRING                           "C4NDY Composite HID_UAC"
 #define USBD_SERIAL_NUMBER                            "000000000001"
 
 #define USB_DESC_TYPE_INTERFACE                       0x04U
@@ -416,9 +416,9 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 
 #define USBD_AUDIO_AS_PLAY_INTERFACE                  0x01U
 
-#define USB_AUDIO_CONFIG_PLAY_TERMINAL_INPUT_ID       0x12
-#define USB_AUDIO_CONFIG_PLAY_UNIT_FEATURE_ID         0x16
-#define USB_AUDIO_CONFIG_PLAY_TERMINAL_OUTPUT_ID      0x14
+#define USB_AUDIO_CONFIG_PLAY_TERMINAL_INPUT_ID       0x01
+#define USB_AUDIO_CONFIG_PLAY_UNIT_FEATURE_ID         0x02
+#define USB_AUDIO_CONFIG_PLAY_TERMINAL_OUTPUT_ID      0x03
 #define USB_AUDIO_CONFIG_PLAY_CLOCK_SOURCE_ID         0x18
 #define USB_AUDIO_CONFIG_PLAY_SAMPLING_FREQUENCY      48000
 #define USB_AUDIO_CONFIG_PLAY_CHANNEL_COUNT           0x02 /* stereo audio  */
@@ -431,14 +431,12 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 #define USBD_PLAYBACK_AC_INTERFACE_SIZE               sizeof(USBD_AUDIOInputTerminalDescTypeDef)+\
                                                       sizeof(USBD_AUDIOFeatureUnitPlayDescTypeDef)+\
                                                       sizeof(USBD_AUDIOOutputTerminalDescTypeDef)+\
-                                                      sizeof(USBD_AUDIOClockSourceDescTypeDef)\
+                                                      sizeof(USBD_AUDIOFeatureUnitPlayDescTypeDef)\
 
 #define USBD_CONFIG_DESCRIPTOR_AC_TOTAL_SIZE          sizeof(USBD_AUDIOCCSIfDescTypeDef)+\
                                                       USBD_PLAYBACK_AC_INTERFACE_SIZE\
 
 #define USBD_AUDIO_EPOUT_ADDR                         0x02
-#define USBD_AUDIO_EPOUT_Feedback_ADDR                0x81
-#define USBD_AUDIO_EPIN_ADDR                          0x82
 
 #define USBD_AUDIO_EPIN_FS_MPS                        (((USB_AUDIO_CONFIG_PLAY_SAMPLING_FREQUENCY + 999)/1000) *\
                                                       USB_AUDIO_CONFIG_PLAY_CHANNEL_COUNT *\
@@ -459,7 +457,7 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 #endif /* USBD_CONFIG_STR_DESC_IDX */
 
 #ifndef USBD_CONFIG_BMATTRIBUTES
-#define USBD_CONFIG_BMATTRIBUTES                      0xC0U
+#define USBD_CONFIG_BMATTRIBUTES                      0x80U
 #endif /* USBD_CONFIG_BMATTRIBUTES */
 
 /* Private macro -----------------------------------------------------------*/

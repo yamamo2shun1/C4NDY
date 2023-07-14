@@ -1044,13 +1044,13 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pSpeakerASFormatDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
   pSpeakerASFormatDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO_AS_FORMAT_TYPE;
   pSpeakerASFormatDesc->bFormatType = UX_DEVICE_CLASS_AUDIO_FORMAT_TYPE_I;
-  pSpeakerASFormatDesc->bNrChannels = 0x02;
-  pSpeakerASFormatDesc->bSubFrameSize = 0x02;
-  pSpeakerASFormatDesc->bBitResolution = 16;
+  pSpeakerASFormatDesc->bNrChannels = USB_AUDIO_CONFIG_PLAY_CHANNEL_COUNT;
+  pSpeakerASFormatDesc->bSubFrameSize = USB_AUDIO_CONFIG_PLAY_RES_BYTE;
+  pSpeakerASFormatDesc->bBitResolution = USB_AUDIO_CONFIG_PLAY_RES_BIT;
   pSpeakerASFormatDesc->bSamFreqType = 0x01;
-  pSpeakerASFormatDesc->sampleFreq[0] = (uint8_t)(48000);
-  pSpeakerASFormatDesc->sampleFreq[1] = (uint8_t)((48000 >> 8));
-  pSpeakerASFormatDesc->sampleFreq[2] = (uint8_t)((48000 >> 16));
+  pSpeakerASFormatDesc->sampleFreq[0] = (uint8_t)(USB_AUDIO_CONFIG_PLAY_SAMPLING_FREQUENCY);
+  pSpeakerASFormatDesc->sampleFreq[1] = (uint8_t)((USB_AUDIO_CONFIG_PLAY_SAMPLING_FREQUENCY >> 8));
+  pSpeakerASFormatDesc->sampleFreq[2] = (uint8_t)((USB_AUDIO_CONFIG_PLAY_SAMPLING_FREQUENCY >> 16));
   *Sze += (uint32_t)sizeof(USBD_AUDIOSFormatIfDescTypeDef);
 
   /* Append Endpoint descriptor to Configuration descriptor */
