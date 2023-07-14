@@ -179,6 +179,18 @@ typedef struct
   uint8_t bEndpointAddress;
   uint8_t bmAttributes;
   uint16_t wMaxPacketSize;
+  uint16_t bInterval;
+  uint8_t bSyncAddress;
+} __PACKED USBD_EpSyncDescTypedef;
+
+/* USB endpoint descriptors structure */
+typedef struct
+{
+  uint8_t bLength;
+  uint8_t bDescriptorType;
+  uint8_t bEndpointAddress;
+  uint8_t bmAttributes;
+  uint16_t wMaxPacketSize;
   uint8_t bInterval;
 } __PACKED USBD_EpDescTypedef;
 
@@ -452,7 +464,25 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 
 /* Private macro -----------------------------------------------------------*/
 /* USER CODE BEGIN Private_macro */
-
+#define __USBD_FRAMEWORK_SET_EP_SYNC(epadd, eptype, epsize, HSinterval, FSinterval, syncadd) do { \
+                                /* Append Endpoint descriptor to Configuration descriptor */ \
+                                pEpDesc = ((USBD_EpSyncDescTypedef*)((uint32_t)pConf + *Sze)); \
+                                pEpDesc->bLength            = (uint8_t)sizeof(USBD_EpSyncDescTypedef); \
+                                pEpDesc->bDescriptorType    = USB_DESC_TYPE_ENDPOINT; \
+                                pEpDesc->bEndpointAddress   = (epadd); \
+                                pEpDesc->bmAttributes       = (eptype); \
+                                pEpDesc->wMaxPacketSize     = (epsize); \
+                                if(pdev->Speed == USBD_HIGH_SPEED) \
+                                { \
+                                  pEpDesc->bInterval        = (HSinterval); \
+                                } \
+                                else \
+                                { \
+                                  pEpDesc->bInterval        = (FSinterval); \
+                                } \
+								pEpDesc->bSyncAddress       = (syncadd); \
+                                *Sze += (uint32_t)sizeof(USBD_EpSyncDescTypedef); \
+                              } while(0)
 /* USER CODE END Private_macro */
 #define __USBD_FRAMEWORK_SET_EP(epadd, eptype, epsize, HSinterval, FSinterval) do { \
                                 /* Append Endpoint descriptor to Configuration descriptor */ \

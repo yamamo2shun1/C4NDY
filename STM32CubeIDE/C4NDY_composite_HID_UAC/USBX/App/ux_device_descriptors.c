@@ -891,7 +891,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
 {
 
   static USBD_IfDescTypedef                    *pIfDesc;
-  static USBD_EpDescTypedef                    *pEpDesc;
+  static USBD_EpSyncDescTypedef                *pEpDesc;
 
   static USBD_AUDIOCCSIfDescTypeDef            *pSpeakerACCSIfDesc;
   static USBD_AUDIOSCSIfDescTypeDef            *pSpeakerASCSIfDesc;
@@ -1054,10 +1054,10 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   *Sze += (uint32_t)sizeof(USBD_AUDIOSFormatIfDescTypeDef);
 
   /* Append Endpoint descriptor to Configuration descriptor */
-  __USBD_FRAMEWORK_SET_EP((pdev->tclasslist[pdev->classId].Eps[0].add),//diff 0x02->0x01
-                          (USBD_EP_TYPE_ISOC|USBD_EP_ATTR_ISOC_SYNC),
+  __USBD_FRAMEWORK_SET_EP_SYNC((pdev->tclasslist[pdev->classId].Eps[0].add),//diff 0x02->0x01
+                          (USBD_EP_TYPE_ISOC),
                           (uint16_t)(pdev->tclasslist[pdev->classId].Eps[0].size),
-                          (0x01U), (0x01U));
+                          (0x01U), (0x01U), (0x00U));
 
   /* Class-Specific AS Isochronous Audio Data Endpoint Descriptor*/
   pSpeakerASCSEpDesc = ((USBD_AUDIOSCSEpDescTypeDef *)(pConf + *Sze));
