@@ -180,8 +180,6 @@ typedef struct
   uint8_t bmAttributes;
   uint16_t wMaxPacketSize;
   uint8_t bInterval;
-  uint8_t bRefresh;
-  uint8_t bSyncAddress;
 } __PACKED USBD_EpDescTypedef;
 
 /* USB Config descriptors structure */
@@ -238,6 +236,7 @@ typedef struct
   uint8_t           baInterfaceNr;
 } __PACKED USBD_AUDIOCCSIfDescTypeDef;
 
+#if 0
 /* Clock Source Descriptor */
 typedef struct
 {
@@ -250,6 +249,7 @@ typedef struct
   uint8_t           bAssocTerminal;
   uint8_t           iClockSource;
 } __PACKED USBD_AUDIOClockSourceDescTypeDef;
+#endif
 
 /* Input Terminal Descriptor */
 typedef struct

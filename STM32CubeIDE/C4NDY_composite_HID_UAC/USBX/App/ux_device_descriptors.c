@@ -873,6 +873,7 @@ static void  USBD_FrameWork_HID_Desc(USBD_DevClassHandleTypeDef *pdev,
 }
 #endif /* USBD_HID_CLASS_ACTIVATED */
 
+/* USER CODE BEGIN 1 */
 #if USBD_AUDIO_CLASS_ACTIVATED == 1
 /**
   * @brief  USBD_FrameWork_AUDIO_Desc
@@ -906,7 +907,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pIadDesc                          = ((USBD_IadDescTypedef *)(pConf + *Sze));
   pIadDesc->bLength                 = (uint8_t)sizeof(USBD_IadDescTypedef);
   pIadDesc->bDescriptorType         = USB_DESC_TYPE_IAD; /* IAD descriptor */
-  pIadDesc->bFirstInterface         = pdev->tclasslist[pdev->classId].Ifs[1];
+  pIadDesc->bFirstInterface         = pdev->tclasslist[pdev->classId].Ifs[0];
   pIadDesc->bInterfaceCount         = 0x02U;
   pIadDesc->bFunctionClass          = UX_DEVICE_CLASS_AUDIO_FUNCTION_CLASS;
   pIadDesc->bFunctionSubClass       = UX_DEVICE_CLASS_AUDIO_SUBCLASS_CONTROL;
@@ -916,12 +917,10 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
 #endif /* USBD_COMPOSITE_USE_IAD == 1 */
 
   /* Append AUDIO Interface descriptor to Configuration descriptor */
-  __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[0],
-		    			  0x00U,
-						  0x00U,
+  __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[0], 0x00U, 0x00U,
                           UX_DEVICE_CLASS_AUDIO_CLASS, \
                           UX_DEVICE_CLASS_AUDIO_SUBCLASS_CONTROL,
-						  UX_DEVICE_CLASS_AUDIO_FUNCTION_PROTOCOL_UNDEFINED,
+                          UX_DEVICE_CLASS_AUDIO_FUNCTION_PROTOCOL_UNDEFINED,
                           0x00U);
 
   /* Append AUDIO USB Speaker Class-specific AC Interface descriptor to Configuration descriptor */
@@ -929,11 +928,25 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pSpeakerACCSIfDesc->bLength = (uint8_t)sizeof(USBD_AUDIOCCSIfDescTypeDef);
   pSpeakerACCSIfDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
   pSpeakerACCSIfDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO_AC_HEADER;
-  pSpeakerACCSIfDesc->bcdADC = 0x0100U;
+  pSpeakerACCSIfDesc->bcdADC = 0x0200U;
   pSpeakerACCSIfDesc->wTotalLength = 0x27;//USBD_CONFIG_DESCRIPTOR_AC_TOTAL_SIZE;
   pSpeakerACCSIfDesc->bInCollection = 0x01;
   pSpeakerACCSIfDesc->baInterfaceNr = 0x01;//kaeru
   *Sze += (uint32_t)sizeof(USBD_AUDIOCCSIfDescTypeDef);
+
+#if 0
+  /* Append USB Speaker Clock Source Descriptor to Configuration descriptor*/
+  pSpeakerCSDesc = ((USBD_AUDIOClockSourceDescTypeDef *)(pConf + *Sze));
+  pSpeakerCSDesc->bLength = (uint8_t)sizeof(USBD_AUDIOClockSourceDescTypeDef);
+  pSpeakerCSDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
+  pSpeakerCSDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO20_AC_CLOCK_SOURCE;
+  pSpeakerCSDesc->bClockID = USB_AUDIO_CONFIG_PLAY_CLOCK_SOURCE_ID;
+  pSpeakerCSDesc->bmAttributes = 0x01U;
+  pSpeakerCSDesc->bmControls = 0x01U;
+  pSpeakerCSDesc->bAssocTerminal = 0x00U;
+  pSpeakerCSDesc->iClockSource = 0x00U;
+  *Sze += (uint32_t)sizeof(USBD_AUDIOClockSourceDescTypeDef);
+#endif
 
   /* Append USB Speaker Input Terminal Descriptor to Configuration descriptor*/
   pSpeakerITDesc = ((USBD_AUDIOInputTerminalDescTypeDef *)(pConf + *Sze));
@@ -975,20 +988,6 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pSpeakerOTDesc->iTerminal = 0x00U;
   *Sze += (uint32_t)sizeof(USBD_AUDIOOutputTerminalDescTypeDef);
 
-#if 0
-  /* Append USB Speaker Clock Source Descriptor to Configuration descriptor*/
-  pSpeakerCSDesc = ((USBD_AUDIOClockSourceDescTypeDef *)(pConf + *Sze));
-  pSpeakerCSDesc->bLength = (uint8_t)sizeof(USBD_AUDIOClockSourceDescTypeDef);
-  pSpeakerCSDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
-  pSpeakerCSDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO20_AC_CLOCK_SOURCE;
-  pSpeakerCSDesc->bClockID = USB_AUDIO_CONFIG_PLAY_CLOCK_SOURCE_ID;
-  pSpeakerCSDesc->bmAttributes = 0x01U;
-  pSpeakerCSDesc->bmControls = 0x01U;
-  pSpeakerCSDesc->bAssocTerminal = 0x00U;
-  pSpeakerCSDesc->iClockSource = 0x00U;
-  *Sze += (uint32_t)sizeof(USBD_AUDIOClockSourceDescTypeDef);
-#endif
-
   /* USB Speaker Standard AS Interface Descriptor - Audio Streaming Zero Bandwidth */
   /* Interface 1, Alternate Setting 0*/
   __USBD_FRAMEWORK_SET_IF(pdev->tclasslist[pdev->classId].Ifs[USBD_AUDIO_AS_PLAY_INTERFACE],
@@ -996,7 +995,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
                           0x00U,
                           UX_DEVICE_CLASS_AUDIO_CLASS, \
                           UX_DEVICE_CLASS_AUDIO_SUBCLASS_AUDIOSTREAMING,
-						  UX_DEVICE_CLASS_AUDIO_FUNCTION_PROTOCOL_UNDEFINED,
+                          UX_DEVICE_CLASS_AUDIO_FUNCTION_PROTOCOL_UNDEFINED,
                           0x00U);
 
   /* USB Speaker Standard AS Interface Descriptor -Audio Streaming Operational */
@@ -1006,7 +1005,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
                           0x01U,
                           UX_DEVICE_CLASS_AUDIO_CLASS, \
                           UX_DEVICE_CLASS_AUDIO_SUBCLASS_AUDIOSTREAMING,
-						  UX_DEVICE_CLASS_AUDIO_FUNCTION_PROTOCOL_UNDEFINED,
+                          UX_DEVICE_CLASS_AUDIO_FUNCTION_PROTOCOL_UNDEFINED,
                           0x00U);
 
   /* USB Speaker Audio Streaming Class-Specific Interface Descriptor */
@@ -1037,8 +1036,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   __USBD_FRAMEWORK_SET_EP((pdev->tclasslist[pdev->classId].Eps[0].add),
                           (USBD_EP_TYPE_ISOC|USBD_EP_ATTR_ISOC_SYNC),
                           (uint16_t)(pdev->tclasslist[pdev->classId].Eps[0].size),
-                          (0x01U),
-						  (0x01U));
+                          (0x01U), (0x01U));
 
   /* Class-Specific AS Isochronous Audio Data Endpoint Descriptor*/
   pSpeakerASCSEpDesc = ((USBD_AUDIOSCSEpDescTypeDef *)(pConf + *Sze));
@@ -1055,7 +1053,4 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   ((USBD_ConfigDescTypedef *)pConf)->wDescriptorLength = *Sze;
 }
 #endif /* USBD_AUDIO_CLASS_ACTIVATED == 1 */
-
-/* USER CODE BEGIN 1 */
-
 /* USER CODE END 1 */
