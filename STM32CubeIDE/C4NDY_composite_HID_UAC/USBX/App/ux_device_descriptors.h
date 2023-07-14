@@ -30,6 +30,8 @@ extern "C" {
 #include "ux_stm32_config.h"
 #include "ux_device_class_hid.h"
 
+#include "ux_device_class_audio.h"
+#include "ux_device_class_audio20.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -42,6 +44,7 @@ extern "C" {
 #define USBD_MAX_CLASS_INTERFACES                      11U
 
 #define USBD_HID_CLASS_ACTIVATED                       1U
+#define USBD_AUDIO_CLASS_ACTIVATED                     1U
 
 #define USBD_HID_KEYBOARD_ACTIVATED                    1U
 
@@ -60,15 +63,7 @@ typedef enum
 {
   CLASS_TYPE_NONE     = 0,
   CLASS_TYPE_HID      = 1,
-  CLASS_TYPE_CDC_ACM  = 2,
-  CLASS_TYPE_MSC      = 3,
-  CLASS_TYPE_CDC_ECM  = 4,
-  CLASS_TYPE_DFU      = 5,
-  CLASS_TYPE_VIDEO    = 6,
-  CLASS_TYPE_PIMA_MTP = 7,
-  CLASS_TYPE_CCID     = 8,
-  CLASS_TYPE_PRINTER  = 9,
-  CLASS_TYPE_RNDIS    = 10,
+  CLASS_TYPE_AUDIO    = 2,
 } USBD_CompositeClassTypeDef;
 
 /* Enum HID Interface Type */
@@ -185,6 +180,8 @@ typedef struct
   uint8_t bmAttributes;
   uint16_t wMaxPacketSize;
   uint8_t bInterval;
+  uint8_t bRefresh;
+  uint8_t bSyncAddress;
 } __PACKED USBD_EpDescTypedef;
 
 /* USB Config descriptors structure */
@@ -228,6 +225,111 @@ typedef struct
 } __PACKED USBD_HIDDescTypedef;
 #endif /* USBD_HID_CLASS_ACTIVATED == 1U */
 
+#if USBD_AUDIO_CLASS_ACTIVATED == 1
+/* Class-Specific AC Interface Header Descriptor */
+typedef struct
+{
+  uint8_t           bLength;
+  uint8_t           bDescriptorType;
+  uint8_t           bDescriptorSubtype;
+  uint16_t          bcdADC;
+  uint16_t          wTotalLength;
+  uint8_t           bInCollection;
+  uint8_t           baInterfaceNr;
+} __PACKED USBD_AUDIOCCSIfDescTypeDef;
+
+/* Clock Source Descriptor */
+typedef struct
+{
+  uint8_t           bLength;
+  uint8_t           bDescriptorType;
+  uint8_t           bDescriptorSubtype;
+  uint8_t           bClockID;
+  uint8_t           bmAttributes;
+  uint8_t           bmControls;
+  uint8_t           bAssocTerminal;
+  uint8_t           iClockSource;
+} __PACKED USBD_AUDIOClockSourceDescTypeDef;
+
+/* Input Terminal Descriptor */
+typedef struct
+{
+  uint8_t           bLength;
+  uint8_t           bDescriptorType;
+  uint8_t           bDescriptorSubtype;
+  uint8_t           bTerminalID;
+  uint16_t          wTerminalType;
+  uint8_t           bAssocTerminal;
+  uint8_t           bNrChannels;
+  uint16_t          bmChannelConfig;
+  uint8_t           iChannelNames;
+  uint8_t           iTerminal;
+} __PACKED USBD_AUDIOInputTerminalDescTypeDef;
+
+/* Feature Unit Descriptor */
+typedef struct
+{
+  uint8_t           bLength;
+  uint8_t           bDescriptorType;
+  uint8_t           bDescriptorSubtype;
+  uint8_t           bUnitID;
+  uint8_t           bSourceID;
+  uint8_t           bControlSize;
+  uint8_t           bmaControls[3];
+  uint8_t           iFeature;
+} __PACKED USBD_AUDIOFeatureUnitPlayDescTypeDef;
+
+/* Output Terminal Descriptor */
+typedef struct
+{
+  uint8_t           bLength;
+  uint8_t           bDescriptorType;
+  uint8_t           bDescriptorSubtype;
+  uint8_t           bTerminalID;
+  uint16_t          wTerminalType;
+  uint8_t           bAssocTerminal;
+  uint8_t           bSourceID;
+  uint8_t           iTerminal;
+} __PACKED USBD_AUDIOOutputTerminalDescTypeDef;
+
+/* Type I Format Type Descriptor */
+typedef struct
+{
+  uint8_t           bLength;
+  uint8_t           bDescriptorType;
+  uint8_t           bDescriptorSubtype;
+  uint8_t           bFormatType;
+  uint8_t           bNrChannels;
+  uint8_t           bSubFrameSize;
+  uint8_t           bBitResolution;
+  uint8_t           bSamFreqType;
+  uint8_t           sampleFreq[3];
+} __PACKED USBD_AUDIOSFormatIfDescTypeDef;
+
+/* Class-Specific AS Interface Descriptor */
+typedef struct
+{
+  uint8_t           bLength;
+  uint8_t           bDescriptorType;
+  uint8_t           bDescriptorSubtype;
+  uint8_t           bTerminalLink;
+  uint8_t           bDelay;
+  uint16_t          wFormatTag;
+} __PACKED USBD_AUDIOSCSIfDescTypeDef;
+
+/* Class-Specific AS Isochronous Audio Data Endpoint Descriptor */
+typedef struct
+{
+  uint8_t           bLength;
+  uint8_t           bDescriptorType;
+  uint8_t           bDescriptor;
+  uint8_t           bmAttributes;
+  uint8_t           bLockDelayUnits;
+  uint16_t          wLockDelay;
+} __PACKED USBD_AUDIOSCSEpDescTypeDef;
+
+#endif /* USBD_AUDIO_CLASS_ACTIVATED */
+
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private_defines */
 
@@ -270,6 +372,12 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 #define USBD_EP_TYPE_BULK                             0x02U
 #define USBD_EP_TYPE_INTR                             0x03U
 
+#define USBD_EP_ATTR_ISOC_NOSYNC                       0x00
+#define USBD_EP_ATTR_ISOC_ASYNC                        0x04
+#define USBD_EP_ATTR_ISOC_ADAPT                        0x08
+#define USBD_EP_ATTR_ISOC_SYNC                         0x0C
+#define USBD_EP_ATTR_ISOC_FEEDBACK                     0x10
+
 #define USBD_FULL_SPEED                               0x00U
 #define USBD_HIGH_SPEED                               0x01U
 
@@ -291,6 +399,48 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 #define USBD_HID_KEYBOARD_EPIN_HS_MPS                 4U
 #define USBD_HID_KEYBOARD_EPIN_FS_BINTERVAL           5U
 #define USBD_HID_KEYBOARD_EPIN_HS_BINTERVAL           5U
+
+/* Device AUDIO Class */
+
+#define USBD_AUDIO_AS_PLAY_INTERFACE                  0x01U
+
+#define USB_AUDIO_CONFIG_PLAY_TERMINAL_INPUT_ID       0x12
+#define USB_AUDIO_CONFIG_PLAY_UNIT_FEATURE_ID         0x16
+#define USB_AUDIO_CONFIG_PLAY_TERMINAL_OUTPUT_ID      0x14
+#define USB_AUDIO_CONFIG_PLAY_CLOCK_SOURCE_ID         0x18
+#define USB_AUDIO_CONFIG_PLAY_SAMPLING_FREQUENCY      48000
+#define USB_AUDIO_CONFIG_PLAY_CHANNEL_COUNT           0x02 /* stereo audio  */
+#define USB_AUDIO_CONFIG_PLAY_RES_BIT                 16   /* 16 bit per sample */
+#define USB_AUDIO_CONFIG_PLAY_RES_BYTE                2    /* 2 bytes */
+#define USB_AUDIO_CONFIG_PLAY_CHANNEL_MAP             0x03
+
+#define USBD_AUDIO_FU_CONTROL_MUTE                    0x0001
+#define USBD_AUDIO_FU_CONTROL_VOLUME                  0x000C
+#define USBD_PLAYBACK_AC_INTERFACE_SIZE               sizeof(USBD_AUDIOInputTerminalDescTypeDef)+\
+                                                      sizeof(USBD_AUDIOFeatureUnitPlayDescTypeDef)+\
+                                                      sizeof(USBD_AUDIOOutputTerminalDescTypeDef)+\
+                                                      sizeof(USBD_AUDIOClockSourceDescTypeDef)\
+
+#define USBD_CONFIG_DESCRIPTOR_AC_TOTAL_SIZE          sizeof(USBD_AUDIOCCSIfDescTypeDef)+\
+                                                      USBD_PLAYBACK_AC_INTERFACE_SIZE\
+
+#define USBD_AUDIO_EPOUT_ADDR                         0x01
+#define USBD_AUDIO_EPOUT_Feedback_ADDR                0x81
+#define USBD_AUDIO_EPIN_ADDR                          0x82
+
+#define USBD_AUDIO_EPIN_FS_MPS                        (((USB_AUDIO_CONFIG_PLAY_SAMPLING_FREQUENCY + 999)/1000) *\
+                                                      USB_AUDIO_CONFIG_PLAY_CHANNEL_COUNT *\
+                                                      USB_AUDIO_CONFIG_PLAY_RES_BYTE)\
+
+#define USBD_AUDIO_EPIN_HS_MPS                        (((USB_AUDIO_CONFIG_PLAY_SAMPLING_FREQUENCY + 7999)/8000) *\
+                                                      USB_AUDIO_CONFIG_PLAY_CHANNEL_COUNT *\
+                                                      USB_AUDIO_CONFIG_PLAY_RES_BYTE)\
+
+/* This is the maximum supported configuration descriptor size
+   User may redefine this value in order to optima */
+#ifndef USBD_FRAMEWORK_MAX_DESC_SZ
+#define USBD_FRAMEWORK_MAX_DESC_SZ                    200U
+#endif /* USBD_FRAMEWORK_MAX_DESC_SZ */
 
 #ifndef USBD_CONFIG_STR_DESC_IDX
 #define USBD_CONFIG_STR_DESC_IDX                      0U
