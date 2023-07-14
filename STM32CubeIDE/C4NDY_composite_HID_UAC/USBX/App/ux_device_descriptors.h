@@ -29,9 +29,6 @@ extern "C" {
 #include "ux_api.h"
 #include "ux_stm32_config.h"
 #include "ux_device_class_hid.h"
-#include "ux_device_class_storage.h"
-#include "ux_device_class_cdc_acm.h"
-#include "ux_device_class_dfu.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -45,9 +42,6 @@ extern "C" {
 #define USBD_MAX_CLASS_INTERFACES                      11U
 
 #define USBD_HID_CLASS_ACTIVATED                       1U
-#define USBD_MSC_CLASS_ACTIVATED                       1U
-#define USBD_CDC_ACM_CLASS_ACTIVATED                   1U
-#define USBD_DFU_CLASS_ACTIVATED                       1U
 
 #define USBD_HID_KEYBOARD_ACTIVATED                    1U
 
@@ -234,59 +228,6 @@ typedef struct
 } __PACKED USBD_HIDDescTypedef;
 #endif /* USBD_HID_CLASS_ACTIVATED == 1U */
 
-#if (USBD_CDC_ACM_CLASS_ACTIVATED == 1) || (USBD_RNDIS_CLASS_ACTIVATED == 1) || (USBD_CDC_ECM_CLASS_ACTIVATED == 1)
-typedef struct
-{
-  /* Header Functional Descriptor*/
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bDescriptorSubtype;
-  uint16_t bcdCDC;
-} __PACKED USBD_CDCHeaderFuncDescTypedef;
-
-typedef struct
-{
-  /* Call Management Functional Descriptor*/
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bDescriptorSubtype;
-  uint8_t bmCapabilities;
-  uint8_t bDataInterface;
-} __PACKED USBD_CDCCallMgmFuncDescTypedef;
-
-typedef struct
-{
-  /* ACM Functional Descriptor*/
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bDescriptorSubtype;
-  uint8_t bmCapabilities;
-} __PACKED USBD_CDCACMFuncDescTypedef;
-
-typedef struct
-{
-  /* Union Functional Descriptor*/
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bDescriptorSubtype;
-  uint8_t bMasterInterface;
-  uint8_t bSlaveInterface;
-} __PACKED USBD_CDCUnionFuncDescTypedef;
-
-#endif /* (USBD_CDC_ACM_CLASS_ACTIVATED == 1) || (USBD_RNDIS_CLASS_ACTIVATED == 1)  || (USBD_CDC_ECM_CLASS_ACTIVATED == 1)*/
-
-#if USBD_DFU_CLASS_ACTIVATED == 1
-typedef struct
-{
-  uint8_t bLength;
-  uint8_t bDescriptorType;
-  uint8_t bmAttributes;
-  uint16_t wDetachTimeout;
-  uint16_t wTransferSze;
-  uint16_t bcdDFUVersion;
-}__PACKED USBD_DFUFuncDescTypedef;
-#endif /* USBD_DFU_CLASS_ACTIVATED */
-
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private_defines */
 
@@ -350,37 +291,6 @@ uint16_t USBD_HID_ReportDesc_length(uint8_t hid_type);
 #define USBD_HID_KEYBOARD_EPIN_HS_MPS                 4U
 #define USBD_HID_KEYBOARD_EPIN_FS_BINTERVAL           5U
 #define USBD_HID_KEYBOARD_EPIN_HS_BINTERVAL           5U
-
-/* Device Storage Class */
-#define USBD_MSC_EPOUT_ADDR                           0x01U
-#define USBD_MSC_EPIN_ADDR                            0x81U
-#define USBD_MSC_EPOUT_FS_MPS                         64U
-#define USBD_MSC_EPOUT_HS_MPS                         512U
-#define USBD_MSC_EPIN_FS_MPS                          64U
-#define USBD_MSC_EPIN_HS_MPS                          512U
-
-/* Device CDC-ACM Class */
-#define USBD_CDCACM_EPINCMD_ADDR                      0x81U
-#define USBD_CDCACM_EPINCMD_FS_MPS                    8U
-#define USBD_CDCACM_EPINCMD_HS_MPS                    8U
-#define USBD_CDCACM_EPIN_ADDR                         0x81U
-#define USBD_CDCACM_EPOUT_ADDR                        0x01U
-#define USBD_CDCACM_EPIN_FS_MPS                       64U
-#define USBD_CDCACM_EPIN_HS_MPS                       512U
-#define USBD_CDCACM_EPOUT_FS_MPS                      64U
-#define USBD_CDCACM_EPOUT_HS_MPS                      512U
-#define USBD_CDCACM_EPINCMD_FS_BINTERVAL              5U
-#define USBD_CDCACM_EPINCMD_HS_BINTERVAL              5U
-
-/* DFU parameters: you can fine tune these values depending on the needed baudrates and performance. */
-#define DFU_DESCRIPTOR_TYPE                           0x21U
-#define USBD_DFU_BM_ATTRIBUTES                        11U
-#define USBD_DFU_DetachTimeout                        255U
-#define USBD_DFU_XFER_SIZE                            1024U
-
-#define USBD_DFU_STRING_DESC_INDEX                    0x06U
-
-#define USBD_DFU_STRING_DESC                          "@Internal Flash   /0x08000000/03*016Ka,01*016Kg,01*064Kg,07*128Kg,04*016Kg,01*064Kg,07*128Kg"
 
 #ifndef USBD_CONFIG_STR_DESC_IDX
 #define USBD_CONFIG_STR_DESC_IDX                      0U

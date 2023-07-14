@@ -112,7 +112,7 @@
 /*#define TX_TIMER_THREAD_STACK_SIZE                1024*/
 /*#define TX_TIMER_THREAD_PRIORITY                0*/
 
-/*#define TX_MINIMUM_STACK                200*/
+#define TX_MINIMUM_STACK                512
 
 /* Determine if timer expirations (application timers, timeouts, and tx_thread_sleep calls
    should be processed within the a system timer thread or directly in the timer ISR.
