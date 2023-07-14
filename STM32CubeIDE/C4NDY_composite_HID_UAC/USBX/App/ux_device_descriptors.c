@@ -937,7 +937,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pSpeakerACCSIfDesc->bcdADC = 0x0100U;
   pSpeakerACCSIfDesc->wTotalLength = 0x27;//USBD_CONFIG_DESCRIPTOR_AC_TOTAL_SIZE;
   pSpeakerACCSIfDesc->bInCollection = 0x01;
-  pSpeakerACCSIfDesc->baInterfaceNr = 0x02;//diff 2->1
+  pSpeakerACCSIfDesc->baInterfaceNr = 0x01;//diff 2->1
   *Sze += (uint32_t)sizeof(USBD_AUDIOCCSIfDescTypeDef);
 
 #if 0
@@ -1034,6 +1034,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pSpeakerASCSIfDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
   pSpeakerASCSIfDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO_AS_GENERAL;
   pSpeakerASCSIfDesc->bTerminalLink = USB_AUDIO_CONFIG_PLAY_TERMINAL_INPUT_ID;//diff 0x12->0x01
+  pSpeakerASCSIfDesc->bDelay = 0x01;
   pSpeakerASCSIfDesc->wFormatTag = 0x0001;
   *Sze += (uint32_t)sizeof(USBD_AUDIOSCSIfDescTypeDef);
 
