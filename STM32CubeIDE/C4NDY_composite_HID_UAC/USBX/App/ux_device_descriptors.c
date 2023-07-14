@@ -646,7 +646,7 @@ uint8_t  USBD_FrameWork_AddToConfDesc(USBD_DevClassHandleTypeDef *pdev, uint8_t 
           /* Find the first available interface slot and Assign number of interfaces */
           interface = USBD_FrameWork_FindFreeIFNbr(pdev);
           pdev->tclasslist[pdev->classId].NumIf = 1U;
-          pdev->tclasslist[pdev->classId].Ifs[0] = interface;
+          pdev->tclasslist[pdev->classId].Ifs[0] = 2;//interface;
 
           /* Assign endpoint numbers */
           pdev->tclasslist[pdev->classId].NumEps = 1U; /* EP_IN */
@@ -686,8 +686,8 @@ uint8_t  USBD_FrameWork_AddToConfDesc(USBD_DevClassHandleTypeDef *pdev, uint8_t 
       /* Find the first available interface slot and Assign number of interfaces */
       interface = USBD_FrameWork_FindFreeIFNbr(pdev);
       pdev->tclasslist[pdev->classId].NumIf = 2U;
-      pdev->tclasslist[pdev->classId].Ifs[0] = interface;
-      pdev->tclasslist[pdev->classId].Ifs[1] = (uint8_t)(interface + 1U);
+      pdev->tclasslist[pdev->classId].Ifs[0] = 0;//interface;
+      pdev->tclasslist[pdev->classId].Ifs[1] = 1;//(uint8_t)(interface + 1U);
 
       /* Assign endpoint numbers */
       pdev->tclasslist[pdev->classId].NumEps = 1U; /* EP1_OUT */
@@ -934,7 +934,7 @@ static void USBD_FrameWork_AUDIO_Desc(USBD_DevClassHandleTypeDef *pdev,
   pSpeakerACCSIfDesc->bLength = (uint8_t)sizeof(USBD_AUDIOCCSIfDescTypeDef);
   pSpeakerACCSIfDesc->bDescriptorType = UX_DEVICE_CLASS_AUDIO_CS_INTERFACE;
   pSpeakerACCSIfDesc->bDescriptorSubtype = UX_DEVICE_CLASS_AUDIO_AC_HEADER;
-  pSpeakerACCSIfDesc->bcdADC = 0x0100U;//diff 0x0100U
+  pSpeakerACCSIfDesc->bcdADC = 0x0100U;
   pSpeakerACCSIfDesc->wTotalLength = 0x27;//USBD_CONFIG_DESCRIPTOR_AC_TOTAL_SIZE;
   pSpeakerACCSIfDesc->bInCollection = 0x01;
   pSpeakerACCSIfDesc->baInterfaceNr = 0x02;//diff 2->1
