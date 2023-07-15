@@ -116,7 +116,7 @@ typedef long                        SLONG;
 /*  Generic USBX Project constants follow.  */
 
 #ifndef UX_PERIODIC_RATE
-#define UX_PERIODIC_RATE                                    100
+#define UX_PERIODIC_RATE                                    1000//100
 #endif
 
 #ifndef UX_MAX_CLASS_DRIVER
