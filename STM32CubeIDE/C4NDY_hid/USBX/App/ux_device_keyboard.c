@@ -193,7 +193,7 @@ VOID usbx_hid_thread_entry(ULONG thread_input)
     if ((device->ux_slave_device_state == UX_DEVICE_CONFIGURED) && (hid_keyboard != UX_NULL))
     {
       /* sleep for 10ms */
-      tx_thread_sleep(MS_TO_TICK(1));
+      //tx_thread_sleep(MS_TO_TICK(1));
 
       detectSwitches();
 #if 0
@@ -345,7 +345,7 @@ void detectSwitches(void)
 			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_RESET);
 		}
 
-#if 1
+#if 0
 		SEGGER_RTT_printf(0, "key[%d]: 0x%04X\n", i, keyState[i]);
 #endif
 	}
