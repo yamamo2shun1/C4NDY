@@ -132,6 +132,7 @@ NVIC.PriorityGroup=NVIC_PRIORITYGROUP_4
 NVIC.SAI1_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
 NVIC.SVCall_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 NVIC.SysTick_IRQn=true\:15\:0\:false\:false\:true\:false\:true\:false
+NVIC.USB_HP_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
 NVIC.USB_LP_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
 NVIC.UsageFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 PA0.Locked=true
