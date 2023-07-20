@@ -23,7 +23,7 @@
 #include "i2c.h"
 #include "quadspi.h"
 #include "sai.h"
-#include "usb_device.h"
+#include "usb.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -294,9 +294,9 @@ int main(void)
   MX_DMA_Init();
   MX_SAI1_Init();
   MX_QUADSPI1_Init();
-  MX_USB_Device_Init();
   MX_I2C2_Init();
   MX_ADC1_Init();
+  MX_USB_PCD_Init();
   /* USER CODE BEGIN 2 */
   default_download_IC_1();
 
