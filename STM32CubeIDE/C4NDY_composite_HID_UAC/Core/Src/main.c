@@ -30,6 +30,8 @@
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
 
+#include "usb_descriptors.h"
+
 #include "ADAU1761_IC_1_PARAM.h"
 #include "ADAU1761_IC_1_REG.h"
 #include "ADAU1761_IC_1.h"
@@ -56,7 +58,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-extern USBD_HandleTypeDef hUsbDeviceFS;
+//extern USBD_HandleTypeDef hUsbDeviceFS;
 
 struct keyboardHID_t {
 	uint8_t modifiers;
@@ -80,7 +82,7 @@ uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS] = {
 		{0x39, 0x04, 0x16, 0x07, 0x09, 0x0A, 0x0B, 0x0D, 0x0E, 0x0F, 0x33, 0x34, 0x31},
 //       LSFT  z     x     c     v     b     n     m     ,<    .>    /?    RSFT  `~
 		{0xE1, 0x1D, 0x1B, 0x06, 0x19, 0x05, 0x11, 0x10, 0x36, 0x37, 0x38, 0xE5, 0x35},
-//       GUI               LALT  BS    ENT   SPC   Int4  RCTRL ◄     ▼     ▲     ►
+//       GUI               LALT  BS    ENT   SPC   Int4  RCTRL �?     ▼     ▲     ►
 		{0xE3, 0xFE, 0xFF, 0xE2, 0x2A, 0x28, 0x2C, 0x8A, 0xE4, 0x50, 0x51, 0x52, 0x4F}
 };
 
@@ -94,7 +96,7 @@ uint8_t keymaps_pinkyless[MATRIX_ROWS][MATRIX_COLUMNS] = {
 		{0xE0, 0x13, 0x0C, 0x08, 0x04, 0x37, 0x07, 0x16, 0x17, 0x0B, 0x1D, 0x2D, 0x31},
 //       LSFT  j     q     ;:    k     x     b     m     w     n     v     RSFT  `~
 		{0xE1, 0x0D, 0x14, 0x33, 0x0E, 0x1B, 0x05, 0x10, 0x1A, 0x11, 0x19, 0xE5, 0x35},
-//       GUI               LALT  BS    DEL   ENT   SPC   CAPS  ◄     ▼     ▲     ►
+//       GUI               LALT  BS    DEL   ENT   SPC   CAPS  �?     ▼     ▲     ►
 		{0xE3, 0xFE, 0xFF, 0xE2, 0x2A, 0x4C, 0x28, 0x2C, 0x39, 0x50, 0x51, 0x52, 0x4F}
 };
 /* USER CODE END PV */
@@ -107,6 +109,75 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+//--------------------------------------------------------------------+
+// USB HID
+//--------------------------------------------------------------------+
+
+// Invoked when sent REPORT successfully to host
+// Application can use this to send the next report
+// Note: For composite reports, report[0] is report ID
+#if 0
+void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_t len)
+{
+  (void) instance;
+  (void) len;
+
+  uint8_t next_report_id = report[0] + 1u;
+
+  if (next_report_id < REPORT_ID_COUNT)
+  {
+    send_hid_report(next_report_id, board_button_read());
+  }
+}
+#endif
+
+// Invoked when received GET_REPORT control request
+// Application must fill buffer report's content and return its length.
+// Return zero will cause the stack to STALL request
+uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t* buffer, uint16_t reqlen)
+{
+  // TODO not Implemented
+  (void) instance;
+  (void) report_id;
+  (void) report_type;
+  (void) buffer;
+  (void) reqlen;
+
+  return 0;
+}
+
+// Invoked when received SET_REPORT control request or
+// received data on OUT endpoint ( Report ID = 0, Type = 0 )
+void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize)
+{
+  (void) instance;
+#if 0
+  if (report_type == HID_REPORT_TYPE_OUTPUT)
+  {
+    // Set keyboard LED e.g Capslock, Numlock etc...
+    if (report_id == REPORT_ID_KEYBOARD)
+    {
+      // bufsize should be (at least) 1
+      if ( bufsize < 1 ) return;
+
+      uint8_t const kbd_leds = buffer[0];
+
+      if (kbd_leds & KEYBOARD_LED_CAPSLOCK)
+      {
+        // Capslock On: disable blink, turn led on
+        blink_interval_ms = 0;
+        board_led_write(true);
+      }else
+      {
+        // Caplocks Off: back to normal blink
+        board_led_write(false);
+        blink_interval_ms = BLINK_MOUNTED;
+      }
+    }
+  }
+#endif
+}
+
 uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y)
 {
 	if (keymapId == 0)
@@ -251,7 +322,11 @@ void detectSwitches(void)
 	{
 		if (keyState[i] != 0x0 || (keyState[i] == 0x0 && keyState[i] != prevKeyState[i]))
 		{
-			USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
+			//USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
+			if (!tud_hid_ready())
+				return;
+
+			tud_hid_keyboard_report(REPORT_ID_KEYBOARD, keyboardHID.modifiers, keyboardHID.key);
 			break;
 		}
 	}
@@ -300,6 +375,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   default_download_IC_1();
 
+  tusb_init();
+
   /* Run the ADC calibration in single-ended mode */
   if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK)
   {
@@ -319,14 +396,18 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	tud_task();
+
 	detectSwitches();
 
+#if 0
 	if (!HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin))
 	{
 		SEGGER_RTT_printf(0, "press!\n");
 		resetKeys();
 		USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
 	}
+#endif
 
 	SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0], pot_value[1]);
 

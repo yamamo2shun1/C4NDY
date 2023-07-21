@@ -58,7 +58,6 @@ void SysTick_Handler(void);
 void DMA1_Channel1_IRQHandler(void);
 void DMA1_Channel2_IRQHandler(void);
 void ADC1_2_IRQHandler(void);
-void USB_HP_IRQHandler(void);
 void USB_LP_IRQHandler(void);
 void SAI1_IRQHandler(void);
 /* USER CODE BEGIN EFP */

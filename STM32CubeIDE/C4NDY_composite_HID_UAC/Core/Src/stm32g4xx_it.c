@@ -245,30 +245,16 @@ void ADC1_2_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles USB high priority interrupt remap.
-  */
-void USB_HP_IRQHandler(void)
-{
-  /* USER CODE BEGIN USB_HP_IRQn 0 */
-
-  /* USER CODE END USB_HP_IRQn 0 */
-  HAL_PCD_IRQHandler(&hpcd_USB_FS);
-  /* USER CODE BEGIN USB_HP_IRQn 1 */
-
-  /* USER CODE END USB_HP_IRQn 1 */
-}
-
-/**
   * @brief This function handles USB low priority interrupt remap.
   */
 void USB_LP_IRQHandler(void)
 {
   /* USER CODE BEGIN USB_LP_IRQn 0 */
-
+  tud_int_handler(BOARD_DEVICE_RHPORT_NUM);
   /* USER CODE END USB_LP_IRQn 0 */
-  HAL_PCD_IRQHandler(&hpcd_USB_FS);
+  //HAL_PCD_IRQHandler(&hpcd_USB_FS);
   /* USER CODE BEGIN USB_LP_IRQn 1 */
-
+  //tud_int_handler(BOARD_DEVICE_RHPORT_NUM);
   /* USER CODE END USB_LP_IRQn 1 */
 }
 
