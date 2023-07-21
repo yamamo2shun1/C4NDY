@@ -94,20 +94,11 @@ uint8_t const * tud_hid_descriptor_report_cb(uint8_t instance)
 // Configuration Descriptor
 //--------------------------------------------------------------------+
 
-enum
-{
-  ITF_NUM_HID,
-  ITF_NUM_AUDIO_CONTROL,
-  ITF_NUM_AUDIO_STREAMING,
-  ITF_NUM_TOTAL
-};
+#define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN + TUD_AUDIO_HEADSET_STEREO_DESC_LEN)
 
-//#define CONFIG_TOTAL_LEN  (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN)
-#define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN + TUD_AUDIO_SPEAKER_STEREO_FB_DESC_LEN)
-
-#define EPNUM_HID   0x81
-#define EPNUM_AUDIO 0x02
-#define EPNUM_AUDIO_FB 0x83
+#define EPNUM_HID       0x01
+#define EPNUM_AUDIO_IN  0x02
+#define EPNUM_AUDIO_OUT 0x02
 
 uint8_t const desc_configuration[] =
 {
@@ -119,18 +110,14 @@ uint8_t const desc_configuration[] =
 		  	  	  	 4,
 					 HID_ITF_PROTOCOL_NONE,
 					 sizeof(desc_hid_report),
-					 EPNUM_HID,
+					 EPNUM_HID | 0x80,
 					 CFG_TUD_HID_EP_BUFSIZE,
 					 5),
 
   // Interface number, string index, EP Out & EP In address, EP size
-  TUD_AUDIO_SPEAKER_STEREO_FB_DESCRIPTOR(ITF_NUM_AUDIO_CONTROL,
-		  	  	  	  	  	  	  	   5,
-									   CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_TX,
-									   CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_TX * 8,
-									   EPNUM_AUDIO,
-									   CFG_TUD_AUDIO_EP_SZ_IN,
-									   EPNUM_AUDIO_FB)
+  TUD_AUDIO_HEADSET_STEREO_DESCRIPTOR(5,
+		  	  	  	  	  	  	  	  EPNUM_AUDIO_OUT,
+									  EPNUM_AUDIO_IN | 0x80)
 };
 
 // Invoked when received GET CONFIGURATION DESCRIPTOR
