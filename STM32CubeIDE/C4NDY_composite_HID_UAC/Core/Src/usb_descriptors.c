@@ -46,9 +46,9 @@ tusb_desc_device_t const desc_device =
     .bLength            = sizeof(tusb_desc_device_t),
     .bDescriptorType    = TUSB_DESC_DEVICE,
     .bcdUSB             = USB_BCD,
-    .bDeviceClass       = 0x00,
-    .bDeviceSubClass    = 0x00,
-    .bDeviceProtocol    = 0x00,
+    .bDeviceClass       = 0xEF,
+    .bDeviceSubClass    = 0x02,
+    .bDeviceProtocol    = 0x01,
     .bMaxPacketSize0    = CFG_TUD_ENDPOINT0_SIZE,
 
     .idVendor           = USB_VID,
@@ -116,7 +116,7 @@ uint8_t const desc_configuration[] =
 
   // Interface number, string index, protocol, report descriptor len, EP In address, size & polling interval
   TUD_HID_DESCRIPTOR(ITF_NUM_HID,
-		  	  	  	 1,
+		  	  	  	 4,
 					 HID_ITF_PROTOCOL_NONE,
 					 sizeof(desc_hid_report),
 					 EPNUM_HID,
@@ -125,7 +125,7 @@ uint8_t const desc_configuration[] =
 
   // Interface number, string index, EP Out & EP In address, EP size
   TUD_AUDIO_SPEAKER_STEREO_FB_DESCRIPTOR(ITF_NUM_AUDIO_CONTROL,
-		  	  	  	  	  	  	  	   2,
+		  	  	  	  	  	  	  	   5,
 									   CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_TX,
 									   CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_TX * 8,
 									   EPNUM_AUDIO,
@@ -155,7 +155,7 @@ char const* string_desc_arr [] =
   "Yamamoto Works Ltd.",         // 1: Manufacturer
   "C4NDY Composite HID_UAC",     // 2: Product
   "206C35825430",                // 3: Serials, should use chip ID
-  "C4NDY HID Keyboard"           // 4: HID Interface
+  "C4NDY HID Keyboard",          // 4: HID Interface
   "C4NDY UAC Mixer",             // 5: UAC Interface
 };
 
