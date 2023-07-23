@@ -105,9 +105,11 @@ int8_t mute[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];       // +1 for master chan
 int16_t volume[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];    // +1 for master channel 0
 
 // Buffer for microphone data
-int32_t mic_buf[CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 4];
+int16_t mic_buf[CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 2];
 // Buffer for speaker data
-int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 4];
+int16_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
+
+uint16_t sai_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
 // Speaker data size received in the last frame
 int spk_data_size;
 // Resolution per format
@@ -473,6 +475,34 @@ bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, ui
   (void)cur_alt_setting;
 
   spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
+
+  SEGGER_RTT_printf(0, "%d %d %d %d\n", sizeof(spk_buf), CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ, spk_data_size, n_bytes_received);
+
+#if 1
+	if (spk_data_size)
+	{
+		//if (current_resolution == 16)
+		{
+			int16_t *src = spk_buf;
+			int16_t *limit = spk_buf + 192 / 2;//spk_data_size / 2;
+			uint16_t *dst = sai_buf;
+
+			int length = 0;
+
+			while (src < limit)
+			{
+				int16_t left = *src++;
+				int16_t right = *src++;
+				*dst++ = (uint16_t)left;
+				*dst++ = (uint16_t)right;
+				length++;
+			}
+			SEGGER_RTT_printf(0, "spk_data_size = %d %d\n", spk_data_size, length);
+			spk_data_size = 0;
+		}
+	}
+#endif
+
   return true;
 }
 
@@ -699,6 +729,8 @@ int main(void)
       /* ADC conversion start error */
       Error_Handler();
   }
+
+  HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)sai_buf, 192 / 2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -707,7 +739,7 @@ int main(void)
   {
 	tud_task();
 
-	detectSwitches();
+	//detectSwitches();
 
 #if 0
 	if (!HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin))
@@ -718,8 +750,32 @@ int main(void)
 	}
 #endif
 
-	SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0], pot_value[1]);
+	//SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0], pot_value[1]);
 
+#if 0
+	if (spk_data_size)
+	{
+		if (current_resolution == 16)
+		{
+			int16_t *src = spk_buf;
+			int16_t *limit = spk_buf + 192 / 2;//spk_data_size / 2;
+			uint16_t *dst = sai_buf;
+
+			int length = 0;
+
+			while (src < limit)
+			{
+				int16_t left = *src++;
+				int16_t right = *src++;
+				*dst++ = (uint16_t)left;
+				*dst++ = (uint16_t)right;
+				length++;
+			}
+			SEGGER_RTT_printf(0, "spk_data_size = %d %d\n", spk_data_size, length);
+			spk_data_size = 0;
+		}
+	}
+#endif
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
