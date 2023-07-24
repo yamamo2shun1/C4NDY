@@ -75,12 +75,7 @@ bool isKeymapIDChanged = false;
 uint8_t keymapID = 0;
 
 // List of supported sample rates
-#if defined(__RX__)
-  const uint32_t sample_rates[] = {48000};
-#else
-  const uint32_t sample_rates[] = {44100, 48000, 88200, 96000};
-#endif
-
+const uint32_t sample_rates[] = {48000};
 uint32_t current_sample_rate  = 48000;
 
 enum
@@ -105,18 +100,18 @@ int8_t mute[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];       // +1 for master chan
 int16_t volume[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];    // +1 for master channel 0
 
 // Buffer for microphone data
-int16_t mic_buf[CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 2];
+int32_t mic_buf[192 / 2];//[CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 2];
 // Buffer for speaker data
-int16_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
+int32_t spk_buf[192 / 2];//[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
 
-uint16_t sai_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
+int16_t sai_buf[192 / 2];//[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
 // Speaker data size received in the last frame
 int spk_data_size;
 // Resolution per format
 const uint8_t resolutions_per_format[CFG_TUD_AUDIO_FUNC_1_N_FORMATS] = {CFG_TUD_AUDIO_FUNC_1_FORMAT_1_RESOLUTION_RX,
                                                                         CFG_TUD_AUDIO_FUNC_1_FORMAT_2_RESOLUTION_RX};
 // Current resolution, update on format change
-uint8_t current_resolution;
+uint8_t current_resolution = 16;
 
 #define N_SAMPLE_RATES  TU_ARRAY_SIZE(sample_rates)
 
@@ -130,7 +125,7 @@ uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS] = {
 		{0x39, 0x04, 0x16, 0x07, 0x09, 0x0A, 0x0B, 0x0D, 0x0E, 0x0F, 0x33, 0x34, 0x31},
 //       LSFT  z     x     c     v     b     n     m     ,<    .>    /?    RSFT  `~
 		{0xE1, 0x1D, 0x1B, 0x06, 0x19, 0x05, 0x11, 0x10, 0x36, 0x37, 0x38, 0xE5, 0x35},
-//       GUI               LALT  BS    ENT   SPC   Int4  RCTRL �?     ▼     ▲     ►
+//       GUI               LALT  BS    ENT   SPC   Int4  RCTRL ?��?     ▼     ▲     ►
 		{0xE3, 0xFE, 0xFF, 0xE2, 0x2A, 0x28, 0x2C, 0x8A, 0xE4, 0x50, 0x51, 0x52, 0x4F}
 };
 
@@ -144,7 +139,7 @@ uint8_t keymaps_pinkyless[MATRIX_ROWS][MATRIX_COLUMNS] = {
 		{0xE0, 0x13, 0x0C, 0x08, 0x04, 0x37, 0x07, 0x16, 0x17, 0x0B, 0x1D, 0x2D, 0x31},
 //       LSFT  j     q     ;:    k     x     b     m     w     n     v     RSFT  `~
 		{0xE1, 0x0D, 0x14, 0x33, 0x0E, 0x1B, 0x05, 0x10, 0x1A, 0x11, 0x19, 0xE5, 0x35},
-//       GUI               LALT  BS    DEL   ENT   SPC   CAPS  �?     ▼     ▲     ►
+//       GUI               LALT  BS    DEL   ENT   SPC   CAPS  ?��?     ▼     ▲     ►
 		{0xE3, 0xFE, 0xFF, 0xE2, 0x2A, 0x4C, 0x28, 0x2C, 0x39, 0x50, 0x51, 0x52, 0x4F}
 };
 /* USER CODE END PV */
@@ -476,15 +471,15 @@ bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, ui
 
   spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
 
-  SEGGER_RTT_printf(0, "%d %d %d %d\n", sizeof(spk_buf), CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ, spk_data_size, n_bytes_received);
+  //SEGGER_RTT_printf(0, "%d %d %d %d\n", sizeof(spk_buf), CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ, spk_data_size, n_bytes_received);
 
-#if 1
+#if 0
 	if (spk_data_size)
 	{
 		//if (current_resolution == 16)
 		{
 			int16_t *src = spk_buf;
-			int16_t *limit = spk_buf + 192 / 2;//spk_data_size / 2;
+			int16_t *limit = spk_buf + spk_data_size / 2;
 			uint16_t *dst = sai_buf;
 
 			int length = 0;
@@ -495,9 +490,11 @@ bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, ui
 				int16_t right = *src++;
 				*dst++ = (uint16_t)left;
 				*dst++ = (uint16_t)right;
-				length++;
+				length += 2;
+
+				//SEGGER_RTT_printf(0, "(L, R) = (%d, %d)\n", left, right);
 			}
-			SEGGER_RTT_printf(0, "spk_data_size = %d %d\n", spk_data_size, length);
+			SEGGER_RTT_printf(0, "spk_data_size = %d %d %d\n", spk_data_size, length, n_bytes_received);
 			spk_data_size = 0;
 		}
 	}
@@ -730,7 +727,7 @@ int main(void)
       Error_Handler();
   }
 
-  HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)sai_buf, 192 / 2);
+  //HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)sai_buf, spk_data_size / 2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -752,26 +749,27 @@ int main(void)
 
 	//SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0], pot_value[1]);
 
-#if 0
+#if 1
 	if (spk_data_size)
 	{
 		if (current_resolution == 16)
 		{
-			int16_t *src = spk_buf;
-			int16_t *limit = spk_buf + 192 / 2;//spk_data_size / 2;
-			uint16_t *dst = sai_buf;
+			int16_t *src = (int16_t *)spk_buf;
+			int16_t *limit = (int16_t *)spk_buf + spk_data_size / 2;
+			int16_t *dst = sai_buf;
 
 			int length = 0;
 
 			while (src < limit)
 			{
-				int16_t left = *src++;
-				int16_t right = *src++;
-				*dst++ = (uint16_t)left;
-				*dst++ = (uint16_t)right;
-				length++;
+				int32_t left = *src++;
+				int32_t right = *src++;
+				*dst++ = (int16_t)(left >> 1);
+				*dst++ = (int16_t)(right >> 1);
+				length += 2;
 			}
-			SEGGER_RTT_printf(0, "spk_data_size = %d %d\n", spk_data_size, length);
+			//SEGGER_RTT_printf(0, "spk_data_size = %d %d\n", spk_data_size, length);
+			HAL_SAI_Transmit(&hsai_BlockB1, (uint8_t *)sai_buf, spk_data_size / 2, 10000);
 			spk_data_size = 0;
 		}
 	}
