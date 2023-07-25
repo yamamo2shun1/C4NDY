@@ -586,11 +586,7 @@ void detectSwitches(void)
 		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_SET);
 
 		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_RESET);
-
-		for (int t = 0; t < 1000; t++)
-		{
-			asm("NOP");
-		}
+		asm("NOP");
 		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_SET);
 
 		for (int j = 0; j < 16; j++)
@@ -650,6 +646,9 @@ void detectSwitches(void)
 			prevKeyState[i] = keyState[i];
 		}
 
+		i = 0;
+		break;
+	default:
 		i = 0;
 		break;
 	}
