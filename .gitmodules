@@ -1,0 +1,3 @@
+[submodule "STM32CubeIDE/C4NDY_composite_HID_UAC/tinyusb"]
+	path = STM32CubeIDE/C4NDY_composite_HID_UAC/tinyusb
+	url = https://github.com/hathach/tinyusb

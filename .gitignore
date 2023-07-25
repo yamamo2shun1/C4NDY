@@ -1,6 +1,11 @@
 ### KiCad
 C4NDY-backups/
-KiCad/tmp/
+KVL-backups/
+tmp/
+jlcpcb/
+plasticity/
+
+*.zip
 
 ### STM32CubeIDE
 .metadata
@@ -10,4 +15,3 @@ Debug
 *.swp
 *.launch
 
-KiCad/jlcpcb/
