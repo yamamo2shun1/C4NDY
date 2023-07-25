@@ -576,221 +576,9 @@ void detectSwitches(void)
 	{
 	case 0:
 		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_RESET);
-
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_RESET);
-
-		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_RESET);
-		//HAL_Delay(1);
-		for (int t = 0; t < 1000; t++)
-		{
-			asm("NOP");
-		}
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_SET);
-
-		for (int j = 0; j < 16; j++)
-		{
-			uint8_t jj = 255;
-			if (j < 8)
-			{
-				jj = j + 5;
-			}
-			else if (j >= 11 && j < 16)
-			{
-				jj = j - 11;
-			}
-
-			if (jj < MATRIX_COLUMNS)
-			{
-				if (HAL_GPIO_ReadPin(HC165_QH_GPIO_Port, HC165_QH_Pin))
-				{
-					keyState[i] &= ~((uint16_t)1 << jj);
-
-					if (keyState[i] != prevKeyState[i])
-					{
-						uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-						clearKeys(keycode);
-					}
-				}
-				else
-				{
-					keyState[i] |= ((uint16_t)1 << jj);
-
-					uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-					setKeys(keycode);
-				}
-			}
-
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_RESET);
-		}
-
-		i++;
-		break;
 	case 1:
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_RESET);
-
-		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_RESET);
-		//HAL_Delay(1);
-		for (int t = 0; t < 1000; t++)
-		{
-			asm("NOP");
-		}
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_SET);
-
-		for (int j = 0; j < 16; j++)
-		{
-			uint8_t jj = 255;
-			if (j < 8)
-			{
-				jj = j + 5;
-			}
-			else if (j >= 11 && j < 16)
-			{
-				jj = j - 11;
-			}
-
-			if (jj < MATRIX_COLUMNS)
-			{
-				if (HAL_GPIO_ReadPin(HC165_QH_GPIO_Port, HC165_QH_Pin))
-				{
-					keyState[i] &= ~((uint16_t) 1 << jj);
-
-					if (keyState[i] != prevKeyState[i])
-					{
-						uint8_t keycode = getKeyCode(keymapID, i,
-								(MATRIX_COLUMNS - 1) - jj);
-						clearKeys(keycode);
-					}
-				}
-				else
-				{
-					keyState[i] |= ((uint16_t) 1 << jj);
-
-					uint8_t keycode = getKeyCode(keymapID, i,
-							(MATRIX_COLUMNS - 1) - jj);
-					setKeys(keycode);
-				}
-			}
-
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin,
-					GPIO_PIN_RESET);
-		}
-
-		i++;
-		break;
 	case 2:
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_RESET);
-
-		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_RESET);
-		//HAL_Delay(1);
-		for (int t = 0; t < 1000; t++)
-		{
-			asm("NOP");
-		}
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_SET);
-
-		for (int j = 0; j < 16; j++)
-		{
-			uint8_t jj = 255;
-			if (j < 8)
-			{
-				jj = j + 5;
-			}
-			else if (j >= 11 && j < 16)
-			{
-				jj = j - 11;
-			}
-
-			if (jj < MATRIX_COLUMNS)
-			{
-				if (HAL_GPIO_ReadPin(HC165_QH_GPIO_Port, HC165_QH_Pin))
-				{
-					keyState[i] &= ~((uint16_t)1 << jj);
-
-					if (keyState[i] != prevKeyState[i])
-					{
-						uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-						clearKeys(keycode);
-					}
-				}
-				else
-				{
-					keyState[i] |= ((uint16_t)1 << jj);
-
-					uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-					setKeys(keycode);
-				}
-			}
-
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_RESET);
-		}
-
-		i++;
-		break;
 	case 3:
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_RESET);
-
-		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_RESET);
-		//HAL_Delay(1);
-		for (int t = 0; t < 1000; t++)
-		{
-			asm("NOP");
-		}
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_SET);
-
-		for (int j = 0; j < 16; j++)
-		{
-			uint8_t jj = 255;
-			if (j < 8)
-			{
-				jj = j + 5;
-			}
-			else if (j >= 11 && j < 16)
-			{
-				jj = j - 11;
-			}
-
-			if (jj < MATRIX_COLUMNS)
-			{
-				if (HAL_GPIO_ReadPin(HC165_QH_GPIO_Port, HC165_QH_Pin))
-				{
-					keyState[i] &= ~((uint16_t)1 << jj);
-
-					if (keyState[i] != prevKeyState[i])
-					{
-						uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-						clearKeys(keycode);
-					}
-				}
-				else
-				{
-					keyState[i] |= ((uint16_t)1 << jj);
-
-					uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-					setKeys(keycode);
-				}
-			}
-
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_RESET);
-		}
-
-		i++;
-		break;
 	case 4:
 		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_SET);
 		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_RESET);
@@ -798,7 +586,7 @@ void detectSwitches(void)
 		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_SET);
 
 		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_RESET);
-		//HAL_Delay(1);
+
 		for (int t = 0; t < 1000; t++)
 		{
 			asm("NOP");
@@ -849,7 +637,6 @@ void detectSwitches(void)
 		{
 			if (keyState[i] != 0x0 || (keyState[i] == 0x0 && keyState[i] != prevKeyState[i]))
 			{
-				//USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
 				if (!tud_hid_ready())
 					return;
 
@@ -864,85 +651,8 @@ void detectSwitches(void)
 		}
 
 		i = 0;
+		break;
 	}
-#if 0
-	HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_RESET);
-
-	for (int i = 0; i < MATRIX_ROWS; i++)
-	{
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_RESET);
-
-		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_RESET);
-		//HAL_Delay(1);
-		for (int t = 0; t < 1000; t++)
-		{
-			asm("NOP");
-		}
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_SET);
-
-		for (int j = 0; j < 16; j++)
-		{
-			uint8_t jj = 255;
-			if (j < 8)
-			{
-				jj = j + 5;
-			}
-			else if (j >= 11 && j < 16)
-			{
-				jj = j - 11;
-			}
-
-			if (jj < MATRIX_COLUMNS)
-			{
-				if (HAL_GPIO_ReadPin(HC165_QH_GPIO_Port, HC165_QH_Pin))
-				{
-					keyState[i] &= ~((uint16_t)1 << jj);
-
-					if (keyState[i] != prevKeyState[i])
-					{
-						uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-						clearKeys(keycode);
-					}
-				}
-				else
-				{
-					keyState[i] |= ((uint16_t)1 << jj);
-
-					uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-					setKeys(keycode);
-				}
-			}
-
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_RESET);
-		}
-
-#if 0
-		SEGGER_RTT_printf(0, "key[%d]: 0x%04X\n", i, keyState[i]);
-#endif
-	}
-
-	for (int i = 0; i < MATRIX_ROWS; i++)
-	{
-		if (keyState[i] != 0x0 || (keyState[i] == 0x0 && keyState[i] != prevKeyState[i]))
-		{
-			//USBD_HID_SendReport(&hUsbDeviceFS, &keyboardHID, sizeof(keyboardHID));
-			if (!tud_hid_ready())
-				return;
-
-			tud_hid_keyboard_report(REPORT_ID_KEYBOARD, keyboardHID.modifiers, keyboardHID.key);
-			break;
-		}
-	}
-
-	for (int i = 0; i < MATRIX_ROWS; i++)
-	{
-		prevKeyState[i] = keyState[i];
-	}
-#endif
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
