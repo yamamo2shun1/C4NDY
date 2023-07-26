@@ -1,0 +1,49 @@
+Sigma Studio Version 4.7. Build 0, Rev 1827
+
+Analog Devices Compiler for the 3rd generation SigmaDSP core.
+Build date = 4/5/2022 at 11:20 AM
+
+## Summary ##
+(Note: Estimates are based on a 48 kHz sample rate)
+
+Instructions used:
+217	(out of a possible 1024 )
+Modulo Data RAM used (X Memory):
+107	(out of a possible 4096 )
+Non Modulo Data RAM used (X Memory):
+0	(out of a possible 4096 )
+Parameter RAM used (Y Memory):
+42	(out of a possible 1024 )
+
+Instance                      		Mips	Inst	Data	Coeff	Other
+                              			(max)
+phono eq                      		54	54	42	15
+ln ph sw                      		26	26	11	2
+Beginning                     		19	19	0	1
+Mid EQ1                       		18	18	18	5
+SafeLoadCode                  		15	15	0	7
+master gain                   		13	13	7	2
+SW vol 1                      		13	13	7	1
+SW vol 2                      		13	13	7	1
+phono gain                    		13	13	5	2
+Input1                        		8	8	4	0
+End                           		5	5	0	0
+Mg1                           		3	3	1	1
+Mg2                           		3	3	1	1
+Mg4                           		3	3	1	1
+Mg3                           		3	3	1	1
+DC1                           		2	2	1	1
+DC2                           		2	2	1	1
+Output1                       		2	2	0	0
+Output2                       		2	2	0	0
+
+Subroutines called:
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                      			217	217	107	42
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+(%)                          			21%	21%	3%	4%
+
+Files written:  
+program_data.dat - load file for downloading code using ADI loader
+hex_program_data.dat - load file for downloading code using microcontroller 
+ParamAddress.dat - Parameter RAM locations for schematic instances
