@@ -124,12 +124,7 @@ int32_t mic_buf[CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 2];
 #if 0
 int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
 #else
-#define MAX_RW_INDEX 64
-int32_t spk_buf[192 * MAX_RW_INDEX] = {0};
-//static int32_t __attribute__((section(".sai_dma_buffer_section"))) __attribute__((aligned(32))) spk_buf[192 * MAX_RW_INDEX] = {0};
-//static volatile int32_t spk_buf[192 * MAX_RW_INDEX] = {0};
-uint64_t spk_read_index = 0;
-uint64_t spk_write_index = 0;
+int32_t spk_buf[192 * 10] = {0};
 #endif
 
 // Speaker data size received in the last frame
@@ -496,31 +491,9 @@ bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, ui
   (void)ep_out;
   (void)cur_alt_setting;
 
-  //HAL_SAI_DMAStop(&hsai_BlockB1);
-  //spk_data_size = tud_audio_read(spk_buf + (spk_read_index & (MAX_RW_INDEX - 1)), n_bytes_received);
   spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
 
-  if (spk_data_size)
-  {
-#if 0
-	  if (spk_data_size != 192)
-	  {
-		  SEGGER_RTT_printf(0, "spk_data_size = %d(%d)\n", spk_data_size, n_bytes_received);
-	  }
-#endif
-	  //spk_read_index++;
-
-#if 1
-	  //if (spk_read_index > spk_write_index)
-	  {
-		  HAL_SAI_DMAStop(&hsai_BlockB1);
-		  //HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)(spk_buf + (spk_write_index & (MAX_RW_INDEX - 1))), n_bytes_received);
-		  HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)spk_buf, n_bytes_received);
-		  //spk_write_index++;
-		  spk_data_size = 0;
-	  }
-#endif
-  }
+  //SEGGER_RTT_printf(0, "size = %d %d\n", spk_data_size, n_bytes_received);
 
   return true;
 }
@@ -538,30 +511,30 @@ bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, u
 
 void audio_task(void)
 {
-#if 0
-	master_gain_buffer[buffer_index] = pot_value[0] >> 2;
-	buffer_index = (buffer_index + 1) % 16;
-	master_gain = 0;
-	for (int i = 0; i < 16; i++)
+	if (spk_data_size)
 	{
-		master_gain += master_gain_buffer[i];
+		HAL_SAI_Transmit(&hsai_BlockB1, (uint8_t *)spk_buf, spk_data_size / 2, 10000);
+		spk_data_size = 0;
 	}
-	master_gain /= 16;
-
-	if (abs(master_gain - master_gain_prev) > 2)
-	{
-		//SEGGER_RTT_printf(0, "master gain = %d\n", master_gain);
-		send_master_gain(master_gain);
-		master_gain_prev = master_gain;
-	}
-#endif
-
 #if 0
-	if (spk_read_index > spk_write_index)
+	else
 	{
-		HAL_SAI_DMAStop(&hsai_BlockB1);
-		HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)(spk_buf + (spk_write_index % MAX_RW_INDEX)), 192);
-		spk_write_index++;
+		//SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0] >> 2, pot_value[1] >> 2);
+		master_gain_buffer[buffer_index] = pot_value[0] >> 2;
+		buffer_index = (buffer_index + 1) & (16 - 1);
+		master_gain = 0;
+		for (int i = 0; i < 16; i++)
+		{
+			master_gain += master_gain_buffer[i];
+		}
+		master_gain >>= 4;
+
+		if (abs(master_gain - master_gain_prev) > 2)
+		{
+			//SEGGER_RTT_printf(0, "master gain = %d\n", master_gain);
+			send_master_gain(master_gain);
+			master_gain_prev = master_gain;
+		}
 	}
 #endif
 }
@@ -869,24 +842,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim == &htim6)
 	{
-		//detectSwitches();
-#if 0
+		//SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0] >> 2, pot_value[1] >> 2);
 		master_gain_buffer[buffer_index] = pot_value[0] >> 2;
-		buffer_index = (buffer_index + 1) % 16;
+		buffer_index = (buffer_index + 1) & (16 - 1);
 		master_gain = 0;
 		for (int i = 0; i < 16; i++)
 		{
 			master_gain += master_gain_buffer[i];
 		}
-		master_gain /= 16;
+		master_gain >>= 4;
 
 		if (abs(master_gain - master_gain_prev) > 2)
 		{
-			//SEGGER_RTT_printf(0, "master gain = %d\n", master_gain);
+			SEGGER_RTT_printf(0, "master gain = %d\n", master_gain);
 			send_master_gain(master_gain);
 			master_gain_prev = master_gain;
 		}
-#endif
 	}
 }
 
@@ -973,7 +944,7 @@ int main(void)
       Error_Handler();
   }
 
-  //HAL_TIM_Base_Start_IT(&htim6);
+  HAL_TIM_Base_Start_IT(&htim6);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -982,24 +953,7 @@ int main(void)
   {
 	  tud_task();
 
-	  //SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0] >> 2, pot_value[1] >> 2);
-	  master_gain_buffer[buffer_index] = pot_value[0] >> 2;
-	  buffer_index = (buffer_index + 1) & (16 - 1);
-	  master_gain = 0;
-	  for (int i = 0; i < 16; i++)
-	  {
-		  master_gain += master_gain_buffer[i];
-	  }
-	  master_gain >>= 4;
-
-	  if (abs(master_gain - master_gain_prev) > 2)
-	  {
-		  //SEGGER_RTT_printf(0, "master gain = %d\n", master_gain);
-		  send_master_gain(master_gain);
-		  master_gain_prev = master_gain;
-	  }
-
-	  //audio_task();
+	  audio_task();
 
 	  detectSwitches();
     /* USER CODE END WHILE */
