@@ -122,10 +122,13 @@ int16_t volume[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];    // +1 for master chan
 int32_t mic_buf[CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 2];
 // Buffer for speaker data
 int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
+int32_t hpout_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
 
+#define SAI_RNG_BUF_SIZE 5120
+#define SAI_BUF_SIZE 256
 uint32_t sai_buf_index = 0;
 uint32_t sai_transmit_index = 0;
-int32_t sai_buf[192 * 10] = {0};
+int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
 
 // Speaker data size received in the last frame
 int spk_data_size;
@@ -494,13 +497,8 @@ bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, ui
   spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
   for (int i = 0; i < spk_data_size / 4; i++)
   {
-#if 0
-	  sai_buf[sai_buf_index] = spk_buf[i];
-	  sai_buf_index = (sai_buf_index + 1) % 1920;
-#else
-	  sai_buf[sai_buf_index % 1920] = spk_buf[i];
+	  sai_buf[sai_buf_index % SAI_RNG_BUF_SIZE] = spk_buf[i];
 	  sai_buf_index++;
-#endif
   }
 
   return true;
@@ -517,50 +515,37 @@ bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, u
   return true;
 }
 
+void HAL_SAI_TxCpltCallback(SAI_HandleTypeDef *hsai)
+{
+	if (sai_buf_index >= (sai_transmit_index + SAI_BUF_SIZE))
+	{
+		for (int i = 0; i < SAI_BUF_SIZE / 4; i++)
+		{
+			hpout_buf[i] = sai_buf[(i + sai_transmit_index) % SAI_RNG_BUF_SIZE];
+		}
+		sai_transmit_index += SAI_BUF_SIZE / 4;
+		spk_data_size = 0;
+	}
+}
+
 void audio_task(void)
 {
-#if 0
-	if (spk_data_size)
+	//SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0] >> 2, pot_value[1] >> 2);
+	master_gain_buffer[buffer_index] = pot_value[0] >> 2;
+	buffer_index = (buffer_index + 1) & (16 - 1);
+	master_gain = 0;
+	for (int i = 0; i < 16; i++)
 	{
-		HAL_SAI_Transmit(&hsai_BlockB1, (uint8_t *)spk_buf, spk_data_size / 2, 10000);
-		spk_data_size = 0;
+		master_gain += master_gain_buffer[i];
 	}
-#endif
+	master_gain >>= 4;
 
-#if 0
-	HAL_SAI_Transmit(&hsai_BlockB1, (uint8_t *)(sai_buf + sai_transmit_index), 128 / 2, 10000);
-	sai_transmit_index = (sai_transmit_index + 128 / 4) % 1920;
-	spk_data_size = 0;
-#else
-	if (sai_buf_index >= (sai_transmit_index + 192))
+	if (abs(master_gain - master_gain_prev) > 2)
 	{
-		HAL_SAI_Transmit(&hsai_BlockB1, (uint8_t *)(sai_buf + sai_transmit_index % 1920), 192 / 2, 10000);
-		sai_transmit_index += 192 / 4;
-		spk_data_size = 0;
+		//SEGGER_RTT_printf(0, "master gain = %d\n", master_gain);
+		send_master_gain(master_gain);
+		master_gain_prev = master_gain;
 	}
-#endif
-
-#if 0
-	//else
-	{
-		//SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0] >> 2, pot_value[1] >> 2);
-		master_gain_buffer[buffer_index] = pot_value[0] >> 2;
-		buffer_index = (buffer_index + 1) & (16 - 1);
-		master_gain = 0;
-		for (int i = 0; i < 16; i++)
-		{
-			master_gain += master_gain_buffer[i];
-		}
-		master_gain >>= 4;
-
-		if (abs(master_gain - master_gain_prev) > 2)
-		{
-			//SEGGER_RTT_printf(0, "master gain = %d\n", master_gain);
-			send_master_gain(master_gain);
-			master_gain_prev = master_gain;
-		}
-	}
-#endif
 }
 
 uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y)
@@ -968,7 +953,9 @@ int main(void)
       Error_Handler();
   }
 
-  HAL_TIM_Base_Start_IT(&htim6);
+  //HAL_TIM_Base_Start_IT(&htim6);
+
+  HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)hpout_buf, SAI_BUF_SIZE / 2);
 
   /* USER CODE END 2 */
 
