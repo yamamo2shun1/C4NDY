@@ -124,11 +124,12 @@ int32_t mic_buf[CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 2];
 int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
 int32_t hpout_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
 
-#define SAI_RNG_BUF_SIZE 5120
-#define SAI_BUF_SIZE 256
-uint32_t sai_buf_index = 0;
-uint32_t sai_transmit_index = 0;
+#define SAI_RNG_BUF_SIZE 20480
+#define SAI_BUF_SIZE 512
+uint64_t sai_buf_index = 0;
+uint64_t sai_transmit_index = 0;
 int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
+bool is_dma_pause = false;
 
 // Speaker data size received in the last frame
 int spk_data_size;
@@ -501,6 +502,8 @@ bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, ui
 	  sai_buf_index++;
   }
 
+  //SEGGER_RTT_printf(0, "sai_buf_index = %d\n", sai_buf_index);
+
   return true;
 }
 
@@ -517,15 +520,17 @@ bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, u
 
 void HAL_SAI_TxCpltCallback(SAI_HandleTypeDef *hsai)
 {
-	if (sai_buf_index >= (sai_transmit_index + SAI_BUF_SIZE))
+	if (sai_buf_index >= (sai_transmit_index + SAI_BUF_SIZE / 4))
 	{
 		for (int i = 0; i < SAI_BUF_SIZE / 4; i++)
 		{
-			hpout_buf[i] = sai_buf[(i + sai_transmit_index) % SAI_RNG_BUF_SIZE];
+			hpout_buf[i] = sai_buf[sai_transmit_index % SAI_RNG_BUF_SIZE];
+			sai_transmit_index++;
 		}
-		sai_transmit_index += SAI_BUF_SIZE / 4;
-		spk_data_size = 0;
+		//spk_data_size = 0;
 	}
+	//SEGGER_RTT_printf(0, "index %u %u\n", sai_buf_index, sai_transmit_index);
+	//SEGGER_RTT_printf(0, "sai_transmit_index %d\n", sai_transmit_index);
 }
 
 void audio_task(void)
