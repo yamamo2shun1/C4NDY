@@ -636,197 +636,67 @@ void setKeys(uint8_t code)
 	}
 }
 
-void test0(void)
-{
-	HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_RESET);
-
-	HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_SET);
-
-	HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_RESET);
-	asm("NOP");
-	HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_SET);
-}
-
-void test(int i, int startPos, int endPos)
-{
-	for (int j = startPos; j < endPos; j++)
-	{
-		uint8_t jj = 255;
-		if (j < 8)
-		{
-			jj = j + 5;
-		}
-		else if (j >= 11 && j < 16)
-		{
-			jj = j - 11;
-		}
-
-		if (jj < MATRIX_COLUMNS)
-		{
-			if (HAL_GPIO_ReadPin(HC165_QH_GPIO_Port, HC165_QH_Pin))
-			{
-				keyState[i] &= ~((uint16_t)1 << jj);
-
-				if (keyState[i] != prevKeyState[i])
-				{
-					uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-					clearKeys(keycode);
-				}
-			}
-			else
-			{
-				keyState[i] |= ((uint16_t)1 << jj);
-
-				uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-				setKeys(keycode);
-			}
-		}
-
-		HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_RESET);
-	}
-}
-
 void detectSwitches(void)
 {
 	static int i = 0;
-	static int index = 0;
 
 	switch (i)
 	{
-	case 0:// 0
+	case 0:
 		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_RESET);
-		test0();
-
-		i++;
-		break;
 	case 1:
-		test(index, 0, 4);
-
-		i++;
-		break;
 	case 2:
-		test(index, 4, 8);
-
-		i++;
-		break;
 	case 3:
-		test(index, 8, 12);
-
-		i++;
-		break;
 	case 4:
-		test(index, 12, 16);
-		index++;
+		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_RESET);
+
+		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_SET);
+
+		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_RESET);
+		asm("NOP");
+		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_SET);
+
+		for (int j = 0; j < 16; j++)
+		{
+			uint8_t jj = 255;
+			if (j < 8)
+			{
+				jj = j + 5;
+			}
+			else if (j >= 11 && j < 16)
+			{
+				jj = j - 11;
+			}
+
+			if (jj < MATRIX_COLUMNS)
+			{
+				if (HAL_GPIO_ReadPin(HC165_QH_GPIO_Port, HC165_QH_Pin))
+				{
+					keyState[i] &= ~((uint16_t)1 << jj);
+
+					if (keyState[i] != prevKeyState[i])
+					{
+						uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
+						clearKeys(keycode);
+					}
+				}
+				else
+				{
+					keyState[i] |= ((uint16_t)1 << jj);
+
+					uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
+					setKeys(keycode);
+				}
+			}
+
+			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_RESET);
+		}
 
 		i++;
 		break;
-	case 5:// 1
-		test0();
-
-		i++;
-		break;
-	case 6:
-		test(index, 0, 4);
-
-		i++;
-		break;
-	case 7:
-		test(index, 4, 8);
-
-		i++;
-		break;
-	case 8:
-		test(index, 8, 12);
-
-		i++;
-		break;
-	case 9:
-		test(index, 12, 16);
-		index++;
-
-		i++;
-		break;
-	case 10:// 2
-		test0();
-
-		i++;
-		break;
-	case 11:
-		test(index, 0, 4);
-
-		i++;
-		break;
-	case 12:
-		test(index, 4, 8);
-
-		i++;
-		break;
-	case 13:
-		test(index, 8, 12);
-
-		i++;
-		break;
-	case 14:
-		test(index, 12, 16);
-		index++;
-
-		i++;
-		break;
-	case 15:// 3
-		test0();
-
-		i++;
-		break;
-	case 16:
-		test(index, 0, 4);
-
-		i++;
-		break;
-	case 17:
-		test(index, 4, 8);
-
-		i++;
-		break;
-	case 18:
-		test(index, 8, 12);
-
-		i++;
-		break;
-	case 19:
-		test(index, 12, 16);
-		index++;
-
-		i++;
-		break;
-	case 20:// 4
-		test0();
-
-		i++;
-		break;
-	case 21:
-		test(index, 0, 4);
-
-		i++;
-		break;
-	case 22:
-		test(index, 4, 8);
-
-		i++;
-		break;
-	case 23:
-		test(index, 8, 12);
-
-		i++;
-		break;
-	case 24:
-		test(index, 12, 16);
-		index = 0;
-
-		i++;
-		break;
-	case 25:
+	case 5:
 		for (int i = 0; i < MATRIX_ROWS; i++)
 		{
 			if (keyState[i] != 0x0 || (keyState[i] == 0x0 && keyState[i] != prevKeyState[i]))
