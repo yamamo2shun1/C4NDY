@@ -76,7 +76,11 @@
 
 /* USER CODE BEGIN PV */
 uint16_t pot_value[2] = {0};
+uint8_t xfade_buffer_index = 0;
 uint8_t buffer_index = 0;
+uint16_t xfade_buffer[16] = {0};
+uint16_t xfade = 0;
+uint16_t xfade_prev = 0;
 uint16_t master_gain_buffer[16] = {0};
 uint16_t master_gain = 0;
 uint16_t master_gain_prev = 0;
@@ -121,8 +125,8 @@ int16_t volume[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];    // +1 for master chan
 // Buffer for microphone data
 int32_t mic_buf[CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 2];
 // Buffer for speaker data
-int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
-int32_t hpout_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
+int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2] = {0};
+int32_t hpout_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2] = {0};
 
 #define SAI_RNG_BUF_SIZE 20480
 #define SAI_BUF_SIZE 512
@@ -527,15 +531,26 @@ void HAL_SAI_TxCpltCallback(SAI_HandleTypeDef *hsai)
 			hpout_buf[i] = sai_buf[sai_transmit_index % SAI_RNG_BUF_SIZE];
 			sai_transmit_index++;
 		}
-		//spk_data_size = 0;
 	}
-	//SEGGER_RTT_printf(0, "index %u %u\n", sai_buf_index, sai_transmit_index);
-	//SEGGER_RTT_printf(0, "sai_transmit_index %d\n", sai_transmit_index);
 }
 
-void audio_task(void)
+void codec_control_task(void)
 {
-	//SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0] >> 2, pot_value[1] >> 2);
+	xfade_buffer[xfade_buffer_index] = pot_value[1] >> 2;
+	xfade_buffer_index = (xfade_buffer_index + 1) & (16 - 1);
+	xfade = 0;
+	for (int i = 0; i < 16; i++)
+	{
+		xfade += xfade_buffer[i];
+	}
+	xfade >>= 4;
+
+	if (abs(xfade - xfade_prev) > 2)
+	{
+		send_xfade(xfade);
+		xfade_prev = xfade;
+	}
+
 	master_gain_buffer[buffer_index] = pot_value[0] >> 2;
 	buffer_index = (buffer_index + 1) & (16 - 1);
 	master_gain = 0;
@@ -547,7 +562,6 @@ void audio_task(void)
 
 	if (abs(master_gain - master_gain_prev) > 2)
 	{
-		//SEGGER_RTT_printf(0, "master gain = %d\n", master_gain);
 		send_master_gain(master_gain);
 		master_gain_prev = master_gain;
 	}
@@ -636,7 +650,7 @@ void setKeys(uint8_t code)
 	}
 }
 
-void detectSwitches(void)
+void hid_keyscan_task(void)
 {
 	static int i = 0;
 
@@ -745,6 +759,27 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 }
 
+void send_xfade(uint16_t fader_val)
+{
+	double xf_rate = (double)fader_val / 1023.0;
+
+	uint8_t dc1_array[4] = {0x00};
+	dc1_array[0] = ((uint32_t)((1.0 - xf_rate) * pow(2, 23)) >> 24) & 0x000000FF;
+	dc1_array[1] = ((uint32_t)((1.0 - xf_rate) * pow(2, 23)) >> 16) & 0x000000FF;
+	dc1_array[2] = ((uint32_t)((1.0 - xf_rate) * pow(2, 23)) >> 8)  & 0x000000FF;
+	dc1_array[3] =  (uint32_t)((1.0 - xf_rate) * pow(2, 23))        & 0x000000FF;
+
+	SIGMA_WRITE_REGISTER_BLOCK(DEVICE_ADDR_IC_1, MOD_DC1_DCINPALG1_ADDR, 4, dc1_array);
+
+	uint8_t dc2_array[4] = {0x00};
+	dc2_array[0] = ((uint32_t)(xf_rate * pow(2, 23)) >> 24) & 0x000000FF;
+	dc2_array[1] = ((uint32_t)(xf_rate * pow(2, 23)) >> 16) & 0x000000FF;
+	dc2_array[2] = ((uint32_t)(xf_rate * pow(2, 23)) >> 8)  & 0x000000FF;
+	dc2_array[3] =  (uint32_t)(xf_rate * pow(2, 23))        & 0x000000FF;
+
+	SIGMA_WRITE_REGISTER_BLOCK(DEVICE_ADDR_IC_1, MOD_DC2_DCINPALG2_ADDR, 4, dc2_array);
+}
+
 void send_master_gain(uint16_t master_val)
 {
 	double master_db = (135.0 / 1023.0) * (double)master_val - 120.0;
@@ -828,9 +863,13 @@ int main(void)
       Error_Handler();
   }
 
-  //HAL_TIM_Base_Start_IT(&htim6);
+  if (HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)hpout_buf, SAI_BUF_SIZE / 2) != HAL_OK)
+  {
+	  /* SAI transmit start error */
+	  Error_Handler();
+  }
 
-  HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)hpout_buf, SAI_BUF_SIZE / 2);
+  //HAL_TIM_Base_Start_IT(&htim6);
 
   /* USER CODE END 2 */
 
@@ -840,9 +879,9 @@ int main(void)
   {
 	  tud_task();
 
-	  audio_task();
+	  codec_control_task();
 
-	  detectSwitches();
+	  hid_keyscan_task();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
