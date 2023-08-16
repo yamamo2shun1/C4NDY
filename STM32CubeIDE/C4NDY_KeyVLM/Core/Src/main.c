@@ -842,6 +842,21 @@ void send_switch_to_phonoin(void)
 									    0x00, 0x00, 0x00, 0x01};
 	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address1_count);
 }
+
+void erase_flash_data(void)
+{
+	static FLASH_EraseInitTypeDef EraseInitStruct;
+	uint32_t PAGEError;
+	EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+	EraseInitStruct.Page = 255;
+	EraseInitStruct.NbPages = 1;
+
+	if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK)
+	{
+		SEGGER_RTT_printf(0, "flash erase error...\n");
+	}
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -904,6 +919,34 @@ int main(void)
   }
 
   //HAL_TIM_Base_Start_IT(&htim6);
+
+  uint32_t flash_addr = 0x0807F800;
+  SEGGER_RTT_printf(0, "user_sw = %d\n", HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin));
+  if (!HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin))
+  {
+	  SEGGER_RTT_printf(0, "init flash data");
+
+	  HAL_FLASH_Unlock();
+
+	  erase_flash_data();
+
+	  if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, flash_addr, 5) != HAL_OK)
+	  {
+		  SEGGER_RTT_printf(0, "flash program error...\n");
+	  }
+	  if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, flash_addr + 8, 99) != HAL_OK)
+	  {
+		  SEGGER_RTT_printf(0, "flash program error...\n");
+	  }
+	  HAL_FLASH_Lock();
+  }
+
+  uint64_t test_val = 0;
+  test_val = *(uint64_t *)flash_addr;
+  SEGGER_RTT_printf(0, "test_val0 = %u\n", test_val);
+
+  test_val = *(uint64_t *)(flash_addr + 8);
+  SEGGER_RTT_printf(0, "test_val1 = %u\n", test_val);
 
   //send_switch_to_phonoin();
   //send_switch_to_linein();
