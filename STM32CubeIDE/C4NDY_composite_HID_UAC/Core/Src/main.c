@@ -808,6 +808,40 @@ void send_master_gain(uint16_t master_val)
 									   0x00, 0x00, 0x00, MOD_MASTERGAIN_COUNT};
 	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address_count);
 }
+
+void send_switch_to_linein(void)
+{
+	uint8_t switch0_array[4] = {0x00, 0x80, 0x00, 0x00};
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 4, switch0_array);
+
+	uint8_t target_address0_count[8] = {0x00, 0x00, 0x00, MOD_LNPHSW_ALG0_STEREODEMUXSLEW10_ADDR - 1,
+									    0x00, 0x00, 0x00, 0x01};
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address0_count);
+
+	uint8_t switch1_array[4] = {0x00, 0x00, 0x00, 0x00};
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 4, switch1_array);
+
+	uint8_t target_address1_count[8] = {0x00, 0x00, 0x00, MOD_LNPHSW_ALG0_STEREODEMUXSLEW11_ADDR - 1,
+									    0x00, 0x00, 0x00, 0x01};
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address1_count);
+}
+
+void send_switch_to_phonoin(void)
+{
+	uint8_t switch0_array[4] = {0x00, 0x00, 0x00, 0x00};
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 4, switch0_array);
+
+	uint8_t target_address0_count[8] = {0x00, 0x00, 0x00, MOD_LNPHSW_ALG0_STEREODEMUXSLEW10_ADDR - 1,
+									    0x00, 0x00, 0x00, 0x01};
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address0_count);
+
+	uint8_t switch1_array[4] = {0x00, 0x80, 0x00, 0x00};
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 4, switch1_array);
+
+	uint8_t target_address1_count[8] = {0x00, 0x00, 0x00, MOD_LNPHSW_ALG0_STEREODEMUXSLEW11_ADDR - 1,
+									    0x00, 0x00, 0x00, 0x01};
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address1_count);
+}
 /* USER CODE END 0 */
 
 /**
@@ -870,6 +904,9 @@ int main(void)
   }
 
   //HAL_TIM_Base_Start_IT(&htim6);
+
+  //send_switch_to_phonoin();
+  //send_switch_to_linein();
 
   /* USER CODE END 2 */
 
