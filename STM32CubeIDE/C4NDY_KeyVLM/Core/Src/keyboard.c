@@ -7,6 +7,7 @@
 
 #include "main.h"
 #include "keyboard.h"
+#include "audio_control.h"
 
 struct keyboardHID_t {
 	uint8_t modifiers;
@@ -19,6 +20,9 @@ uint16_t prevKeyState[MATRIX_ROWS] = {0x0};
 
 bool isKeymapIDChanged = false;
 uint8_t keymapID = 0;
+
+bool isLinePhonoSWChanged = false;
+uint8_t linePhonoSW = 0;
 
 // deafult QWERTY layout
 uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS] = {
@@ -70,6 +74,10 @@ void clearKeys(uint8_t code)
 	{
 		isKeymapIDChanged = false;
 	}
+	else if (code == SC_LNPH)
+	{
+		isLinePhonoSWChanged = false;
+	}
 	else if (code >= SC_LCONTROL && code <= SC_RGUI)
 	{
 		keyboardHID.modifiers &= ~(1 << (code - SC_LCONTROL));
@@ -88,7 +96,7 @@ void clearKeys(uint8_t code)
 
 void setKeys(uint8_t code)
 {
-	if (code == 0xFF)
+	if (code == SC_LAYOUT)
 	{
 		if (!isKeymapIDChanged)
 		{
@@ -103,6 +111,23 @@ void setKeys(uint8_t code)
 				HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
 			}
 			isKeymapIDChanged = true;
+		}
+	}
+	else if (code == SC_LNPH)
+	{
+		if (!isLinePhonoSWChanged)
+		{
+			if (linePhonoSW == 0)
+			{
+				linePhonoSW = 1;
+				send_switch_to_linein();
+			}
+			else
+			{
+				linePhonoSW = 0;
+				send_switch_to_phonoin();
+			}
+			isLinePhonoSWChanged = true;
 		}
 	}
 	else if (code >= SC_LCONTROL && code <= SC_RGUI)
