@@ -47,6 +47,13 @@ void HAL_SAI_TxCpltCallback(SAI_HandleTypeDef *hsai)
 
 void start_adc(void)
 {
+	/* Run the ADC calibration in single-ended mode */
+	if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK)
+	{
+		/* Calibration Error */
+		Error_Handler();
+	}
+
 	if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *)pot_value, 2) != HAL_OK)
 	{
 		/* ADC conversion start error */

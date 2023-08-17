@@ -501,13 +501,6 @@ int main(void)
 
   tusb_init();
 
-  /* Run the ADC calibration in single-ended mode */
-  if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK)
-  {
-	  /* Calibration Error */
-      Error_Handler();
-  }
-
   start_adc();
   start_sai();
 
