@@ -39,6 +39,8 @@
 #include "ADAU1761_IC_1_REG.h"
 #include "ADAU1761_IC_1.h"
 #include "SigmaStudioFW.h"
+
+#include "keyboard.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,8 +54,6 @@
 
 #define ADAU1761_ADDR 0x70
 
-#define MATRIX_ROWS 5
-#define MATRIX_COLUMNS 13
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -84,18 +84,6 @@ uint16_t xfade_prev = 0;
 uint16_t master_gain_buffer[16] = {0};
 uint16_t master_gain = 0;
 uint16_t master_gain_prev = 0;
-
-struct keyboardHID_t {
-	uint8_t modifiers;
-	uint8_t reserved;
-	uint8_t key[6];
-} keyboardHID;
-
-uint16_t keyState[MATRIX_ROWS] = {0x0};
-uint16_t prevKeyState[MATRIX_ROWS] = {0x0};
-
-bool isKeymapIDChanged = false;
-uint8_t keymapID = 0;
 
 // List of supported sample rates
 const uint32_t sample_rates[] = {48000};
@@ -145,33 +133,6 @@ uint8_t current_resolution = 16;
 
 #define N_SAMPLE_RATES  TU_ARRAY_SIZE(sample_rates)
 
-// deafult QWERTY layout
-uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS] = {
-//       ESC   1     2     3     4     5     6     7     8     9     0     -_    =+
-		{0x29, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x2D, 0x2E},
-//       TAB   q     w     e     r     t     y     u     i     o     p     [{    ]}
-		{0x2B, 0x14, 0x1A, 0x08, 0x15, 0x17, 0x1C, 0x18, 0x0C, 0x12, 0x13, 0x2F, 0x30},
-//       CAPS  a     s     d     f     g     h     j     k     l     ;:    '"    \|
-		{0x39, 0x04, 0x16, 0x07, 0x09, 0x0A, 0x0B, 0x0D, 0x0E, 0x0F, 0x33, 0x34, 0x89},
-//       LSFT  z     x     c     v     b     n     m     ,<    .>    /?    RSFT  `~
-		{0xE1, 0x1D, 0x1B, 0x06, 0x19, 0x05, 0x11, 0x10, 0x36, 0x37, 0x38, 0xE5, 0x35},
-//       GUI               LALT  BS    ENT   SPC   Int4  RCTRL ◀     ▼     ▲     ►
-		{0xE3, 0xFE, 0xFF, 0xE2, 0x2A, 0x28, 0x2C, 0x8A, 0xE4, 0x50, 0x51, 0x52, 0x4F}
-};
-
-// Pinky-less Dvorak layout
-uint8_t keymaps_pinkyless[MATRIX_ROWS][MATRIX_COLUMNS] = {
-//       ESC   1     2     3     4     5     6     7     8     9     0     [{    }]
-		{0x29, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x2F, 0x30},
-//       TAB   '"    ,<    o     u     y     f     g     c     r     l     /?    +=
-		{0x2B, 0x34, 0x36, 0x12, 0x18, 0x1C, 0x09, 0x0A, 0x06, 0x15, 0x0F, 0x38, 0x2E},
-//       LCTRL p     i     e     a     .>    d     s     t     h     z     -_    \|
-		{0xE0, 0x13, 0x0C, 0x08, 0x04, 0x37, 0x07, 0x16, 0x17, 0x0B, 0x1D, 0x2D, 0x31},
-//       LSFT  j     q     ;:    k     x     b     m     w     n     v     RSFT  `~
-		{0xE1, 0x0D, 0x14, 0x33, 0x0E, 0x1B, 0x05, 0x10, 0x1A, 0x11, 0x19, 0xE5, 0x35},
-//       GUI               LALT  BS    DEL   ENT   SPC   CAPS  ◀     ▼     ▲     ►
-		{0xE3, 0xFE, 0xFF, 0xE2, 0x2A, 0x4C, 0x28, 0x2C, 0x39, 0x50, 0x51, 0x52, 0x4F}
-};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -564,175 +525,6 @@ void codec_control_task(void)
 	{
 		send_master_gain(master_gain);
 		master_gain_prev = master_gain;
-	}
-}
-
-uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y)
-{
-	if (keymapId == 0)
-	{
-		return keymaps_default[x][y];
-	}
-	else
-	{
-		return keymaps_pinkyless[x][y];
-	}
-}
-
-void resetKeys(void)
-{
-	keyboardHID.modifiers = 0;
-	for (int k = 0; k < 6; k++)
-	{
-		keyboardHID.key[k] = 0;
-	}
-}
-
-void clearKeys(uint8_t code)
-{
-	if (code == 0xFF)
-	{
-		isKeymapIDChanged = false;
-	}
-	else if (code >= 0xE0 && code <= 0xE7)
-	{
-		keyboardHID.modifiers &= ~(1 << (code - 0xE0));
-	}
-	else
-	{
-		for (int k = 0; k < 6; k++)
-		{
-			if (keyboardHID.key[k] == code)
-			{
-				keyboardHID.key[k] = 0;
-			}
-		}
-	}
-}
-
-void setKeys(uint8_t code)
-{
-	if (code == 0xFF)
-	{
-		if (!isKeymapIDChanged)
-		{
-			if (keymapID == 0)
-			{
-				keymapID = 1;
-				HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
-			}
-			else
-			{
-				keymapID = 0;
-				HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
-			}
-			isKeymapIDChanged = true;
-		}
-	}
-	else if (code >= 0xE0 && code <= 0xE7)
-	{
-		keyboardHID.modifiers |= 1 << (code - 0xE0);
-	}
-	else
-	{
-		for (int k = 0; k < 6; k++)
-		{
-			if (keyboardHID.key[k] == code)
-			{
-				break;
-			}
-			else if (keyboardHID.key[k] == 0x00)
-			{
-				keyboardHID.key[k] = code;
-				break;
-			}
-		}
-	}
-}
-
-void hid_keyscan_task(void)
-{
-	static int i = 0;
-
-	switch (i)
-	{
-	case 0:
-		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_RESET);
-	case 1:
-	case 2:
-	case 3:
-	case 4:
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(HC164_CLK_GPIO_Port, HC164_CLK_Pin, GPIO_PIN_RESET);
-
-		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_RESET);
-		asm("NOP");
-		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_SET);
-
-		for (int j = 0; j < 16; j++)
-		{
-			uint8_t jj = 255;
-			if (j < 8)
-			{
-				jj = j + 5;
-			}
-			else if (j >= 11 && j < 16)
-			{
-				jj = j - 11;
-			}
-
-			if (jj < MATRIX_COLUMNS)
-			{
-				if (HAL_GPIO_ReadPin(HC165_QH_GPIO_Port, HC165_QH_Pin))
-				{
-					keyState[i] &= ~((uint16_t)1 << jj);
-
-					if (keyState[i] != prevKeyState[i])
-					{
-						uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-						clearKeys(keycode);
-					}
-				}
-				else
-				{
-					keyState[i] |= ((uint16_t)1 << jj);
-
-					uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-					setKeys(keycode);
-				}
-			}
-
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_RESET);
-		}
-
-		i++;
-		break;
-	case 5:
-		for (int i = 0; i < MATRIX_ROWS; i++)
-		{
-			if (keyState[i] != 0x0 || (keyState[i] == 0x0 && keyState[i] != prevKeyState[i]))
-			{
-				if (!tud_hid_ready())
-					return;
-
-				tud_hid_keyboard_report(REPORT_ID_KEYBOARD, keyboardHID.modifiers, keyboardHID.key);
-				break;
-			}
-		}
-
-		for (int i = 0; i < MATRIX_ROWS; i++)
-		{
-			prevKeyState[i] = keyState[i];
-		}
-
-		i = 0;
-		break;
-	default:
-		i = 0;
-		break;
 	}
 }
 
