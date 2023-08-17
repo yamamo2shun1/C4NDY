@@ -21,6 +21,8 @@
 #define __SIGMASTUDIOFW_H__
 
 #include "main.h"
+#include "adc.h"
+#include "i2c.h"
 
 /* 
  * TODO: Update for your system's data type

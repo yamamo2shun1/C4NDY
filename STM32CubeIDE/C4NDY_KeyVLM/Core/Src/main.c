@@ -35,12 +35,8 @@
 
 #include "usb_descriptors.h"
 
-#include "ADAU1761_IC_1_PARAM.h"
-#include "ADAU1761_IC_1_REG.h"
-#include "ADAU1761_IC_1.h"
-#include "SigmaStudioFW.h"
-
 #include "keyboard.h"
+#include "audio_control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,38 +48,16 @@
 /* USER CODE BEGIN PD */
 #define AUDIO_SAMPLE_RATE 48000
 
-#define ADAU1761_ADDR 0x70
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define SIGMASTUDIOTYPE_FIXPOINT 	0
-#define SIGMASTUDIOTYPE_INTEGER 	1
-
-#define SIGMA_SAFELOAD_MODULO_RAM_SIZE 0x0000
-#define SIGMA_SAFELOAD_DATA_1 0x0001
-#define SIGMA_SAFELOAD_DATA_2 0x0002
-#define SIGMA_SAFELOAD_DATA_3 0x0003
-#define SIGMA_SAFELOAD_DATA_4 0x0004
-#define SIGMA_SAFELOAD_DATA_5 0x0005
-#define SIGMA_SAFELOAD_TARGET_ADDRESS 0x0006
-#define SIGMA_SAFELOAD_TRIGGER 0x0007
 
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint16_t pot_value[2] = {0};
-uint8_t xfade_buffer_index = 0;
-uint8_t buffer_index = 0;
-uint16_t xfade_buffer[16] = {0};
-uint16_t xfade = 0;
-uint16_t xfade_prev = 0;
-uint16_t master_gain_buffer[16] = {0};
-uint16_t master_gain = 0;
-uint16_t master_gain_prev = 0;
 
 // List of supported sample rates
 const uint32_t sample_rates[] = {48000};
@@ -110,21 +84,6 @@ enum
 int8_t mute[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];       // +1 for master channel 0
 int16_t volume[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];    // +1 for master channel 0
 
-// Buffer for microphone data
-int32_t mic_buf[CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 2];
-// Buffer for speaker data
-int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2] = {0};
-int32_t hpout_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2] = {0};
-
-#define SAI_RNG_BUF_SIZE 20480
-#define SAI_BUF_SIZE 512
-uint64_t sai_buf_index = 0;
-uint64_t sai_transmit_index = 0;
-int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
-bool is_dma_pause = false;
-
-// Speaker data size received in the last frame
-int spk_data_size;
 // Resolution per format
 const uint8_t resolutions_per_format[CFG_TUD_AUDIO_FUNC_1_N_FORMATS] = {CFG_TUD_AUDIO_FUNC_1_FORMAT_1_RESOLUTION_RX,
                                                                         CFG_TUD_AUDIO_FUNC_1_FORMAT_2_RESOLUTION_RX};
@@ -444,7 +403,7 @@ bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const * p_reque
 #endif
 
   // Clear buffer when streaming format is changed
-  spk_data_size = 0;
+  clear_usb_audio_buf();
   if(alt != 0)
   {
     current_resolution = resolutions_per_format[alt-1];
@@ -460,12 +419,7 @@ bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, ui
   (void)ep_out;
   (void)cur_alt_setting;
 
-  spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
-  for (int i = 0; i < spk_data_size / 4; i++)
-  {
-	  sai_buf[sai_buf_index % SAI_RNG_BUF_SIZE] = spk_buf[i];
-	  sai_buf_index++;
-  }
+  read_audio_data_from_usb(n_bytes_received);
 
   //SEGGER_RTT_printf(0, "sai_buf_index = %d\n", sai_buf_index);
 
@@ -483,156 +437,12 @@ bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, u
   return true;
 }
 
-void HAL_SAI_TxCpltCallback(SAI_HandleTypeDef *hsai)
-{
-	if (sai_buf_index >= (sai_transmit_index + SAI_BUF_SIZE / 4))
-	{
-		for (int i = 0; i < SAI_BUF_SIZE / 4; i++)
-		{
-			hpout_buf[i] = sai_buf[sai_transmit_index % SAI_RNG_BUF_SIZE];
-			sai_transmit_index++;
-		}
-	}
-}
-
-void codec_control_task(void)
-{
-	xfade_buffer[xfade_buffer_index] = pot_value[1] >> 2;
-	xfade_buffer_index = (xfade_buffer_index + 1) & (16 - 1);
-	xfade = 0;
-	for (int i = 0; i < 16; i++)
-	{
-		xfade += xfade_buffer[i];
-	}
-	xfade >>= 4;
-
-	if (abs(xfade - xfade_prev) > 2)
-	{
-		send_xfade(xfade);
-		xfade_prev = xfade;
-	}
-
-	master_gain_buffer[buffer_index] = pot_value[0] >> 2;
-	buffer_index = (buffer_index + 1) & (16 - 1);
-	master_gain = 0;
-	for (int i = 0; i < 16; i++)
-	{
-		master_gain += master_gain_buffer[i];
-	}
-	master_gain >>= 4;
-
-	if (abs(master_gain - master_gain_prev) > 2)
-	{
-		send_master_gain(master_gain);
-		master_gain_prev = master_gain;
-	}
-}
-
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim == &htim6)
 	{
-		//SEGGER_RTT_printf(0, "pot = %d, %d\n", pot_value[0] >> 2, pot_value[1] >> 2);
-		master_gain_buffer[buffer_index] = pot_value[0] >> 2;
-		buffer_index = (buffer_index + 1) & (16 - 1);
-		master_gain = 0;
-		for (int i = 0; i < 16; i++)
-		{
-			master_gain += master_gain_buffer[i];
-		}
-		master_gain >>= 4;
 
-		if (abs(master_gain - master_gain_prev) > 2)
-		{
-			//SEGGER_RTT_printf(0, "master gain = %d\n", master_gain);
-			send_master_gain(master_gain);
-			master_gain_prev = master_gain;
-		}
 	}
-}
-
-void send_xfade(uint16_t fader_val)
-{
-	double xf_rate = (double)fader_val / 1023.0;
-
-	uint8_t dc1_array[4] = {0x00};
-	dc1_array[0] = ((uint32_t)((1.0 - xf_rate) * pow(2, 23)) >> 24) & 0x000000FF;
-	dc1_array[1] = ((uint32_t)((1.0 - xf_rate) * pow(2, 23)) >> 16) & 0x000000FF;
-	dc1_array[2] = ((uint32_t)((1.0 - xf_rate) * pow(2, 23)) >> 8)  & 0x000000FF;
-	dc1_array[3] =  (uint32_t)((1.0 - xf_rate) * pow(2, 23))        & 0x000000FF;
-
-	SIGMA_WRITE_REGISTER_BLOCK(DEVICE_ADDR_IC_1, MOD_DC1_DCINPALG1_ADDR, 4, dc1_array);
-
-	uint8_t dc2_array[4] = {0x00};
-	dc2_array[0] = ((uint32_t)(xf_rate * pow(2, 23)) >> 24) & 0x000000FF;
-	dc2_array[1] = ((uint32_t)(xf_rate * pow(2, 23)) >> 16) & 0x000000FF;
-	dc2_array[2] = ((uint32_t)(xf_rate * pow(2, 23)) >> 8)  & 0x000000FF;
-	dc2_array[3] =  (uint32_t)(xf_rate * pow(2, 23))        & 0x000000FF;
-
-	SIGMA_WRITE_REGISTER_BLOCK(DEVICE_ADDR_IC_1, MOD_DC2_DCINPALG2_ADDR, 4, dc2_array);
-}
-
-void send_master_gain(uint16_t master_val)
-{
-	double master_db = (135.0 / 1023.0) * (double)master_val - 120.0;
-
-	double master_rate = pow(10.0, master_db / 20);
-
-	uint8_t master_gain_array[8] = {0x00};
-	master_gain_array[0] = ((uint32_t)(master_rate * pow(2, 23)) >> 24) & 0x000000FF;
-	master_gain_array[1] = ((uint32_t)(master_rate * pow(2, 23)) >> 16) & 0x000000FF;
-	master_gain_array[2] = ((uint32_t)(master_rate * pow(2, 23)) >> 8)  & 0x000000FF;
-	master_gain_array[3] =  (uint32_t)(master_rate * pow(2, 23))        & 0x000000FF;
-	master_gain_array[4] = 0x00;// if_step
-	master_gain_array[5] = 0x00;
-	master_gain_array[6] = 0x80;
-	master_gain_array[7] = 0x00;
-#if 0
-	SEGGER_RTT_printf(0, "%d -> %02X,%02X,%02X,%02X\n", master_val,
-													  master_gain_array[0],
-													  master_gain_array[1],
-													  master_gain_array[2],
-													  master_gain_array[3]);
-#endif
-	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 8, master_gain_array);
-
-	uint8_t target_address_count[8] = {0x00, 0x00, 0x00, MOD_MASTERGAIN_ALG0_TARGET_ADDR - 1,
-									   0x00, 0x00, 0x00, MOD_MASTERGAIN_COUNT};
-	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address_count);
-}
-
-void send_switch_to_linein(void)
-{
-	uint8_t switch0_array[4] = {0x00, 0x80, 0x00, 0x00};
-	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 4, switch0_array);
-
-	uint8_t target_address0_count[8] = {0x00, 0x00, 0x00, MOD_LNPHSW_ALG0_STEREODEMUXSLEW10_ADDR - 1,
-									    0x00, 0x00, 0x00, 0x01};
-	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address0_count);
-
-	uint8_t switch1_array[4] = {0x00, 0x00, 0x00, 0x00};
-	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 4, switch1_array);
-
-	uint8_t target_address1_count[8] = {0x00, 0x00, 0x00, MOD_LNPHSW_ALG0_STEREODEMUXSLEW11_ADDR - 1,
-									    0x00, 0x00, 0x00, 0x01};
-	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address1_count);
-}
-
-void send_switch_to_phonoin(void)
-{
-	uint8_t switch0_array[4] = {0x00, 0x00, 0x00, 0x00};
-	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 4, switch0_array);
-
-	uint8_t target_address0_count[8] = {0x00, 0x00, 0x00, MOD_LNPHSW_ALG0_STEREODEMUXSLEW10_ADDR - 1,
-									    0x00, 0x00, 0x00, 0x01};
-	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address0_count);
-
-	uint8_t switch1_array[4] = {0x00, 0x80, 0x00, 0x00};
-	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 4, switch1_array);
-
-	uint8_t target_address1_count[8] = {0x00, 0x00, 0x00, MOD_LNPHSW_ALG0_STEREODEMUXSLEW11_ADDR - 1,
-									    0x00, 0x00, 0x00, 0x01};
-	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address1_count);
 }
 
 void erase_flash_data(void)
@@ -698,17 +508,8 @@ int main(void)
       Error_Handler();
   }
 
-  if (HAL_ADC_Start_DMA(&hadc1, (uint32_t *)pot_value, 2) != HAL_OK)
-  {
-      /* ADC conversion start error */
-      Error_Handler();
-  }
-
-  if (HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)hpout_buf, SAI_BUF_SIZE / 2) != HAL_OK)
-  {
-	  /* SAI transmit start error */
-	  Error_Handler();
-  }
+  start_adc();
+  start_sai();
 
   //HAL_TIM_Base_Start_IT(&htim6);
 
