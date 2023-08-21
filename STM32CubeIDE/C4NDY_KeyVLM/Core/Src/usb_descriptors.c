@@ -76,29 +76,51 @@ uint8_t const * tud_descriptor_device_cb(void)
 uint8_t const desc_hid_report[] =
 {
   TUD_HID_REPORT_DESC_KEYBOARD( HID_REPORT_ID(REPORT_ID_KEYBOARD         )),
+#if 0
   TUD_HID_REPORT_DESC_MOUSE   ( HID_REPORT_ID(REPORT_ID_MOUSE            )),
   TUD_HID_REPORT_DESC_CONSUMER( HID_REPORT_ID(REPORT_ID_CONSUMER_CONTROL )),
   TUD_HID_REPORT_DESC_GAMEPAD ( HID_REPORT_ID(REPORT_ID_GAMEPAD          ))
+#endif
+};
+
+uint8_t const desc_hid_report_gio[] =
+{
+  TUD_HID_REPORT_DESC_GENERIC_INOUT(CFG_TUD_HID_EP_BUFSIZE)
 };
 
 // Invoked when received GET HID REPORT DESCRIPTOR
 // Application return pointer to descriptor
 // Descriptor contents must exist long enough for transfer to complete
-uint8_t const * tud_hid_descriptor_report_cb(uint8_t instance)
+//uint8_t const * tud_hid_descriptor_report_cb(uint8_t instance)
+uint8_t const * tud_hid_descriptor_report_cb(uint8_t itf)
 {
-  (void) instance;
-  return desc_hid_report;
+#if 0
+	(void) instance;
+	return desc_hid_report;
+#else
+	if (itf == 0)
+	{
+		return desc_hid_report;
+	}
+	else if (itf == 1)
+	{
+		return desc_hid_report_gio;
+	}
+
+	return NULL;
+#endif
 }
 
 //--------------------------------------------------------------------+
 // Configuration Descriptor
 //--------------------------------------------------------------------+
 
-#define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN + TUD_AUDIO_HEADSET_STEREO_DESC_LEN)
+#define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN + TUD_HID_INOUT_DESC_LEN + TUD_AUDIO_HEADSET_STEREO_DESC_LEN)
 
 #define EPNUM_HID       0x01
-#define EPNUM_AUDIO_IN  0x02
-#define EPNUM_AUDIO_OUT 0x02
+#define EPNUM_HID_GIO   0x02
+#define EPNUM_AUDIO_IN  0x03
+#define EPNUM_AUDIO_OUT 0x03
 
 uint8_t const desc_configuration[] =
 {
@@ -114,8 +136,17 @@ uint8_t const desc_configuration[] =
 					 CFG_TUD_HID_EP_BUFSIZE,
 					 5),
 
+  TUD_HID_INOUT_DESCRIPTOR(ITF_NUM_HID_GIO,
+		  	  	  	  	   5,
+						   HID_ITF_PROTOCOL_NONE,
+						   sizeof(desc_hid_report_gio),
+						   EPNUM_HID_GIO,
+						   0x80 | EPNUM_HID_GIO,
+						   CFG_TUD_HID_EP_BUFSIZE,
+						   10),
+
   // Interface number, string index, EP Out & EP In address, EP size
-  TUD_AUDIO_HEADSET_STEREO_DESCRIPTOR(5,
+  TUD_AUDIO_HEADSET_STEREO_DESCRIPTOR(6,
 		  	  	  	  	  	  	  	  EPNUM_AUDIO_OUT,
 									  EPNUM_AUDIO_IN | 0x80)
 };
@@ -140,10 +171,11 @@ char const* string_desc_arr [] =
 {
   (const char[]) { 0x09, 0x04 }, // 0: is supported language is English (0x0409)
   "Yamamoto Works Ltd.",         // 1: Manufacturer
-  "C4NDY KeyVLM",     // 2: Product
+  "C4NDY KeyVLM",                // 2: Product
   "206C35825430",                // 3: Serials, should use chip ID
-  "C4NDY KeyVLM(Keyboard)",          // 4: HID Interface
-  "C4NDY KeyVLM(Mixer)",             // 5: UAC Interface
+  "C4NDY KeyVLM(Keyboard)",      // 4: HID Interface
+  "C4NDY KeyVLM(Setting)",       // 5: HID GIO Interface
+  "C4NDY KeyVLM(Mixer)",         // 6: UAC Interface
 };
 
 static uint16_t _desc_str[32];
