@@ -35,17 +35,49 @@ uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS] = {
 
 // Pinky-less Dvorak layout
 uint8_t keymaps_pinkyless[MATRIX_ROWS][MATRIX_COLUMNS] = {
-//   ESC          1        2          3        4      5          6         7         8            9        0        [{         }]
 	{SC_ESC,      SC_1,    SC_2,      SC_3,    SC_4,  SC_5,      SC_6,     SC_7,     SC_8,        SC_9,    SC_0,    SC_LSB,    SC_RSB},
-//   TAB          '"       ,<         o        u      y          f         g         c            r        l        /?         +=
 	{SC_TAB,      SC_APS,  SC_COMMA,  SC_O,    SC_U,  SC_Y,      SC_F,     SC_G,     SC_C,        SC_R,    SC_L,    SC_SLASH,  SC_EQUAL},
-//   LCTRL        p        i          e        a      .>         d         s         t            h        z        -_         \|
 	{SC_LCONTROL, SC_P,    SC_I,      SC_E,    SC_A,  SC_PERIOD, SC_D,     SC_S,     SC_T,        SC_H,    SC_Z,    SC_MINUS,  SC_BSLASH},
-//   LSFT         j        q          ;:       k      x          b         m         w            n        v        RSFT       `~
 	{SC_LSHIFT,   SC_J,    SC_Q,      SC_SC,   SC_K,  SC_X,      SC_B,     SC_M,     SC_W,        SC_N,    SC_V,    SC_RSHIFT, SC_GA},
-//   GUI                              LALT     BS     DEL        ENT       SPC       CAPS         ◀        ▼        ▲          ►
 	{SC_LGUI,     SC_LNPH, SC_LAYOUT, SC_LALT, SC_BS, SC_DELETE, SC_ENTER, SC_SPACE, SC_CAPSLOCK, SC_LEFT, SC_DOWN, SC_UP,     SC_RIGHT}
 };
+
+// Invoked when received SET_REPORT control request or
+// received data on OUT endpoint ( Report ID = 0, Type = 0 )
+void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize)
+{
+  (void) instance;
+
+  SEGGER_RTT_printf(0, "report_id = %d\n", report_id);
+  SEGGER_RTT_printf(0, "report_type = %d\n", report_type);
+  SEGGER_RTT_printf(0, "buf[%d] = %d\n", 0, buffer[0]);
+  SEGGER_RTT_printf(0, "bufsize = %d\n", bufsize);
+#if 0
+  if (report_type == HID_REPORT_TYPE_OUTPUT)
+  {
+    // Set keyboard LED e.g Capslock, Numlock etc...
+    if (report_id == REPORT_ID_KEYBOARD)
+    {
+      // bufsize should be (at least) 1
+      if ( bufsize < 1 ) return;
+
+      uint8_t const kbd_leds = buffer[0];
+
+      if (kbd_leds & KEYBOARD_LED_CAPSLOCK)
+      {
+        // Capslock On: disable blink, turn led on
+        blink_interval_ms = 0;
+        board_led_write(true);
+      }else
+      {
+        // Caplocks Off: back to normal blink
+        board_led_write(false);
+        blink_interval_ms = BLINK_MOUNTED;
+      }
+    }
+  }
+#endif
+}
 
 uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y)
 {
