@@ -88,6 +88,8 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 	  SEGGER_RTT_printf(0, "buf[%d] = %d\n", i, buffer[i]);
   }
   SEGGER_RTT_printf(0, "bufsize = %d\n", bufsize);
+
+  tud_hid_n_report(1, 0, buffer, bufsize);
 #if 0
   if (report_type == HID_REPORT_TYPE_OUTPUT)
   {
