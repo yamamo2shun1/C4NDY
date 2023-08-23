@@ -196,6 +196,15 @@ int main(void)
 	  write_flash_data(0, 5);
 	  write_flash_data(1, 99);
 
+	  for (int i = 0; i < 5; i++)
+	  {
+		  for (int j = 0; j < 13; j++)
+		  {
+			  write_flash_data(2 + 0 * 65 + i * 13 + j, getKeyCode(0, i, j));
+			  write_flash_data(2 + 1 * 65 + i * 13 + j, getKeyCode(1, i, j));
+		  }
+	  }
+
 	  HAL_FLASH_Lock();
   }
 
@@ -206,6 +215,27 @@ int main(void)
   test_val = read_flash_data(1);
   SEGGER_RTT_printf(0, "test_val1 = %u\n", test_val);
 
+  for (int k = 0; k < 2; k++)
+  {
+	  SEGGER_RTT_printf(0, "\n");
+	  for (int i = 0; i < 5; i++)
+	  {
+		  SEGGER_RTT_printf(0, "[ ");
+		  for (int j = 0; j < 13; j++)
+		  {
+			  if (k == 0)
+			  {
+				  setKeyCode(0, i, j, read_flash_data(2 + k * 65 + i * 13 + j));
+			  }
+			  else
+			  {
+				  setKeyCode(1, i, j, read_flash_data(2 + k * 65 + i * 13 + j));
+			  }
+			  SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + k * 65 + i * 13 + j));
+		  }
+		  SEGGER_RTT_printf(0, "]\n");
+	  }
+  }
   //send_switch_to_phonoin();
   //send_switch_to_linein();
 

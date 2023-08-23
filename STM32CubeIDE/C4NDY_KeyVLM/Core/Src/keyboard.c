@@ -125,7 +125,6 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 		  for (int j = 0; j < 13; j++)
 		  {
 			  keymaps_default[buffer[0] - 0xF0][j] = buffer[j + 2];
-
 		  }
 	  }
 	  else
@@ -135,6 +134,27 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 			  keymaps_layout2[buffer[0] - 0xF0][j] = buffer[j + 2];
 		  }
 	  }
+  }
+  else if (buffer[0] == 0xF5)
+  {
+	  SEGGER_RTT_printf(0, "erase & write FLASH...\n");
+	  HAL_FLASH_Unlock();
+
+	  erase_flash_data();
+
+	  write_flash_data(0, 5);
+	  write_flash_data(1, 99);
+
+	  for (int i = 0; i < 5; i++)
+	  {
+		  for (int j = 0; j < 13; j++)
+		  {
+			  write_flash_data(2 + 0 * 65 + i * 13 + j, keymaps_default[i][j]);
+			  write_flash_data(2 + 1 * 65 + i * 13 + j, keymaps_layout2[i][j]);
+		  }
+	  }
+
+	  HAL_FLASH_Lock();
   }
 
 #if 0
@@ -173,6 +193,18 @@ uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y)
 	else
 	{
 		return keymaps_layout2[x][y];
+	}
+}
+
+void setKeyCode(uint8_t keymapId, uint8_t x, uint8_t y, uint8_t code)
+{
+	if (keymapId == 0)
+	{
+		keymaps_default[x][y] = code;
+	}
+	else
+	{
+		keymaps_layout2[x][y] = code;
 	}
 }
 

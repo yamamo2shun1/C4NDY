@@ -114,6 +114,7 @@ extern uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS];
 extern uint8_t keymaps_pinkyless[MATRIX_ROWS][MATRIX_COLUMNS];
 
 uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y);
+void setKeyCode(uint8_t keymapId, uint8_t x, uint8_t y, uint8_t code);
 void resetKeys(void);
 void clearKeys(uint8_t code);
 void setKeys(uint8_t code);
