@@ -155,6 +155,11 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 	  }
 
 	  HAL_FLASH_Lock();
+
+	  uint8_t rbuf[16] = {0x00};
+	  rbuf[1] = 0xF5;
+	  rbuf[2] = 0x01;
+	  tud_hid_n_report(1, 0, rbuf, 16);
   }
 
 #if 0
