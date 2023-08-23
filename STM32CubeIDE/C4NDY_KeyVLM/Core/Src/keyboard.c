@@ -60,6 +60,24 @@ void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_
 }
 #endif
 
+void setLinePhonoSW(uint8_t val)
+{
+	linePhonoSW = val;
+	if (linePhonoSW == 0)
+	{
+		send_switch_to_phonoin();
+	}
+	else if (linePhonoSW == 1)
+	{
+		send_switch_to_linein();
+	}
+}
+
+uint8_t getLinePhonoSW(void)
+{
+	return linePhonoSW;
+}
+
 // Invoked when received GET_REPORT control request
 // Application must fill buffer report's content and return its length.
 // Return zero will cause the stack to STALL request
@@ -142,7 +160,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
 	  erase_flash_data();
 
-	  write_flash_data(0, 5);
+	  write_flash_data(0, linePhonoSW);
 	  write_flash_data(1, 99);
 
 	  for (int i = 0; i < 5; i++)

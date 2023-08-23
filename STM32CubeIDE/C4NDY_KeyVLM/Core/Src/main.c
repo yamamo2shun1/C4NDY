@@ -193,7 +193,7 @@ int main(void)
 
 	  erase_flash_data();
 
-	  write_flash_data(0, 5);
+	  write_flash_data(0, 0);
 	  write_flash_data(1, 99);
 
 	  for (int i = 0; i < 5; i++)
@@ -208,10 +208,10 @@ int main(void)
 	  HAL_FLASH_Lock();
   }
 
-  uint64_t test_val = 0;
-  test_val = read_flash_data(0);
-  SEGGER_RTT_printf(0, "test_val0 = %u\n", test_val);
+  setLinePhonoSW(read_flash_data(0));
+  SEGGER_RTT_printf(0, "Phono/Line SW = %u\n", getLinePhonoSW());
 
+  uint64_t test_val = 0;
   test_val = read_flash_data(1);
   SEGGER_RTT_printf(0, "test_val1 = %u\n", test_val);
 
