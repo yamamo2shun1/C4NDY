@@ -33,8 +33,8 @@ uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS] = {
 	{SC_LGUI,     SC_LNPH, SC_LAYOUT, SC_LALT, SC_BS, SC_ENTER, SC_SPACE, SC_HENKAN, SC_RCONTROL, SC_LEFT,   SC_DOWN,  SC_UP,     SC_RIGHT}
 };
 
-// Pinky-less Dvorak layout
-uint8_t keymaps_pinkyless[MATRIX_ROWS][MATRIX_COLUMNS] = {
+// Improved Dvorak layout
+uint8_t keymaps_layout2[MATRIX_ROWS][MATRIX_COLUMNS] = {
 	{SC_ESC,      SC_1,    SC_2,      SC_3,    SC_4,  SC_5,      SC_6,     SC_7,     SC_8,        SC_9,    SC_0,    SC_LSB,    SC_RSB},
 	{SC_TAB,      SC_APS,  SC_COMMA,  SC_O,    SC_U,  SC_Y,      SC_F,     SC_G,     SC_C,        SC_R,    SC_L,    SC_SLASH,  SC_EQUAL},
 	{SC_LCONTROL, SC_P,    SC_I,      SC_E,    SC_A,  SC_PERIOD, SC_D,     SC_S,     SC_T,        SC_H,    SC_Z,    SC_MINUS,  SC_BSLASH},
@@ -89,7 +89,31 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
   }
   SEGGER_RTT_printf(0, "bufsize = %d\n", bufsize);
 
-  tud_hid_n_report(1, 0, buffer, bufsize);
+  uint8_t rbuf[16] = {0x00};
+  if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4)
+  {
+	  if (keymapID == 0)
+	  {
+		  for (int j = 0; j < 13; j++)
+		  {
+			  rbuf[j] = keymaps_default[buffer[0] - 0xF0][j];
+		  }
+	  }
+	  else
+	  {
+		  for (int j = 0; j < 13; j++)
+		  {
+			  rbuf[j] = keymaps_layout2[buffer[0] - 0xF0][j];
+		  }
+	  }
+
+	  for (int i = 0; i < 16; i++)
+	  {
+		  SEGGER_RTT_printf(0, "rbuf[%d] = %d\n", i, rbuf[i]);
+	  }
+	  tud_hid_n_report(1, 0, rbuf, 16);
+  }
+
 #if 0
   if (report_type == HID_REPORT_TYPE_OUTPUT)
   {
@@ -125,7 +149,7 @@ uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y)
 	}
 	else
 	{
-		return keymaps_pinkyless[x][y];
+		return keymaps_layout2[x][y];
 	}
 }
 
