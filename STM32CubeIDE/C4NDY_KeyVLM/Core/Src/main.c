@@ -46,6 +46,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define FLASH_ADDR 0x0807F800
+
 #define AUDIO_SAMPLE_RATE 48000
 
 /* USER CODE END PD */
@@ -122,6 +124,19 @@ void erase_flash_data(void)
 	}
 }
 
+void write_flash_data(uint8_t index, uint8_t val)
+{
+	if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, FLASH_ADDR + 8 * index, val) != HAL_OK)
+	{
+		SEGGER_RTT_printf(0, "flash program error...\n");
+	}
+}
+
+uint64_t read_flash_data(uint8_t index)
+{
+	return *(uint64_t *)(FLASH_ADDR + 8 * index);
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -169,7 +184,6 @@ int main(void)
 
   //HAL_TIM_Base_Start_IT(&htim6);
 
-  uint32_t flash_addr = 0x0807F800;
   SEGGER_RTT_printf(0, "user_sw = %d\n", HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin));
   if (!HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin))
   {
@@ -179,22 +193,17 @@ int main(void)
 
 	  erase_flash_data();
 
-	  if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, flash_addr, 5) != HAL_OK)
-	  {
-		  SEGGER_RTT_printf(0, "flash program error...\n");
-	  }
-	  if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, flash_addr + 8, 99) != HAL_OK)
-	  {
-		  SEGGER_RTT_printf(0, "flash program error...\n");
-	  }
+	  write_flash_data(0, 5);
+	  write_flash_data(1, 99);
+
 	  HAL_FLASH_Lock();
   }
 
   uint64_t test_val = 0;
-  test_val = *(uint64_t *)flash_addr;
+  test_val = read_flash_data(0);
   SEGGER_RTT_printf(0, "test_val0 = %u\n", test_val);
 
-  test_val = *(uint64_t *)(flash_addr + 8);
+  test_val = read_flash_data(1);
   SEGGER_RTT_printf(0, "test_val1 = %u\n", test_val);
 
   //send_switch_to_phonoin();
