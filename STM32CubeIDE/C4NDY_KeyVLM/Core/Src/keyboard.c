@@ -90,8 +90,9 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
   SEGGER_RTT_printf(0, "bufsize = %d\n", bufsize);
 
   uint8_t rbuf[16] = {0x00};
-  if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4)
+  if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x00)
   {
+	  SEGGER_RTT_printf(0, "read:\n");
 	  if (keymapID == 0)
 	  {
 		  for (int j = 0; j < 13; j++)
@@ -107,11 +108,33 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 		  }
 	  }
 
+#if 0
 	  for (int i = 0; i < 16; i++)
 	  {
 		  SEGGER_RTT_printf(0, "rbuf[%d] = %d\n", i, rbuf[i]);
 	  }
+#endif
 	  tud_hid_n_report(1, 0, rbuf, 16);
+
+  }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x01)
+  {
+	  SEGGER_RTT_printf(0, "write:\n");
+	  if (keymapID == 0)
+	  {
+		  for (int j = 0; j < 13; j++)
+		  {
+			  keymaps_default[buffer[0] - 0xF0][j] = buffer[j + 2];
+
+		  }
+	  }
+	  else
+	  {
+		  for (int j = 0; j < 13; j++)
+		  {
+			  keymaps_layout2[buffer[0] - 0xF0][j] = buffer[j + 2];
+		  }
+	  }
   }
 
 #if 0
