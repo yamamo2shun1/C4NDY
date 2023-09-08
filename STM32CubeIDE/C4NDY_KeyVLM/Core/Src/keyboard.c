@@ -137,20 +137,20 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
   }
   else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x01)
   {
-	  SEGGER_RTT_printf(0, "write:\n");
-	  if (keymapID == 0)
+	  SEGGER_RTT_printf(0, "write to layout1:\n");
+
+	  for (int j = 0; j < 13; j++)
 	  {
-		  for (int j = 0; j < 13; j++)
-		  {
-			  keymaps_default[buffer[0] - 0xF0][j] = buffer[j + 2];
-		  }
+		  keymaps_default[buffer[0] - 0xF0][j] = buffer[j + 2];
 	  }
-	  else
+  }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x02)
+  {
+	  SEGGER_RTT_printf(0, "write to layout2:\n");
+
+	  for (int j = 0; j < 13; j++)
 	  {
-		  for (int j = 0; j < 13; j++)
-		  {
-			  keymaps_layout2[buffer[0] - 0xF0][j] = buffer[j + 2];
-		  }
+		  keymaps_layout2[buffer[0] - 0xF0][j] = buffer[j + 2];
 	  }
   }
   else if (buffer[0] == 0xF5)
