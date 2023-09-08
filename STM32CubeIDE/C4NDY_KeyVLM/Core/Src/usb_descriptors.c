@@ -25,6 +25,7 @@
 
 #include "tusb.h"
 #include "usb_descriptors.h"
+#include "stm32g4xx_hal.h"
 
 /* A combination of interfaces must have a unique product id, since PC will save device driver after the first plug.
  * Same VID/PID with different interface e.g MSC (first), then CDC (later) will possibly cause system error on PC.
@@ -172,7 +173,7 @@ char const* string_desc_arr [] =
   (const char[]) { 0x09, 0x04 }, // 0: is supported language is English (0x0409)
   "Yamamoto Works Ltd.",         // 1: Manufacturer
   "C4NDY KeyVLM",                // 2: Product
-  "206C35825430",                // 3: Serials, should use chip ID
+  "0",                           // 3: Serials, should use chip ID
   "C4NDY KeyVLM(Keyboard)",      // 4: HID Interface
   "C4NDY KeyVLM(Setting)",       // 5: HID GIO Interface
   "C4NDY KeyVLM(Mixer)",         // 6: UAC Interface
@@ -199,16 +200,36 @@ uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid)
 
     if ( !(index < sizeof(string_desc_arr)/sizeof(string_desc_arr[0])) ) return NULL;
 
-    const char* str = string_desc_arr[index];
-
-    // Cap at max char
-    chr_count = (uint8_t) strlen(str);
-    if ( chr_count > 31 ) chr_count = 31;
-
-    // Convert ASCII string into UTF-16
-    for(uint8_t i=0; i<chr_count; i++)
+    if (index == 3) // serial id
     {
-      _desc_str[1+i] = str[i];
+    	char sstr[30] = "";
+    	uint16_t upper_id = (uint16_t)((DBGMCU->IDCODE >> 16) & 0x0000FFFF);
+    	uint16_t lower_id = (uint16_t)(DBGMCU->IDCODE & 0x0000FFFF);
+    	sprintf(sstr, "%x%x", upper_id, lower_id);
+
+    	// Cap at max char
+    	chr_count = (uint8_t) strlen(sstr);
+    	if ( chr_count > 31 ) chr_count = 31;
+
+    	// Convert ASCII string into UTF-16
+    	for(uint8_t i=0; i<chr_count; i++)
+    	{
+    		_desc_str[1+i] = sstr[i];
+    	}
+    }
+    else
+    {
+    	const char* str = string_desc_arr[index];
+
+    	// Cap at max char
+    	chr_count = (uint8_t) strlen(str);
+    	if ( chr_count > 31 ) chr_count = 31;
+
+    	// Convert ASCII string into UTF-16
+    	for(uint8_t i=0; i<chr_count; i++)
+    	{
+    		_desc_str[1+i] = str[i];
+    	}
     }
   }
 
