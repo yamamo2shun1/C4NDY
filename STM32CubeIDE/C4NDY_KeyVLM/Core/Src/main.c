@@ -178,11 +178,16 @@ int main(void)
   //SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", HAL_GetDEVID(), HAL_GetDEVID());
   SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", DBGMCU->IDCODE, DBGMCU->IDCODE);
 
+  SEGGER_RTT_printf(0, "initialize ADAU1761...\n");
   default_download_IC_1();
 
+  SEGGER_RTT_printf(0, "initialize tinyUSB...\n");
   tusb_init();
 
+  SEGGER_RTT_printf(0, "start ADC DMA...\n");
   start_adc();
+
+  SEGGER_RTT_printf(0, "start SAI DMA...\n");
   start_sai();
 
   //HAL_TIM_Base_Start_IT(&htim6);
