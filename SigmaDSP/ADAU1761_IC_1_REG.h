@@ -1,7 +1,7 @@
 /*
  * File:           C:\Users\shun\C4NDY\SigmaDSP\ADAU1761_IC_1_REG.h
  *
- * Created:        Wednesday, July 26, 2023 11:29:29 AM
+ * Created:        Friday, December 1, 2023 12:12:22 PM
  * Description:    ADAU1761:IC 1 control register definitions.
  *
  * This software is distributed in the hope that it will be useful,
@@ -248,7 +248,7 @@
 /* CRC Ideal_1  - Registers (IC 1) */
 #define REG_CRC_IDEAL_1_IC_1_ADDR                 0x40C0
 #define REG_CRC_IDEAL_1_IC_1_BYTE                 1
-#define REG_CRC_IDEAL_1_IC_1_VALUE                0x37
+#define REG_CRC_IDEAL_1_IC_1_VALUE                0x7F
 
 /* CRC Ideal_2  - Registers (IC 1) */
 #define REG_CRC_IDEAL_2_IC_1_ADDR                 0x40C1
@@ -258,12 +258,12 @@
 /* CRC Ideal_3  - Registers (IC 1) */
 #define REG_CRC_IDEAL_3_IC_1_ADDR                 0x40C2
 #define REG_CRC_IDEAL_3_IC_1_BYTE                 1
-#define REG_CRC_IDEAL_3_IC_1_VALUE                0x7D
+#define REG_CRC_IDEAL_3_IC_1_VALUE                0x67
 
 /* CRC Ideal_4  - Registers (IC 1) */
 #define REG_CRC_IDEAL_4_IC_1_ADDR                 0x40C3
 #define REG_CRC_IDEAL_4_IC_1_BYTE                 1
-#define REG_CRC_IDEAL_4_IC_1_VALUE                0x74
+#define REG_CRC_IDEAL_4_IC_1_VALUE                0x61
 
 /* CRC Enable  - Registers (IC 1) */
 #define REG_CRC_ENABLE_IC_1_ADDR                  0x40C4
@@ -875,7 +875,7 @@
 #define R44_DEJITTER_IC_1_SHIFT                   0
 
 /* CRC Ideal_1 (IC 1) */
-#define R45_CRC_IDEAL_1_IC_1                      0x37   /* 00110111b	[7:0] */
+#define R45_CRC_IDEAL_1_IC_1                      0x7F   /* 01111111b	[7:0] */
 #define R45_CRC_IDEAL_1_IC_1_MASK                 0xFF
 #define R45_CRC_IDEAL_1_IC_1_SHIFT                0
 
@@ -885,12 +885,12 @@
 #define R46_CRC_IDEAL_2_IC_1_SHIFT                0
 
 /* CRC Ideal_3 (IC 1) */
-#define R47_CRC_IDEAL_3_IC_1                      0x7D   /* 01111101b	[7:0] */
+#define R47_CRC_IDEAL_3_IC_1                      0x67   /* 01100111b	[7:0] */
 #define R47_CRC_IDEAL_3_IC_1_MASK                 0xFF
 #define R47_CRC_IDEAL_3_IC_1_SHIFT                0
 
 /* CRC Ideal_4 (IC 1) */
-#define R48_CRC_IDEAL_4_IC_1                      0x74   /* 01110100b	[7:0] */
+#define R48_CRC_IDEAL_4_IC_1                      0x61   /* 01100001b	[7:0] */
 #define R48_CRC_IDEAL_4_IC_1_MASK                 0xFF
 #define R48_CRC_IDEAL_4_IC_1_SHIFT                0
 

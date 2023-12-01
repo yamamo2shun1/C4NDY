@@ -7,13 +7,13 @@ Build date = 4/5/2022 at 11:20 AM
 (Note: Estimates are based on a 48 kHz sample rate)
 
 Instructions used:
-217	(out of a possible 1024 )
+239	(out of a possible 1024 )
 Modulo Data RAM used (X Memory):
-107	(out of a possible 4096 )
+119	(out of a possible 4096 )
 Non Modulo Data RAM used (X Memory):
 0	(out of a possible 4096 )
 Parameter RAM used (Y Memory):
-42	(out of a possible 1024 )
+46	(out of a possible 1024 )
 
 Instance                      		Mips	Inst	Data	Coeff	Other
                               			(max)
@@ -23,15 +23,17 @@ Beginning                     		19	19	0	1
 Mid EQ1                       		18	18	18	5
 SafeLoadCode                  		15	15	0	7
 master gain                   		13	13	7	2
-SW vol 1                      		13	13	7	1
 SW vol 2                      		13	13	7	1
+SW vol 1                      		13	13	7	1
 phono gain                    		13	13	5	2
+usb gain R                    		11	11	6	2
+usb gain L                    		11	11	6	2
 Input1                        		8	8	4	0
 End                           		5	5	0	0
-Mg1                           		3	3	1	1
-Mg2                           		3	3	1	1
 Mg4                           		3	3	1	1
 Mg3                           		3	3	1	1
+Mg2                           		3	3	1	1
+Mg1                           		3	3	1	1
 DC1                           		2	2	1	1
 DC2                           		2	2	1	1
 Output1                       		2	2	0	0
@@ -39,9 +41,9 @@ Output2                       		2	2	0	0
 
 Subroutines called:
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Total                      			217	217	107	42
+Total                      			239	239	119	46
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-(%)                          			21%	21%	3%	4%
+(%)                          			23%	23%	3%	4%
 
 Files written:  
 program_data.dat - load file for downloading code using ADI loader
