@@ -144,6 +144,7 @@ static bool tud_audio_clock_set_request(uint8_t rhport, audio_control_request_t 
 }
 
 // Helper for feature unit get requests
+// PC側で音量調整をするとここも呼ばれる
 static bool tud_audio_feature_unit_get_request(uint8_t rhport, audio_control_request_t const *request)
 {
   TU_ASSERT(request->bEntityID == UAC2_ENTITY_SPK_FEATURE_UNIT);
@@ -162,14 +163,14 @@ static bool tud_audio_feature_unit_get_request(uint8_t rhport, audio_control_req
         .wNumSubRanges = tu_htole16(1),
         .subrange[0] = { .bMin = tu_htole16(-VOLUME_CTRL_50_DB), tu_htole16(VOLUME_CTRL_0_DB), tu_htole16(256) }
       };
-      TU_LOG1("Get channel %u volume range (%d, %d, %u) dB\r\n", request->bChannelNumber,
+      SEGGER_RTT_printf(0, "Get channel %u volume range (%d, %d, %u) dB\r\n", request->bChannelNumber,
               range_vol.subrange[0].bMin / 256, range_vol.subrange[0].bMax / 256, range_vol.subrange[0].bRes / 256);
       return tud_audio_buffer_and_schedule_control_xfer(rhport, (tusb_control_request_t const *)request, &range_vol, sizeof(range_vol));
     }
     else if (request->bRequest == AUDIO_CS_REQ_CUR)
     {
       audio_control_cur_2_t cur_vol = { .bCur = tu_htole16(volume[request->bChannelNumber]) };
-      TU_LOG1("Get channel %u volume %d dB\r\n", request->bChannelNumber, cur_vol.bCur / 256);
+      SEGGER_RTT_printf(0, "Get channel %u volume %d dB\r\n", request->bChannelNumber, cur_vol.bCur / 256);
       return tud_audio_buffer_and_schedule_control_xfer(rhport, (tusb_control_request_t const *)request, &cur_vol, sizeof(cur_vol));
     }
   }
@@ -180,6 +181,7 @@ static bool tud_audio_feature_unit_get_request(uint8_t rhport, audio_control_req
 }
 
 // Helper for feature unit set requests
+// PC側で音量調整をするとこの関数が呼ばれる
 static bool tud_audio_feature_unit_set_request(uint8_t rhport, audio_control_request_t const *request, uint8_t const *buf)
 {
   (void)rhport;
@@ -193,7 +195,7 @@ static bool tud_audio_feature_unit_set_request(uint8_t rhport, audio_control_req
 
     mute[request->bChannelNumber] = ((audio_control_cur_1_t const *)buf)->bCur;
 
-    TU_LOG1("Set channel %d Mute: %d\r\n", request->bChannelNumber, mute[request->bChannelNumber]);
+    SEGGER_RTT_printf(0, "Set channel %d Mute: %d\r\n", request->bChannelNumber, mute[request->bChannelNumber]);
 
     return true;
   }
@@ -203,7 +205,17 @@ static bool tud_audio_feature_unit_set_request(uint8_t rhport, audio_control_req
 
     volume[request->bChannelNumber] = ((audio_control_cur_2_t const *)buf)->bCur;
 
-    TU_LOG1("Set channel %d volume: %d dB\r\n", request->bChannelNumber, volume[request->bChannelNumber] / 256);
+    switch (request->bChannelNumber)
+    {
+    case 1:
+    	send_usb_gain_L(volume[request->bChannelNumber] / 256);
+    	break;
+    case 2:
+    	send_usb_gain_R(volume[request->bChannelNumber] / 256);
+    	break;
+    }
+
+    SEGGER_RTT_printf(0, "Set channel %d volume: %d dB\r\n", request->bChannelNumber, volume[request->bChannelNumber] / 256);
 
     return true;
   }
@@ -369,6 +381,56 @@ void copybuf_sai2codec(void)
 			sai_transmit_index++;
 		}
 	}
+}
+
+void clear_hpout_buf(void)
+{
+	for (int i = 0; i < SAI_BUF_SIZE / 4; i++)
+	{
+		hpout_buf[i] = 0;
+	}
+}
+
+void send_usb_gain_L(int16_t usb_db)
+{
+	double usb_rate = pow(10.0, (double)usb_db / 20.0);
+
+	uint8_t usb_gain_array[8] = {0x00};
+	usb_gain_array[0] = ((uint32_t)(usb_rate * pow(2.0, 23.0)) >> 24) & 0x000000FF;
+	usb_gain_array[1] = ((uint32_t)(usb_rate * pow(2.0, 23.0)) >> 16) & 0x000000FF;
+	usb_gain_array[2] = ((uint32_t)(usb_rate * pow(2.0, 23.0)) >> 8)  & 0x000000FF;
+	usb_gain_array[3] =  (uint32_t)(usb_rate * pow(2.0, 23.0))        & 0x000000FF;
+	usb_gain_array[4] = 0x00;// if_step
+	usb_gain_array[5] = 0x00;
+	usb_gain_array[6] = 0x80;
+	usb_gain_array[7] = 0x00;
+
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 8, usb_gain_array);
+
+	uint8_t target_address_count[8] = {0x00, 0x00, 0x00, MOD_USBGAINL_ALG0_TARGET_ADDR - 1,
+									   0x00, 0x00, 0x00, MOD_USBGAINL_COUNT};
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address_count);
+}
+
+void send_usb_gain_R(int16_t usb_db)
+{
+	double usb_rate = pow(10.0, (double)usb_db / 20.0);
+
+	uint8_t usb_gain_array[8] = {0x00};
+	usb_gain_array[0] = ((uint32_t)(usb_rate * pow(2.0, 23.0)) >> 24) & 0x000000FF;
+	usb_gain_array[1] = ((uint32_t)(usb_rate * pow(2.0, 23.0)) >> 16) & 0x000000FF;
+	usb_gain_array[2] = ((uint32_t)(usb_rate * pow(2.0, 23.0)) >> 8)  & 0x000000FF;
+	usb_gain_array[3] =  (uint32_t)(usb_rate * pow(2.0, 23.0))        & 0x000000FF;
+	usb_gain_array[4] = 0x00;// if_step
+	usb_gain_array[5] = 0x00;
+	usb_gain_array[6] = 0x80;
+	usb_gain_array[7] = 0x00;
+
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 8, usb_gain_array);
+
+	uint8_t target_address_count[8] = {0x00, 0x00, 0x00, MOD_USBGAINR_ALG0_TARGET_ADDR - 1,
+									   0x00, 0x00, 0x00, MOD_USBGAINR_COUNT};
+	SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address_count);
 }
 
 void send_xfade(uint16_t fader_val)
