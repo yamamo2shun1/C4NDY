@@ -82,7 +82,7 @@ static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t 
   {
     if (request->bRequest == AUDIO_CS_REQ_CUR)
     {
-      TU_LOG1("Clock get current freq %lu\r\n", current_sample_rate);
+      SEGGER_RTT_printf(0, "Clock get current freq %lu\r\n", current_sample_rate);
 
       audio_control_cur_4_t curf = { (int32_t) tu_htole32(current_sample_rate) };
       return tud_audio_buffer_and_schedule_control_xfer(rhport, (tusb_control_request_t const *)request, &curf, sizeof(curf));
@@ -93,13 +93,13 @@ static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t 
       {
         .wNumSubRanges = tu_htole16(N_SAMPLE_RATES)
       };
-      TU_LOG1("Clock get %d freq ranges\r\n", N_SAMPLE_RATES);
+      SEGGER_RTT_printf(0, "Clock get %d freq ranges\r\n", N_SAMPLE_RATES);
       for(uint8_t i = 0; i < N_SAMPLE_RATES; i++)
       {
         rangef.subrange[i].bMin = (int32_t) sample_rates[i];
         rangef.subrange[i].bMax = (int32_t) sample_rates[i];
         rangef.subrange[i].bRes = 0;
-        TU_LOG1("Range %d (%d, %d, %d)\r\n", i, (int)rangef.subrange[i].bMin, (int)rangef.subrange[i].bMax, (int)rangef.subrange[i].bRes);
+        SEGGER_RTT_printf(0, "Range %d (%d, %d, %d)\r\n", i, (int)rangef.subrange[i].bMin, (int)rangef.subrange[i].bMax, (int)rangef.subrange[i].bRes);
       }
 
       return tud_audio_buffer_and_schedule_control_xfer(rhport, (tusb_control_request_t const *)request, &rangef, sizeof(rangef));
@@ -109,10 +109,10 @@ static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t 
            request->bRequest == AUDIO_CS_REQ_CUR)
   {
     audio_control_cur_1_t cur_valid = { .bCur = 1 };
-    TU_LOG1("Clock get is valid %u\r\n", cur_valid.bCur);
+    SEGGER_RTT_printf(0, "Clock get is valid %u\r\n", cur_valid.bCur);
     return tud_audio_buffer_and_schedule_control_xfer(rhport, (tusb_control_request_t const *)request, &cur_valid, sizeof(cur_valid));
   }
-  TU_LOG1("Clock get request not supported, entity = %u, selector = %u, request = %u\r\n",
+  SEGGER_RTT_printf(0, "Clock get request not supported, entity = %u, selector = %u, request = %u\r\n",
           request->bEntityID, request->bControlSelector, request->bRequest);
   return false;
 }
@@ -131,13 +131,13 @@ static bool tud_audio_clock_set_request(uint8_t rhport, audio_control_request_t 
 
     current_sample_rate = (uint32_t) ((audio_control_cur_4_t const *)buf)->bCur;
 
-    TU_LOG1("Clock set current freq: %ld\r\n", current_sample_rate);
+    SEGGER_RTT_printf(0, "Clock set current freq: %ld\r\n", current_sample_rate);
 
     return true;
   }
   else
   {
-    TU_LOG1("Clock set request not supported, entity = %u, selector = %u, request = %u\r\n",
+	SEGGER_RTT_printf(0, "Clock set request not supported, entity = %u, selector = %u, request = %u\r\n",
             request->bEntityID, request->bControlSelector, request->bRequest);
     return false;
   }
@@ -152,7 +152,7 @@ static bool tud_audio_feature_unit_get_request(uint8_t rhport, audio_control_req
   if (request->bControlSelector == AUDIO_FU_CTRL_MUTE && request->bRequest == AUDIO_CS_REQ_CUR)
   {
     audio_control_cur_1_t mute1 = { .bCur = mute[request->bChannelNumber] };
-    TU_LOG1("Get channel %u mute %d\r\n", request->bChannelNumber, mute1.bCur);
+    SEGGER_RTT_printf(0, "Get channel %u mute %d\r\n", request->bChannelNumber, mute1.bCur);
     return tud_audio_buffer_and_schedule_control_xfer(rhport, (tusb_control_request_t const *)request, &mute1, sizeof(mute1));
   }
   else if (UAC2_ENTITY_SPK_FEATURE_UNIT && request->bControlSelector == AUDIO_FU_CTRL_VOLUME)
@@ -174,7 +174,7 @@ static bool tud_audio_feature_unit_get_request(uint8_t rhport, audio_control_req
       return tud_audio_buffer_and_schedule_control_xfer(rhport, (tusb_control_request_t const *)request, &cur_vol, sizeof(cur_vol));
     }
   }
-  TU_LOG1("Feature unit get request not supported, entity = %u, selector = %u, request = %u\r\n",
+  SEGGER_RTT_printf(0, "Feature unit get request not supported, entity = %u, selector = %u, request = %u\r\n",
           request->bEntityID, request->bControlSelector, request->bRequest);
 
   return false;
@@ -221,7 +221,7 @@ static bool tud_audio_feature_unit_set_request(uint8_t rhport, audio_control_req
   }
   else
   {
-    TU_LOG1("Feature unit set request not supported, entity = %u, selector = %u, request = %u\r\n",
+	SEGGER_RTT_printf(0, "Feature unit set request not supported, entity = %u, selector = %u, request = %u\r\n",
             request->bEntityID, request->bControlSelector, request->bRequest);
     return false;
   }
@@ -238,7 +238,7 @@ bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
     return tud_audio_feature_unit_get_request(rhport, request);
   else
   {
-    TU_LOG1("Get request not handled, entity = %d, selector = %d, request = %d\r\n",
+	SEGGER_RTT_printf(0, "Get request not handled, entity = %d, selector = %d, request = %d\r\n",
             request->bEntityID, request->bControlSelector, request->bRequest);
   }
   return false;
@@ -253,7 +253,7 @@ bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
     return tud_audio_feature_unit_set_request(rhport, request, buf);
   if (request->bEntityID == UAC2_ENTITY_CLOCK)
     return tud_audio_clock_set_request(rhport, request, buf);
-  TU_LOG1("Set request not handled, entity = %d, selector = %d, request = %d\r\n",
+  SEGGER_RTT_printf(0, "Set request not handled, entity = %d, selector = %d, request = %d\r\n",
           request->bEntityID, request->bControlSelector, request->bRequest);
 
   return false;
