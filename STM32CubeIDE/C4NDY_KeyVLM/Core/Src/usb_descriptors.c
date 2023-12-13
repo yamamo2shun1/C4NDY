@@ -116,7 +116,7 @@ uint8_t const * tud_hid_descriptor_report_cb(uint8_t itf)
 // Configuration Descriptor
 //--------------------------------------------------------------------+
 
-#define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN + TUD_HID_INOUT_DESC_LEN + TUD_AUDIO_HEADSET_STEREO_DESC_LEN)
+#define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN + TUD_HID_INOUT_DESC_LEN + TUD_AUDIO_HEADPHONE_STEREO_DESC_LEN)
 
 #define EPNUM_HID       0x01
 #define EPNUM_HID_GIO   0x02
@@ -147,7 +147,7 @@ uint8_t const desc_configuration[] =
 						   10),
 
   // Interface number, string index, EP Out & EP In address, EP size
-  TUD_AUDIO_HEADSET_STEREO_DESCRIPTOR(6,
+  TUD_AUDIO_HEADPHONE_STEREO_DESCRIPTOR(6,
 		  	  	  	  	  	  	  	  EPNUM_AUDIO_OUT,
 									  EPNUM_AUDIO_IN | 0x80)
 };
