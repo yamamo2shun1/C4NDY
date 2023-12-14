@@ -1,6 +1,6 @@
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan10B1
-Parameter Address = 17
+Parameter Address = 14
 Parameter Value   = 1.03710103034973
 Parameter Data :
 0x00 ,	0x84 ,	0xBF ,	0xBA ,	
@@ -9,7 +9,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11B1
-Parameter Address = 18
+Parameter Address = 15
 Parameter Value   = -1.99174845218658
 Parameter Data :
 0x0F ,	0x01 ,	0x0E ,	0x63 ,	
@@ -18,7 +18,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12B1
-Parameter Address = 19
+Parameter Address = 16
 Parameter Value   = 0.954654216766357
 Parameter Data :
 0x00 ,	0x7A ,	0x32 ,	0x1C ,	
@@ -27,7 +27,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11A1
-Parameter Address = 20
+Parameter Address = 17
 Parameter Value   = 1.99174845218658
 Parameter Data :
 0x00 ,	0xFE ,	0xF1 ,	0x9D ,	
@@ -36,7 +36,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12A1
-Parameter Address = 21
+Parameter Address = 18
 Parameter Value   = -0.991755366325378
 Parameter Data :
 0x0F ,	0x81 ,	0x0E ,	0x29 ,	
@@ -45,7 +45,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan10B2
-Parameter Address = 22
+Parameter Address = 19
 Parameter Value   = 0.988543391227722
 Parameter Data :
 0x00 ,	0x7E ,	0x88 ,	0x97 ,	
@@ -54,7 +54,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11B2
-Parameter Address = 23
+Parameter Address = 20
 Parameter Value   = -1.94739270210266
 Parameter Data :
 0x0F ,	0x06 ,	0xBB ,	0xD6 ,	
@@ -63,7 +63,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12B2
-Parameter Address = 24
+Parameter Address = 21
 Parameter Value   = 0.959102511405945
 Parameter Data :
 0x00 ,	0x7A ,	0xC3 ,	0xDF ,	
@@ -72,7 +72,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11A2
-Parameter Address = 25
+Parameter Address = 22
 Parameter Value   = 1.94739270210266
 Parameter Data :
 0x00 ,	0xF9 ,	0x44 ,	0x2A ,	
@@ -81,7 +81,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12A2
-Parameter Address = 26
+Parameter Address = 23
 Parameter Value   = -0.947645902633667
 Parameter Data :
 0x0F ,	0x86 ,	0xB3 ,	0x8A ,	
@@ -90,7 +90,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan10B3
-Parameter Address = 27
+Parameter Address = 24
 Parameter Value   = 0.402376294136047
 Parameter Data :
 0x00 ,	0x33 ,	0x81 ,	0x11 ,	
@@ -99,7 +99,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11B3
-Parameter Address = 28
+Parameter Address = 25
 Parameter Value   = 0.581923484802246
 Parameter Data :
 0x00 ,	0x4A ,	0x7C ,	0x78 ,	
@@ -108,7 +108,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12B3
-Parameter Address = 29
+Parameter Address = 26
 Parameter Value   = 0.26957106590271
 Parameter Data :
 0x00 ,	0x22 ,	0x81 ,	0x4E ,	
@@ -117,7 +117,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11A3
-Parameter Address = 30
+Parameter Address = 27
 Parameter Value   = -0.581923484802246
 Parameter Data :
 0x0F ,	0xB5 ,	0x83 ,	0x88 ,	
@@ -126,7 +126,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12A3
-Parameter Address = 31
+Parameter Address = 28
 Parameter Value   = 0.328052639961243
 Parameter Data :
 0x00 ,	0x29 ,	0xFD ,	0xA1 ,	
@@ -135,7 +135,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan10B1
-Parameter Address = 17
+Parameter Address = 14
 Parameter Value   = 1.03710103034973
 Parameter Data :
 0x00 ,	0x84 ,	0xBF ,	0xBA ,	
@@ -144,7 +144,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11B1
-Parameter Address = 18
+Parameter Address = 15
 Parameter Value   = -1.99174845218658
 Parameter Data :
 0x0F ,	0x01 ,	0x0E ,	0x63 ,	
@@ -153,7 +153,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12B1
-Parameter Address = 19
+Parameter Address = 16
 Parameter Value   = 0.954654216766357
 Parameter Data :
 0x00 ,	0x7A ,	0x32 ,	0x1C ,	
@@ -162,7 +162,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11A1
-Parameter Address = 20
+Parameter Address = 17
 Parameter Value   = 1.99174845218658
 Parameter Data :
 0x00 ,	0xFE ,	0xF1 ,	0x9D ,	
@@ -171,7 +171,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12A1
-Parameter Address = 21
+Parameter Address = 18
 Parameter Value   = -0.991755366325378
 Parameter Data :
 0x0F ,	0x81 ,	0x0E ,	0x29 ,	
@@ -180,7 +180,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan10B2
-Parameter Address = 22
+Parameter Address = 19
 Parameter Value   = 0.988543391227722
 Parameter Data :
 0x00 ,	0x7E ,	0x88 ,	0x97 ,	
@@ -189,7 +189,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11B2
-Parameter Address = 23
+Parameter Address = 20
 Parameter Value   = -1.94739270210266
 Parameter Data :
 0x0F ,	0x06 ,	0xBB ,	0xD6 ,	
@@ -198,7 +198,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12B2
-Parameter Address = 24
+Parameter Address = 21
 Parameter Value   = 0.959102511405945
 Parameter Data :
 0x00 ,	0x7A ,	0xC3 ,	0xDF ,	
@@ -207,7 +207,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11A2
-Parameter Address = 25
+Parameter Address = 22
 Parameter Value   = 1.94739270210266
 Parameter Data :
 0x00 ,	0xF9 ,	0x44 ,	0x2A ,	
@@ -216,7 +216,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12A2
-Parameter Address = 26
+Parameter Address = 23
 Parameter Value   = -0.947645902633667
 Parameter Data :
 0x0F ,	0x86 ,	0xB3 ,	0x8A ,	
@@ -225,7 +225,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan10B3
-Parameter Address = 27
+Parameter Address = 24
 Parameter Value   = 0.402376294136047
 Parameter Data :
 0x00 ,	0x33 ,	0x81 ,	0x11 ,	
@@ -234,7 +234,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11B3
-Parameter Address = 28
+Parameter Address = 25
 Parameter Value   = 0.581923484802246
 Parameter Data :
 0x00 ,	0x4A ,	0x7C ,	0x78 ,	
@@ -243,7 +243,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12B3
-Parameter Address = 29
+Parameter Address = 26
 Parameter Value   = 0.26957106590271
 Parameter Data :
 0x00 ,	0x22 ,	0x81 ,	0x4E ,	
@@ -252,7 +252,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan11A3
-Parameter Address = 30
+Parameter Address = 27
 Parameter Value   = -0.581923484802246
 Parameter Data :
 0x0F ,	0xB5 ,	0x83 ,	0x88 ,	
@@ -261,7 +261,7 @@ Parameter Data :
 
 Cell Name         = phono eq
 Parameter Name    = PEQ1Chan12A3
-Parameter Address = 31
+Parameter Address = 28
 Parameter Value   = 0.328052639961243
 Parameter Data :
 0x00 ,	0x29 ,	0xFD ,	0xA1 ,	
@@ -288,7 +288,7 @@ Parameter Data :
 
 Cell Name         = phono gain
 Parameter Name    = SWGain1940DBAlg1target
-Parameter Address = 32
+Parameter Address = 34
 Parameter Value   = 15.8489319086075
 Parameter Data :
 0x07 ,	0xEC ,	0xA9 ,	0xCD ,	
@@ -297,7 +297,7 @@ Parameter Data :
 
 Cell Name         = phono gain
 Parameter Name    = SWGain1940DBAlg1step
-Parameter Address = 33
+Parameter Address = 35
 Parameter Value   = 0.00390625
 Parameter Data :
 0x00 ,	0x00 ,	0x80 ,	0x00 ,	
@@ -306,7 +306,7 @@ Parameter Data :
 
 Cell Name         = Mid EQ1
 Parameter Name    = EQ1940Dual20B1
-Parameter Address = 34
+Parameter Address = 36
 Parameter Value   = 0.982964515686035
 Parameter Data :
 0x00 ,	0x7D ,	0xD1 ,	0xC8 ,	
@@ -315,7 +315,7 @@ Parameter Data :
 
 Cell Name         = Mid EQ1
 Parameter Name    = EQ1940Dual21B1
-Parameter Address = 35
+Parameter Address = 37
 Parameter Value   = -1.96573793888092
 Parameter Data :
 0x0F ,	0x04 ,	0x62 ,	0xB3 ,	
@@ -324,7 +324,7 @@ Parameter Data :
 
 Cell Name         = Mid EQ1
 Parameter Name    = EQ1940Dual22B1
-Parameter Address = 36
+Parameter Address = 38
 Parameter Value   = 0.982773423194885
 Parameter Data :
 0x00 ,	0x7D ,	0xCB ,	0x85 ,	
@@ -333,7 +333,7 @@ Parameter Data :
 
 Cell Name         = Mid EQ1
 Parameter Name    = EQ1940Dual21A1
-Parameter Address = 37
+Parameter Address = 39
 Parameter Value   = 1.96544444561005
 Parameter Data :
 0x00 ,	0xFB ,	0x93 ,	0xAF ,	
@@ -342,7 +342,7 @@ Parameter Data :
 
 Cell Name         = Mid EQ1
 Parameter Name    = EQ1940Dual22A1
-Parameter Address = 38
+Parameter Address = 40
 Parameter Value   = -0.966031432151794
 Parameter Data :
 0x0F ,	0x84 ,	0x59 ,	0x15 ,	
@@ -351,7 +351,7 @@ Parameter Data :
 
 Cell Name         = SW vol 1
 Parameter Name    = ExtSWGainDB1step
-Parameter Address = 41
+Parameter Address = 43
 Parameter Value   = 0.0078125
 Parameter Data :
 0x00, 0x01, 0x00, 0x00, 
@@ -360,7 +360,7 @@ Parameter Data :
 
 Cell Name         = SW vol 2
 Parameter Name    = ExtSWGainDB2step
-Parameter Address = 16
+Parameter Address = 33
 Parameter Value   = 0.0078125
 Parameter Data :
 0x00, 0x01, 0x00, 0x00, 
@@ -387,7 +387,7 @@ Parameter Data :
 
 Cell Name         = Mg1
 Parameter Name    = SingleCtrlMixer19401
-Parameter Address = 39
+Parameter Address = 41
 Parameter Value   = 0.5
 Parameter Data :
 0x00, 0x40, 0x00, 0x00, 
@@ -396,7 +396,7 @@ Parameter Data :
 
 Cell Name         = Mg2
 Parameter Name    = SingleCtrlMixer19403
-Parameter Address = 40
+Parameter Address = 42
 Parameter Value   = 0.5
 Parameter Data :
 0x00, 0x40, 0x00, 0x00, 
@@ -405,7 +405,7 @@ Parameter Data :
 
 Cell Name         = Mg3
 Parameter Name    = SingleCtrlMixer19404
-Parameter Address = 42
+Parameter Address = 44
 Parameter Value   = 0.5
 Parameter Data :
 0x00, 0x40, 0x00, 0x00, 
@@ -414,7 +414,7 @@ Parameter Data :
 
 Cell Name         = Mg4
 Parameter Name    = SingleCtrlMixer19405
-Parameter Address = 43
+Parameter Address = 45
 Parameter Value   = 0.5
 Parameter Data :
 0x00, 0x40, 0x00, 0x00, 
@@ -423,7 +423,7 @@ Parameter Data :
 
 Cell Name         = master gain
 Parameter Name    = SWGain1940DBAlg2target
-Parameter Address = 44
+Parameter Address = 46
 Parameter Value   = 0.969632506370544
 Parameter Data :
 0x00 ,	0x7C ,	0x1C ,	0xEB ,	
@@ -432,7 +432,7 @@ Parameter Data :
 
 Cell Name         = master gain
 Parameter Name    = SWGain1940DBAlg2step
-Parameter Address = 45
+Parameter Address = 47
 Parameter Value   = 0.00390625
 Parameter Data :
 0x00 ,	0x00 ,	0x80 ,	0x00 ,	
@@ -441,7 +441,7 @@ Parameter Data :
 
 Cell Name         = usb gain L
 Parameter Name    = SWGain1940DBAlg3target
-Parameter Address = 14
+Parameter Address = 29
 Parameter Value   = 1
 Parameter Data :
 0x00 ,	0x80 ,	0x00 ,	0x00 ,	
@@ -450,7 +450,7 @@ Parameter Data :
 
 Cell Name         = usb gain L
 Parameter Name    = SWGain1940DBAlg3step
-Parameter Address = 15
+Parameter Address = 30
 Parameter Value   = 0.00390625
 Parameter Data :
 0x00 ,	0x00 ,	0x80 ,	0x00 ,	
@@ -459,7 +459,7 @@ Parameter Data :
 
 Cell Name         = usb gain R
 Parameter Name    = SWGain1940DBAlg4target
-Parameter Address = 10
+Parameter Address = 31
 Parameter Value   = 1
 Parameter Data :
 0x00 ,	0x80 ,	0x00 ,	0x00 ,	
@@ -468,10 +468,28 @@ Parameter Data :
 
 Cell Name         = usb gain R
 Parameter Name    = SWGain1940DBAlg4step
-Parameter Address = 11
+Parameter Address = 32
 Parameter Value   = 0.00390625
 Parameter Data :
 0x00 ,	0x00 ,	0x80 ,	0x00 ,	
+
+
+
+Cell Name         = Single 1
+Parameter Name    = targetGainS200AlgGrowDBStep1
+Parameter Address = 11
+Parameter Value   = 0.630957365036011
+Parameter Data :
+0x00, 0x50, 0xC3, 0x36, 
+
+
+
+Cell Name         = Single 1
+Parameter Name    = approx_factorGainS200AlgGrowDBStep1
+Parameter Address = 10
+Parameter Value   = 0.00048828125
+Parameter Data :
+0x00, 0x00, 0x10, 0x00, 
 
 
 
@@ -496,13 +514,10 @@ See also ADAU1761.hex file
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x40 , 	0x00 , 	0x00 , 	
 0x00 , 	0x40 , 	0x00 , 	0x00 , 	
-0x00 , 	0x80 , 	0x00 , 	0x00 , 	
-0x00 , 	0x00 , 	0x80 , 	0x00 , 	
+0x00 , 	0x00 , 	0x10 , 	0x00 , 	
+0x00 , 	0x50 , 	0xC3 , 	0x36 , 	
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x80 , 	0x00 , 	0x00 , 	
-0x00 , 	0x80 , 	0x00 , 	0x00 , 	
-0x00 , 	0x00 , 	0x80 , 	0x00 , 	
-0x00 , 	0x01 , 	0x00 , 	0x00 , 	
 0x00 , 	0x84 , 	0xBF , 	0xBA , 	
 0x0F , 	0x01 , 	0x0E , 	0x63 , 	
 0x00 , 	0x7A , 	0x32 , 	0x1C , 	
@@ -518,6 +533,11 @@ See also ADAU1761.hex file
 0x00 , 	0x22 , 	0x81 , 	0x4E , 	
 0x0F , 	0xB5 , 	0x83 , 	0x88 , 	
 0x00 , 	0x29 , 	0xFD , 	0xA1 , 	
+0x00 , 	0x80 , 	0x00 , 	0x00 , 	
+0x00 , 	0x00 , 	0x80 , 	0x00 , 	
+0x00 , 	0x80 , 	0x00 , 	0x00 , 	
+0x00 , 	0x00 , 	0x80 , 	0x00 , 	
+0x00 , 	0x01 , 	0x00 , 	0x00 , 	
 0x07 , 	0xEC , 	0xA9 , 	0xCD , 	
 0x00 , 	0x00 , 	0x80 , 	0x00 , 	
 0x00 , 	0x7D , 	0xD1 , 	0xC8 , 	
@@ -544,13 +564,10 @@ Parameter data for: IC 1 (Binary format starting at parameter address 0)
 00000000	00000000	00000000	00000000	
 00000000	01000000	00000000	00000000	
 00000000	01000000	00000000	00000000	
-00000000	10000000	00000000	00000000	
-00000000	00000000	10000000	00000000	
+00000000	00000000	00010000	00000000	
+00000000	01010000	11000011	00110110	
 00000000	00000000	00000000	00000000	
 00000000	10000000	00000000	00000000	
-00000000	10000000	00000000	00000000	
-00000000	00000000	10000000	00000000	
-00000000	00000001	00000000	00000000	
 00000000	10000100	10111111	10111010	
 00001111	00000001	00001110	01100011	
 00000000	01111010	00110010	00011100	
@@ -566,6 +583,11 @@ Parameter data for: IC 1 (Binary format starting at parameter address 0)
 00000000	00100010	10000001	01001110	
 00001111	10110101	10000011	10001000	
 00000000	00101001	11111101	10100001	
+00000000	10000000	00000000	00000000	
+00000000	00000000	10000000	00000000	
+00000000	10000000	00000000	00000000	
+00000000	00000000	10000000	00000000	
+00000000	00000001	00000000	00000000	
 00000111	11101100	10101001	11001101	
 00000000	00000000	10000000	00000000	
 00000000	01111101	11010001	11001000	

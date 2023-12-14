@@ -29,9 +29,11 @@
             <Algorithm name="DCInpAlg2" friendlyname="dc Input " cell="DC2 " location="{X=540, Y=205} " Growth="0 " GrowthB="0 " FS="48000">
                 <Link pin="O_C164_A0_P1_out" dir="out" link="Link14" />
             </Algorithm>
-            <Algorithm name="SWGain1940DBAlg4" friendlyname="Gain (RC Slew) " cell="usb gain R " location="{X=315, Y=409} " Growth="1 " GrowthB="0">
-                <Link pin="I_C74_A0_P1_in" dir="in" link="Link0" />
-                <Link pin="O_C74_A0_P2_out" dir="out" link="Link27" />
+            <Algorithm name="GainS200AlgGrowDBStep1" friendlyname="Gain (DB) - Growable " cell="Single 1 " location="{X=64, Y=375} " Growth="2 " GrowthB="0">
+                <Link pin="I_C16_A0_P1_in" dir="in" link="Link17" />
+                <Link pin="I_C16_A0_P3_in" dir="in" link="Link0" />
+                <Link pin="O_C16_A0_P2_out" dir="out" link="Link28" />
+                <Link pin="O_C16_A0_P4_out" dir="out" link="Link29" />
             </Algorithm>
             <Algorithm name="stereoDemuxSlew1" friendlyname="Stereo SW Slew " cell="ln ph sw " location="{X=-85, Y=32} " Growth="2 " GrowthB="0">
                 <Link pin="I_C48_A0_P1_in" dir="in" link="Link1" />
@@ -41,9 +43,19 @@
                 <Link pin="O_C48_A0_P5_out" dir="out" link="Link3" />
                 <Link pin="O_C48_A0_P6_out" dir="out" link="Link4" />
             </Algorithm>
+            <Algorithm name="PEQ1Chan1" friendlyname="PEQ1Chan - Double Precision " cell="phono eq " location="{X=70, Y=82} " Growth="2 " GrowthB="0">
+                <Link pin="I_C15_A0_P1_in" dir="in" link="Link3" />
+                <Link pin="I_C15_A0_P3_in" dir="in" link="Link4" />
+                <Link pin="O_C15_A0_P2_out" dir="out" link="Link7" />
+                <Link pin="O_C15_A0_P4_out" dir="out" link="Link8" />
+            </Algorithm>
             <Algorithm name="SWGain1940DBAlg3" friendlyname="Gain (RC Slew) " cell="usb gain L " location="{X=204, Y=295} " Growth="1 " GrowthB="0">
-                <Link pin="I_C68_A0_P1_in" dir="in" link="Link17" />
+                <Link pin="I_C68_A0_P1_in" dir="in" link="Link28" />
                 <Link pin="O_C68_A0_P2_out" dir="out" link="Link26" />
+            </Algorithm>
+            <Algorithm name="SWGain1940DBAlg4" friendlyname="Gain (RC Slew) " cell="usb gain R " location="{X=315, Y=409} " Growth="1 " GrowthB="0">
+                <Link pin="I_C74_A0_P1_in" dir="in" link="Link29" />
+                <Link pin="O_C74_A0_P2_out" dir="out" link="Link27" />
             </Algorithm>
             <Algorithm name="ExtSWGainDB2" friendlyname="Ext vol (SW slew) " cell="SW vol 2 " location="{X=659, Y=278} " Growth="2 " GrowthB="0">
                 <Link pin="I_C146_A0_P1_in" dir="in" link="Link14" />
@@ -51,12 +63,6 @@
                 <Link pin="I_C146_A0_P4_in" dir="in" link="Link27" />
                 <Link pin="O_C146_A0_P3_out" dir="out" link="Link19" />
                 <Link pin="O_C146_A0_P5_out" dir="out" link="Link21" />
-            </Algorithm>
-            <Algorithm name="PEQ1Chan1" friendlyname="PEQ1Chan - Double Precision " cell="phono eq " location="{X=70, Y=82} " Growth="2 " GrowthB="0">
-                <Link pin="I_C15_A0_P1_in" dir="in" link="Link3" />
-                <Link pin="I_C15_A0_P3_in" dir="in" link="Link4" />
-                <Link pin="O_C15_A0_P2_out" dir="out" link="Link7" />
-                <Link pin="O_C15_A0_P4_out" dir="out" link="Link8" />
             </Algorithm>
             <Algorithm name="SWGain1940DBAlg1" friendlyname="Gain (RC Slew) " cell="phono gain " location="{X=196, Y=75} " Growth="2 " GrowthB="0">
                 <Link pin="I_C100_A0_P1_in" dir="in" link="Link7" />

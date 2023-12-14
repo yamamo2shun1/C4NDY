@@ -1,7 +1,7 @@
 /*
  * File:           C:\Users\shun\C4NDY\SigmaDSP\ADAU1761_IC_1_REG.h
  *
- * Created:        Friday, December 1, 2023 12:12:22 PM
+ * Created:        Thursday, December 14, 2023 10:03:28 AM
  * Description:    ADAU1761:IC 1 control register definitions.
  *
  * This software is distributed in the hope that it will be useful,
@@ -258,12 +258,12 @@
 /* CRC Ideal_3  - Registers (IC 1) */
 #define REG_CRC_IDEAL_3_IC_1_ADDR                 0x40C2
 #define REG_CRC_IDEAL_3_IC_1_BYTE                 1
-#define REG_CRC_IDEAL_3_IC_1_VALUE                0x67
+#define REG_CRC_IDEAL_3_IC_1_VALUE                0x7F
 
 /* CRC Ideal_4  - Registers (IC 1) */
 #define REG_CRC_IDEAL_4_IC_1_ADDR                 0x40C3
 #define REG_CRC_IDEAL_4_IC_1_BYTE                 1
-#define REG_CRC_IDEAL_4_IC_1_VALUE                0x61
+#define REG_CRC_IDEAL_4_IC_1_VALUE                0x7F
 
 /* CRC Enable  - Registers (IC 1) */
 #define REG_CRC_ENABLE_IC_1_ADDR                  0x40C4
@@ -885,12 +885,12 @@
 #define R46_CRC_IDEAL_2_IC_1_SHIFT                0
 
 /* CRC Ideal_3 (IC 1) */
-#define R47_CRC_IDEAL_3_IC_1                      0x67   /* 01100111b	[7:0] */
+#define R47_CRC_IDEAL_3_IC_1                      0x7F   /* 01111111b	[7:0] */
 #define R47_CRC_IDEAL_3_IC_1_MASK                 0xFF
 #define R47_CRC_IDEAL_3_IC_1_SHIFT                0
 
 /* CRC Ideal_4 (IC 1) */
-#define R48_CRC_IDEAL_4_IC_1                      0x61   /* 01100001b	[7:0] */
+#define R48_CRC_IDEAL_4_IC_1                      0x7F   /* 01111111b	[7:0] */
 #define R48_CRC_IDEAL_4_IC_1_MASK                 0xFF
 #define R48_CRC_IDEAL_4_IC_1_SHIFT                0
 
