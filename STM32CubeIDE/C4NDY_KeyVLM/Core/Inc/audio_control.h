@@ -29,8 +29,8 @@
 extern int spk_data_size;
 
 // Buffer for speaker data
-extern int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
-extern int32_t hpout_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
+extern int16_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ];
+extern int16_t hpout_buf[SAI_BUF_SIZE];
 
 void start_adc(void);
 void start_sai(void);

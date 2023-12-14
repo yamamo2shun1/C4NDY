@@ -60,15 +60,15 @@ uint16_t master_gain_prev = 0;
 
 uint64_t sai_buf_index = 0;
 uint64_t sai_transmit_index = 0;
-int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
+int16_t sai_buf[SAI_RNG_BUF_SIZE * 2] = {0};
 bool is_dma_pause = false;
 
 // Speaker data size received in the last frame
 int spk_data_size = 0;
 
 // Buffer for speaker data
-int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2] = {0};
-int32_t hpout_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2] = {0};
+int16_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ] = {0};
+int16_t hpout_buf[SAI_BUF_SIZE] = {0};
 
 // Helper for clock get requests
 static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t const *request)
@@ -341,7 +341,7 @@ void start_adc(void)
 
 void start_sai(void)
 {
-	if (HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)hpout_buf, SAI_BUF_SIZE / 2) != HAL_OK)
+	if (HAL_SAI_Transmit_DMA(&hsai_BlockB1, (uint8_t *)hpout_buf, SAI_BUF_SIZE) != HAL_OK)
 	{
 		/* SAI transmit start error */
 		Error_Handler();
@@ -361,30 +361,22 @@ void read_audio_data_from_usb(uint16_t n_bytes_received)
 
 void copybuf_usb2sai(void)
 {
-	for (int i = 0; i < spk_data_size / 4; i++)
+	for (int i = 0; i < spk_data_size / 2; i++)
 	{
-		sai_buf[sai_buf_index % SAI_RNG_BUF_SIZE] = spk_buf[i];
+		sai_buf[sai_buf_index % SAI_RNG_BUF_SIZE] = spk_buf[i] >> 1; // To prevent sound cracking
 		sai_buf_index++;
 	}
 }
 
 void copybuf_sai2codec(void)
 {
-	if (sai_buf_index >= (sai_transmit_index + SAI_BUF_SIZE / 4))
+	if (sai_buf_index >= (sai_transmit_index + SAI_BUF_SIZE))
 	{
-		for (int i = 0; i < SAI_BUF_SIZE / 4; i++)
+		for (int i = 0; i < SAI_BUF_SIZE; i++)
 		{
 			hpout_buf[i] = sai_buf[sai_transmit_index % SAI_RNG_BUF_SIZE];
 			sai_transmit_index++;
 		}
-	}
-}
-
-void clear_hpout_buf(void)
-{
-	for (int i = 0; i < SAI_BUF_SIZE / 4; i++)
-	{
-		hpout_buf[i] = 0;
 	}
 }
 
