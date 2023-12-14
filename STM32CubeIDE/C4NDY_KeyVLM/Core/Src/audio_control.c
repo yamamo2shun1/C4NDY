@@ -58,8 +58,8 @@ uint16_t master_gain_buffer[16] = {0};
 uint16_t master_gain = 0;
 uint16_t master_gain_prev = 0;
 
-uint64_t sai_buf_index = 0;
-uint64_t sai_transmit_index = 0;
+uint32_t sai_buf_index = 0;
+uint32_t sai_transmit_index = 0;
 int16_t sai_buf[SAI_RNG_BUF_SIZE * 2] = {0};
 bool is_dma_pause = false;
 
