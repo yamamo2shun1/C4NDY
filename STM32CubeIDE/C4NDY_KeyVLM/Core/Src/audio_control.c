@@ -66,9 +66,6 @@ bool is_dma_pause = false;
 // Speaker data size received in the last frame
 int spk_data_size = 0;
 
-// Buffer for microphone data
-int32_t mic_buf[CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ / 2] = {0};
-
 // Buffer for speaker data
 int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2] = {0};
 int32_t hpout_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2] = {0};
