@@ -115,6 +115,16 @@ int main(void)
   MX_USB_PCD_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
+  SEGGER_RTT_printf(0, "Go to Application Code.\n");
+
+  for (int i = 0; i < 3; i++)
+  {
+	  HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
+	  HAL_Delay(200);
+	  HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
+	  HAL_Delay(200);
+  }
+
   jumpUserApp();
   /* USER CODE END 2 */
 
