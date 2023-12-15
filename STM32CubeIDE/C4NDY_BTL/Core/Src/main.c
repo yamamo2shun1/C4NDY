@@ -24,12 +24,12 @@
 #include "quadspi.h"
 #include "sai.h"
 #include "tim.h"
-#include "usb.h"
+#include "usb_device.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stdbool.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,6 +40,8 @@ typedef void (*pFunction)(void);
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define FLASH_APP_ADDR (0x08020000)
+
+#define FLASH_DATA_ADDR (0x0807F800)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -62,18 +64,74 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void erase_flash_data(void)
+{
+	static FLASH_EraseInitTypeDef EraseInitStruct;
+	uint32_t PAGEError;
+	EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+	EraseInitStruct.Page = 255;
+	EraseInitStruct.NbPages = 1;
+
+	if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK)
+	{
+		SEGGER_RTT_printf(0, "flash erase error...\n");
+	}
+}
+
+void write_flash_data(uint8_t index, uint8_t val)
+{
+	if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, FLASH_DATA_ADDR + 8 * index, val) != HAL_OK)
+	{
+		SEGGER_RTT_printf(0, "flash program error...\n");
+	}
+}
+
+uint64_t read_flash_data(uint8_t index)
+{
+	return *(uint64_t *)(FLASH_DATA_ADDR + 8 * index);
+}
+
+void setBootDfuFlag(bool is_boot_dfu)
+{
+	SEGGER_RTT_printf(0, "erase & write FLASH...\n");
+	HAL_FLASH_Unlock();
+
+	erase_flash_data();
+
+	write_flash_data(0, 0);
+	if (is_boot_dfu)
+	{
+		write_flash_data(1, 1);
+	}
+	else
+	{
+		write_flash_data(1, 0);
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 13; j++)
+		{
+			write_flash_data(2 + 0 * 65 + i * 13 + j, 0);
+			write_flash_data(2 + 1 * 65 + i * 13 + j, 0);
+		}
+	}
+
+	HAL_FLASH_Lock();
+}
+
 void jumpUserApp()
 {
-    //ジャンプ先であるReset_Handlerのアドレスは、基準となるアドレスから4バイト後(→<a href="https://www.stmcu.jp/design/document/programming_manual/51584/">PM0253</a> 2.4.4 Vector table)
+    //ジャンプ�?�であるReset_Handlerのアドレスは、基準となるアドレスから4バイト�?(�?<a href="https://www.stmcu.jp/design/document/programming_manual/51584/">PM0253</a> 2.4.4 Vector table)
     jumpAddress = *(uint32_t *) (FLASH_APP_ADDR + 4);
     jumpToApplication = (pFunction) jumpAddress;
 
-    //main内でHAL_Init()→SystemClock_Config()の順に初期化関数を呼んでいるため、逆順にDeInitしておく。
-    //各割り込みが有効化されていれば、ここで無効化も実施しておく。
+    //main�?でHAL_Init()→SystemClock_Config()の�?に初期化関数を呼んで�?るため�??�?�?にDeInitしておく�?
+    //�?割り込みが有効化されて�?れ�?�、ここで無効化も実施しておく�?
     HAL_RCC_DeInit();
     HAL_DeInit();
 
-    //スタックポインタにFLASH_APP_ADDRの値を設定
+    //スタ�?クポインタにFLASH_APP_ADDRの値を設�?
     __set_MSP(*(uint32_t*)FLASH_APP_ADDR);
     jumpToApplication();
 }
@@ -112,11 +170,9 @@ int main(void)
   MX_QUADSPI1_Init();
   MX_I2C2_Init();
   MX_ADC1_Init();
-  MX_USB_PCD_Init();
   MX_TIM6_Init();
+  MX_USB_Device_Init();
   /* USER CODE BEGIN 2 */
-  SEGGER_RTT_printf(0, "Go to Application Code.\n");
-
   for (int i = 0; i < 3; i++)
   {
 	  HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
@@ -125,7 +181,20 @@ int main(void)
 	  HAL_Delay(200);
   }
 
-  jumpUserApp();
+  if (read_flash_data(1) == 1)
+  {
+	setBootDfuFlag(false);
+
+	SEGGER_RTT_printf(0, "Go to custom DFU mode.\n");
+	HAL_Delay(100);
+  }
+  else
+  {
+	SEGGER_RTT_printf(0, "Go to Application Code.\n");
+	HAL_Delay(100);
+
+	jumpUserApp();
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
