@@ -18,6 +18,9 @@ struct keyboardHID_t {
 uint16_t keyState[MATRIX_ROWS] = {0x0};
 uint16_t prevKeyState[MATRIX_ROWS] = {0x0};
 
+bool isSwitchDFUMode = false;
+uint32_t longPressCounter = 0;
+
 bool isKeymapIDChanged = false;
 uint8_t keymapID = 0;
 
@@ -264,6 +267,8 @@ void clearKeys(uint8_t code)
 			}
 		}
 	}
+
+	longPressCounter = 0;
 }
 
 void setKeys(uint8_t code)
@@ -312,6 +317,18 @@ void setKeys(uint8_t code)
 		{
 			if (keyboardHID.key[k] == code)
 			{
+				// LGUI + ESC 長押しでDFUモーでリセット
+				if (keyboardHID.modifiers == 0x08 && keyboardHID.key[k] == 0x00)
+				{
+					longPressCounter++;
+					if (longPressCounter == 5000)
+					{
+						setBootDfuFlag(true);
+						SEGGER_RTT_printf(0, "Boot Custom DFU...\n");
+						HAL_Delay(100);
+						NVIC_SystemReset();
+					}
+				}
 				break;
 			}
 			else if (keyboardHID.key[k] == 0x00)

@@ -46,7 +46,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define FLASH_ADDR 0x0807F800
+#define FLASH_DATA_ADDR 0x0807F800
 
 #define AUDIO_SAMPLE_RATE 48000
 
@@ -126,7 +126,7 @@ void erase_flash_data(void)
 
 void write_flash_data(uint8_t index, uint8_t val)
 {
-	if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, FLASH_ADDR + 8 * index, val) != HAL_OK)
+	if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, FLASH_DATA_ADDR + 8 * index, val) != HAL_OK)
 	{
 		SEGGER_RTT_printf(0, "flash program error...\n");
 	}
@@ -134,9 +134,66 @@ void write_flash_data(uint8_t index, uint8_t val)
 
 uint64_t read_flash_data(uint8_t index)
 {
-	return *(uint64_t *)(FLASH_ADDR + 8 * index);
+	return *(uint64_t *)(FLASH_DATA_ADDR + 8 * index);
 }
 
+void setBootDfuFlag(bool is_boot_dfu)
+{
+	SEGGER_RTT_printf(0, "erase & write FLASH...\n");
+	HAL_FLASH_Unlock();
+
+	uint64_t currentKeyMap[2][5][13] = {0x0};
+
+	SEGGER_RTT_printf(0, "current KeyMap\n");
+	for (int k = 0; k < 2; k++)
+	{
+		SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
+		SEGGER_RTT_printf(0, "[\n");
+		for (int i = 0; i < 5; i++)
+		{
+			SEGGER_RTT_printf(0, "[");
+			for (int j = 0; j < 13; j++)
+			{
+				currentKeyMap[k][i][j] = read_flash_data(2 + k * 65 + i * 13 + j);
+				SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
+			}
+			SEGGER_RTT_printf(0, "]\n");
+		}
+		SEGGER_RTT_printf(0, "]\n\n");
+	}
+
+	erase_flash_data();
+
+	write_flash_data(0, getLinePhonoSW());
+	if (is_boot_dfu)
+	{
+		write_flash_data(1, 1);
+	}
+	else
+	{
+		write_flash_data(1, 0);
+	}
+
+	SEGGER_RTT_printf(0, "reload KeyMap\n");
+	for (int k = 0; k < 2; k++)
+	{
+		SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
+		SEGGER_RTT_printf(0, "[\n");
+		for (int i = 0; i < 5; i++)
+		{
+			SEGGER_RTT_printf(0, "[");
+			for (int j = 0; j < 13; j++)
+			{
+				write_flash_data(2 + k * 65 + i * 13 + j, currentKeyMap[k][i][j]);
+				SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
+			}
+			SEGGER_RTT_printf(0, "]\n");
+		}
+		SEGGER_RTT_printf(0, "]\n\n");
+	}
+
+	HAL_FLASH_Lock();
+}
 /* USER CODE END 0 */
 
 /**
@@ -260,6 +317,7 @@ int main(void)
 	  codec_control_task();
 
 	  hid_keyscan_task();
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

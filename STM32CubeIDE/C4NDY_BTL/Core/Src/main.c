@@ -96,6 +96,26 @@ void setBootDfuFlag(bool is_boot_dfu)
 	SEGGER_RTT_printf(0, "erase & write FLASH...\n");
 	HAL_FLASH_Unlock();
 
+	uint64_t currentKeyMap[2][5][13] = {0x0};
+
+	SEGGER_RTT_printf(0, "current KeyMap ");
+	for (int k = 0; k < 2; k++)
+	{
+		SEGGER_RTT_printf(0, "%d\n", k + 1);
+		SEGGER_RTT_printf(0, "[\n");
+		for (int i = 0; i < 5; i++)
+		{
+			SEGGER_RTT_printf(0, "[");
+			for (int j = 0; j < 13; j++)
+			{
+				currentKeyMap[k][i][j] = read_flash_data(2 + k * 65 + i * 13 + j);
+				SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
+			}
+			SEGGER_RTT_printf(0, "]\n");
+		}
+		SEGGER_RTT_printf(0, "]\n\n");
+	}
+
 	erase_flash_data();
 
 	write_flash_data(0, 0);
@@ -108,13 +128,22 @@ void setBootDfuFlag(bool is_boot_dfu)
 		write_flash_data(1, 0);
 	}
 
-	for (int i = 0; i < 5; i++)
+	SEGGER_RTT_printf(0, "reload KeyMap ");
+	for (int k = 0; k < 2; k++)
 	{
-		for (int j = 0; j < 13; j++)
+		SEGGER_RTT_printf(0, "%d\n", k + 1);
+		SEGGER_RTT_printf(0, "[\n");
+		for (int i = 0; i < 5; i++)
 		{
-			write_flash_data(2 + 0 * 65 + i * 13 + j, 0);
-			write_flash_data(2 + 1 * 65 + i * 13 + j, 0);
+			SEGGER_RTT_printf(0, "[");
+			for (int j = 0; j < 13; j++)
+			{
+				write_flash_data(2 + k * 65 + i * 13 + j, currentKeyMap[k][i][j]);
+				SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
+			}
+			SEGGER_RTT_printf(0, "]\n");
 		}
+		SEGGER_RTT_printf(0, "]\n\n");
 	}
 
 	HAL_FLASH_Lock();
