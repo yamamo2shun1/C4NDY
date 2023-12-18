@@ -81,7 +81,7 @@
 /*---------- -----------*/
 #define USBD_DFU_MAX_ITF_NUM     1U
 /*---------- -----------*/
-#define USBD_DFU_XFER_SIZE     4096U
+#define USBD_DFU_XFER_SIZE     1024U
 /*---------- -----------*/
 #define USBD_DFU_APP_DEFAULT_ADD     0x08020000U
 

@@ -151,16 +151,12 @@ void setBootDfuFlag(bool is_boot_dfu)
 
 void jumpUserApp()
 {
-    //ジャンプ�?�であるReset_Handlerのアドレスは、基準となるアドレスから4バイト�?(�?<a href="https://www.stmcu.jp/design/document/programming_manual/51584/">PM0253</a> 2.4.4 Vector table)
     jumpAddress = *(uint32_t *) (FLASH_APP_ADDR + 4);
     jumpToApplication = (pFunction) jumpAddress;
 
-    //main�?でHAL_Init()→SystemClock_Config()の�?に初期化関数を呼んで�?るため�??�?�?にDeInitしておく�?
-    //�?割り込みが有効化されて�?れ�?�、ここで無効化も実施しておく�?
     HAL_RCC_DeInit();
     HAL_DeInit();
 
-    //スタ�?クポインタにFLASH_APP_ADDRの値を設�?
     __set_MSP(*(uint32_t*)FLASH_APP_ADDR);
     jumpToApplication();
 }

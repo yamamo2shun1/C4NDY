@@ -226,7 +226,9 @@ uint16_t FLASH_If_Write(uint8_t *src, uint8_t *dest, uint32_t Len)
   {
 	/* Device voltage range supposed to be [2.7V to 3.6V], the operation will
 	 * be done by byte */
-	if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, (uint32_t) (dest + i), *(uint64_t *) (src + i)) == HAL_OK)
+	if (HAL_FLASH_Program
+		(FLASH_TYPEPROGRAM_DOUBLEWORD, (uint32_t) (dest + i),
+		 *(uint64_t *) (src + i)) == HAL_OK)
 	{
 	  /* Check the written value */
 	  if (*(uint64_t *) (src + i) != *(uint64_t *) (dest + i))
@@ -308,7 +310,7 @@ static uint32_t GetPage(uint32_t Address)
 {
   uint32_t page = 0U;
 
-  //if (Address < (FLASH_BASE + FLASH_BANK_SIZE))
+  if (Address < (FLASH_BASE + FLASH_BANK_SIZE))
   {
     /* Bank 1 */
     page = (Address - FLASH_BASE) / FLASH_PAGE_SIZE;
@@ -320,7 +322,6 @@ static uint32_t GetPage(uint32_t Address)
     page = (Address - (FLASH_BASE + FLASH_BANK_SIZE)) / FLASH_PAGE_SIZE;
   }
 #endif
-
   return page;
 }
 /**
