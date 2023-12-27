@@ -1,4 +1,4 @@
-22291269774772069
+22298075041145438
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -64092,6 +64092,13 @@ Gateron Low Profile Switch 2.0
 2
 2
 My_Parts
+Gateron_KS-27
+
+
+0
+2
+2
+My_Parts
 Gateron_LowProfile_2.0_CHole
 
 
@@ -64168,6 +64175,13 @@ LM2623AMM/NOPB
 0
 8
 8
+My_Parts
+Mic_Module
+Through hole angled pin header, 2x03, 2.54mm pitch, 6mm pin length, double rows
+Through hole angled pin header THT 2x03 2.54mm double row
+0
+6
+6
 My_Parts
 Molex_15910060
 
@@ -64266,6 +64280,20 @@ LM66100QDCKRQ1
 0
 6
 6
+My_Parts
+SD02H1SB
+
+
+0
+4
+4
+My_Parts
+SD04H1SB
+
+
+0
+8
+8
 My_Parts
 SKRPABE010
 
