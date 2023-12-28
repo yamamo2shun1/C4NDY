@@ -25,4 +25,4 @@ The C4NDY is the STM32G491 prototyping board.
 </center>
 
 ## License
-MIT License
+[MIT　License](https://github.com/yamamo2shun1/C4NDY/blob/main/LICENSE.md)
