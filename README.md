@@ -1,4 +1,6 @@
 # C4NDY KeyVLM
+
+## Overview
 The C4NDY KeyVLM is a USB keyboard with a 65-key Ortholinear layout. Its greatest feature is that it can be connected to a turntable, allowing you to mix the music you are playing on your computer or smartphone with the music on your vinyl records.
 
 - Supported Keyswitch: Gateron Low Profile 2.0  
