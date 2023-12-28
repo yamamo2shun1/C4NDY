@@ -1,10 +1,10 @@
 # C4NDY KeyVLM
 
-## Overview
+## Features
 The C4NDY KeyVLM is a USB keyboard with a 65-key Ortholinear layout. Its greatest feature is that it can be connected to a turntable, allowing you to mix the music you are playing on your computer or smartphone with the music on your vinyl records.
 
-- Supported Keyswitch: Gateron Low Profile 2.0  
-- Supported USB Audio Spec: 16bit 48kHz Input only
+- Supported Keyswitch: Gateron Low Profile 2.0(Implemented Hotswap socket KS-27)  
+- Supported USB Audio Spec: 16bit 48kHz Input only(Codec is [Analog Devices ADAU1761](https://www.analog.com/jp/products/adau1761.html))
 
 ![1](https://github.com/yamamo2shun1/C4NDY/assets/96638/20440f42-f48b-4111-9ce8-993f187b1d1e)
 ![2](https://github.com/yamamo2shun1/C4NDY/assets/96638/e7a72ce8-ff90-4a15-8e16-572257de4128)
@@ -19,10 +19,11 @@ The keymap can be changed using the [KeyVLM Configurator](https://github.com/yam
 ## Mainboard
 The C4NDY is the STM32G491 prototyping board.
 
+- MCU: [STM32G491CET6](https://www.st.com/ja/microcontrollers-microprocessors/stm32g4x1.html)
+- Bootloader: Custom bootloader([C4NDY_BTL](https://github.com/yamamo2shun1/C4NDY/tree/main/STM32CubeIDE/C4NDY_BTL))
+- USB Stack: [TinyUSB](https://github.com/hathach/tinyusb)
+
 ![c4ndy_brd_explain](https://github.com/yamamo2shun1/C4NDY/assets/96638/aaa2ed8d-d70b-4a83-bae2-521097d3deec)
 
 <img width="200" alt="c4ndy_revB_front" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/7183699a-8d82-4a91-bb7c-bbe63f441531">　<img width="200" allt="c4ndy_revB_back" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/1787f323-11b4-4320-b053-13762e59fe66">
 </center>
-
-## License
-[MIT　License](https://github.com/yamamo2shun1/C4NDY/blob/main/LICENSE.md)
