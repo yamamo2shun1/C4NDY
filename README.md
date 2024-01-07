@@ -17,14 +17,15 @@ The C4NDY KeyVLM is a USB keyboard with a 65-key Ortholinear layout. Its greates
 ## Keymap Configurator
 The keymap can be changed using the [KeyVLM Configurator](https://github.com/yamamo2shun1/KeyVLM_Configurator), a dedicated configuration tool developed in the Go language.
 
-## Mainboard
+## Mainboard(rev.D)
 The C4NDY is the STM32G491 prototyping board.
 
 - MCU: [STM32G491CET6](https://www.st.com/ja/microcontrollers-microprocessors/stm32g4x1.html)
 - Bootloader: Custom bootloader([C4NDY_BTL](https://github.com/yamamo2shun1/C4NDY/tree/main/STM32CubeIDE/C4NDY_BTL))
 - USB Stack: [TinyUSB](https://github.com/hathach/tinyusb)
 
-![c4ndy_brd_explain](https://github.com/yamamo2shun1/C4NDY/assets/96638/aaa2ed8d-d70b-4a83-bae2-521097d3deec)
+![c4ndy_brd_explain](https://github.com/yamamo2shun1/C4NDY/assets/96638/89944889-bca0-41cf-98d1-02606702823f)
 
-<img width="200" alt="c4ndy_revB_front" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/7183699a-8d82-4a91-bb7c-bbe63f441531">　<img width="200" allt="c4ndy_revB_back" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/1787f323-11b4-4320-b053-13762e59fe66">
+<center>
+<img width="200" alt="c4ndy_revD_front" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/d9490441-fa41-4fb6-88b6-fedd4f7f2d4a"> <img width="200" alt="c4ndy_revD_back" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/f3e677f7-a3df-4a09-87be-e421eff5cd60">
 </center>
