@@ -27,5 +27,5 @@ The C4NDY is the STM32G491 prototyping board.
 ![c4ndy_brd_explain](https://github.com/yamamo2shun1/C4NDY/assets/96638/89944889-bca0-41cf-98d1-02606702823f)
 
 <center>
-<img width="200" alt="c4ndy_revD_front" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/d9490441-fa41-4fb6-88b6-fedd4f7f2d4a"> <img width="200" alt="c4ndy_revD_back" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/f3e677f7-a3df-4a09-87be-e421eff5cd60">
+<img width="250" alt="c4ndy_revD_front" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/d9490441-fa41-4fb6-88b6-fedd4f7f2d4a"> <img width="250" alt="c4ndy_revD_back" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/f3e677f7-a3df-4a09-87be-e421eff5cd60">
 </center>
