@@ -11,6 +11,9 @@ The C4NDY KeyVLM is a USB keyboard with a 65-key Ortholinear layout. Its greates
 ![2](https://github.com/yamamo2shun1/C4NDY/assets/96638/e7a72ce8-ff90-4a15-8e16-572257de4128)
 ![3](https://github.com/yamamo2shun1/C4NDY/assets/96638/33fd7535-f1e1-4e20-a99c-ce84f68deabb)
 
+## Side Panel I/O
+<img width="550" alt="C4NDY_KeyVLM_PanelIO_explain" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/ab5ae116-6d78-4700-a677-635909ac28c7">
+
 ## Example Layout
 ![keymap-layout](https://github.com/yamamo2shun1/C4NDY/assets/96638/bc8e57b4-f748-4dd8-b59a-7187f392ab16)
 
