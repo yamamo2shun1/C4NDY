@@ -363,7 +363,7 @@ void copybuf_usb2sai(void)
 {
 	for (int i = 0; i < spk_data_size / 2; i++)
 	{
-		sai_buf[sai_buf_index % SAI_RNG_BUF_SIZE] = spk_buf[i] >> 1; // To prevent sound cracking
+		sai_buf[sai_buf_index % SAI_RNG_BUF_SIZE] = spk_buf[i];
 		sai_buf_index++;
 	}
 }
