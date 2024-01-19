@@ -318,7 +318,7 @@ void setKeys(uint8_t code)
 			if (keyboardHID.key[k] == code)
 			{
 				// LGUI + ESC 長押しでDFUモーでリセット
-				if (keyboardHID.modifiers == 0x08 && keyboardHID.key[k] == 0x00)
+				if (keyboardHID.modifiers == 0x08 && keyboardHID.key[k] == SC_ESC)
 				{
 					longPressCounter++;
 					if (longPressCounter == 5000)
