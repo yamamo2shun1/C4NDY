@@ -20,6 +20,39 @@ The C4NDY KeyVLM is a USB keyboard with a 65-key Ortholinear layout. Its greates
 ## Keymap Configurator
 The keymap can be changed using the [KeyVLM Configurator](https://github.com/yamamo2shun1/KeyVLM_Configurator), a dedicated configuration tool developed in the Go language.
 
+## Firmware Update
+### Introduction
+The C4NDY KeyVLM does not require a firmware rewrite to change the keymap.
+Normal users will only update the firmware when bug fixes or new features are added.
+C4NDY KeyVLM has a built-in boot loader for this purpose.
+
+### How to switch to boot loader mode
+Press and hold down the LGUI and ESC keys until the green LED on the Side-Panel blinks three times to enter the boot loader mode.
+
+https://github.com/yamamo2shun1/C4NDY/assets/96638/79a93170-637f-4472-83ec-ebd615135d6c
+
+### Installing the driver
+If you are using Windows, you will need to install the driver on [Zadig](https://zadig.akeo.ie/) after entering the boot loader mode (first time only).
+
+<img width="431" alt="スクリーンショット 2024-01-19 095923" src="https://github.com/yamamo2shun1/C4NDY/assets/96638/9a9aec08-cc1c-4b73-bf09-fa08c4a1bd21">
+
+### Installing the programmer
+To update the firmware, it is recommended to install and use [STM32CubeProg](https://www.st.com/ja/development-tools/stm32cubeprog.html).
+The procedure to update the firmware using STM32CubeProg is as follows
+
+1. launch STM32CubeProg.
+2. Rewrite "PID" to "0x0001.
+3. Rewrite "VID" to "0x31BF".
+4. Click the "Port" update button.
+5. Confirm that "Port" is changed from "No DFU detected" to "USB1" and click the "Connect" button.
+6. Click the "Erasing & Programming" button, the second green button from the top on the left side of the window.
+7. Check the "Verify programming" and "Run after programming" check boxes.
+8. Confirm that "Full chip erase" is not checked.
+9．Set the path of the latest .hex file in "File path".
+10. Click "Start Programming" to start programming.
+
+https://github.com/yamamo2shun1/C4NDY/assets/96638/fc8503f9-ba2c-4c98-849b-17fdc625cbd1
+
 ## Mainboard(rev.D)
 The C4NDY is the STM32G491 prototyping board.
 
