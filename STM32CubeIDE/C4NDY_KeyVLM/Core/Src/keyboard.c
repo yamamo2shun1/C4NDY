@@ -156,6 +156,26 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 		  keymaps_layout2[buffer[0] - 0xF0][j] = buffer[j + 2];
 	  }
   }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x03)
+  {
+	  SEGGER_RTT_printf(0, "read from layout1:\n");
+	  for (int j = 0; j < 13; j++)
+	  {
+		  rbuf[j] = keymaps_default[buffer[0] - 0xF0][j];
+	  }
+
+	  tud_hid_n_report(1, 0, rbuf, 16);
+  }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x04)
+  {
+	  SEGGER_RTT_printf(0, "read from layout2:\n");
+	  for (int j = 0; j < 13; j++)
+	  {
+		  rbuf[j] = keymaps_layout2[buffer[0] - 0xF0][j];
+	  }
+
+	  tud_hid_n_report(1, 0, rbuf, 16);
+  }
   else if (buffer[0] == 0xF5)
   {
 	  SEGGER_RTT_printf(0, "erase & write FLASH...\n");
