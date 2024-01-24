@@ -1,7 +1,7 @@
 /*
  * File:           C:\Users\shun\C4NDY\SigmaDSP\ADAU1761_IC_1.h
  *
- * Created:        Friday, January 12, 2024 2:43:02 PM
+ * Created:        Wednesday, January 24, 2024 9:52:57 PM
  * Description:    ADAU1761:IC 1 program data.
  *
  * This software is distributed in the hope that it will be useful,
@@ -387,7 +387,7 @@ ADI_REG_TYPE R4_DELAY_IC_1_Default[R4_DELAY_IC_1_SIZE] = {
 /* Register Default - IC 1.Serial Port Control Registers */
 #define R5_SERIAL_PORT_CONTROL_REGISTERS_IC_1_SIZE 2
 ADI_REG_TYPE R5_SERIAL_PORT_CONTROL_REGISTERS_IC_1_Default[R5_SERIAL_PORT_CONTROL_REGISTERS_IC_1_SIZE] = {
-0x00, 0x01
+0x00, 0x02
 };
 
 /* Register Default - IC 1.ALC Control Registers */

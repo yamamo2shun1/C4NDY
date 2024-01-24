@@ -65,7 +65,7 @@
             <Address>16405</Address>
             <AddrIncr>0</AddrIncr>
             <Size>2</Size>
-            <Data>0x00, 0x01, </Data>
+            <Data>0x00, 0x02, </Data>
         </Register>
         <Register>
             <Name>IC 1.ALC Control Registers</Name>
