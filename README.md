@@ -4,7 +4,7 @@
 The C4NDY KeyVLM is a USB keyboard with a 65-key Ortholinear layout. Its greatest feature is that it can be connected to a turntable, allowing you to mix the music you are playing on your computer or smartphone with the music on your vinyl records.
 
 - Supported Keyswitch: Gateron Low Profile 2.0(Implemented Hotswap socket KS-27)  
-- Supported USB Audio Spec: 16bit 48kHz Input only(Codec is [Analog Devices ADAU1761](https://www.analog.com/jp/products/adau1761.html))
+- Supported USB Audio Spec: 24bit 48kHz Input only(Codec is [Analog Devices ADAU1761](https://www.analog.com/jp/products/adau1761.html))
 - Supported Analog Audio In/Out: Line/Phono In and Headphone Out, [Thonkiconn 3.5mm jack socket](https://www.thonk.co.uk/shop/thonkiconn/))
 
 ![1](https://github.com/yamamo2shun1/C4NDY/assets/96638/20440f42-f48b-4111-9ce8-993f187b1d1e)
