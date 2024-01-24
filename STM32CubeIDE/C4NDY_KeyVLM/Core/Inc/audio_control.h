@@ -22,15 +22,15 @@
 #define SIGMA_SAFELOAD_TARGET_ADDRESS 0x0006
 #define SIGMA_SAFELOAD_TRIGGER 0x0007
 
-#define SAI_RNG_BUF_SIZE 20480
+#define SAI_RNG_BUF_SIZE 10240//20480
 #define SAI_BUF_SIZE 512
 
 // Speaker data size received in the last frame
 extern int spk_data_size;
 
 // Buffer for speaker data
-extern int16_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ];
-extern int16_t hpout_buf[SAI_BUF_SIZE];
+extern int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ];
+extern int32_t hpout_buf[SAI_BUF_SIZE];
 
 void start_adc(void);
 void start_sai(void);
