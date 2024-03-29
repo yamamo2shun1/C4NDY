@@ -63,6 +63,8 @@ void Error_Handler(void);
 #define HC164_A_GPIO_Port GPIOC
 #define HC165_CLK_Pin GPIO_PIN_15
 #define HC165_CLK_GPIO_Port GPIOC
+#define LP_LED_Pin GPIO_PIN_2
+#define LP_LED_GPIO_Port GPIOB
 #define USER_SW_Pin GPIO_PIN_10
 #define USER_SW_GPIO_Port GPIOB
 #define USER_LED_Pin GPIO_PIN_12
