@@ -7,7 +7,7 @@ The C4NDY KeyVLM is a USB keyboard with a 65-key Ortholinear layout. Its greates
 - Supported USB Audio Spec: 24bit 48kHz Input only(Codec is [Analog Devices ADAU1761](https://www.analog.com/jp/products/adau1761.html))
 - Supported Analog Audio In/Out: Line/Phono In and Headphone Out, [Thonkiconn 3.5mm jack socket](https://www.thonk.co.uk/shop/thonkiconn/))
 
-![1](https://github.com/yamamo2shun1/C4NDY/assets/96638/20440f42-f48b-4111-9ce8-993f187b1d1e)
+![1](https://github.com/yamamo2shun1/C4NDY/assets/96638/124d06b2-1729-456f-8eb0-5030e0e5dcab)
 ![2](https://github.com/yamamo2shun1/C4NDY/assets/96638/e7a72ce8-ff90-4a15-8e16-572257de4128)
 ![3](https://github.com/yamamo2shun1/C4NDY/assets/96638/33fd7535-f1e1-4e20-a99c-ce84f68deabb)
 
