@@ -18,7 +18,7 @@ C4NDY KeyVLMは65キー格子配列のUSBキーボードです。最大の特徴
 ![keymap-layout](https://github.com/yamamo2shun1/C4NDY/assets/96638/bc8e57b4-f748-4dd8-b59a-7187f392ab16)
 
 ## キーマップコンフィグレーター
-The keymap can be changed using the [KeyVLM Configurator](https://github.com/yamamo2shun1/KeyVLM_Configurator), a dedicated configuration tool developed in the Go language.
+[KeyVLM Configurator](https://github.com/yamamo2shun1/KeyVLM_Configurator) を使ってキーマップを変更します。この専用のコマンドライン・ツールはGo言語で開発しています。
 
 ## ファームウェア・アップデート
 ### 概要
