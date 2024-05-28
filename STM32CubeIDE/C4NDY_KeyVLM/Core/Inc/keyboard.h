@@ -97,11 +97,11 @@
 #define SC_LCONTROL 0xE0 // Left Control
 #define SC_LSHIFT   0xE1 // Left Shift
 #define SC_LALT     0xE2 // Left Alt
-#define SC_LGUI     0xE3 // Left GUI
+#define SC_LGUI     0xE3 // Left GUI(Win/Command)
 #define SC_RCONTROL 0xE4 // Right Control
 #define SC_RSHIFT   0xE5 // Right Shift
 #define SC_RALT     0xE6 // Right Alt
-#define SC_RGUI     0xE7 // Right GUI
+#define SC_RGUI     0xE7 // Right GUI(Win/Command)
 
 // original code
 #define SC_LNPH     0xFE // Line Phono Swtich
