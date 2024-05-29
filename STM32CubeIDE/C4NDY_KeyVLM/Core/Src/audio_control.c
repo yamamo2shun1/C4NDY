@@ -5,6 +5,8 @@
  *      Author: shun
  */
 
+#include <math.h>
+
 #include "main.h"
 #include "sai.h"
 
@@ -447,7 +449,8 @@ void send_xfade(uint16_t fader_val)
 
 void send_master_gain(uint16_t master_val)
 {
-	double master_db = (135.0 / 1023.0) * (double)master_val - 120.0;
+	double c_curve_val = 1038.0 * tanh((double)master_val / 448.0);
+	double master_db = (135.0 / 1023.0) * c_curve_val - 120.0;
 
 	double master_rate = pow(10.0, master_db / 20);
 
