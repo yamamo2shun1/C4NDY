@@ -53,10 +53,10 @@ uint8_t xfade_buffer_index = 0;
 uint8_t buffer_index = 0;
 uint16_t xfade_buffer[16] = {0};
 uint16_t xfade = 0;
-uint16_t xfade_prev = 0;
+uint16_t xfade_prev = 255;
 uint16_t master_gain_buffer[16] = {0};
 uint16_t master_gain = 0;
-uint16_t master_gain_prev = 0;
+uint16_t master_gain_prev = 255;
 
 uint32_t sai_buf_index = 0;
 uint32_t sai_transmit_index = 0;
