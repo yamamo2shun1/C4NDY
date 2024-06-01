@@ -68,13 +68,11 @@ void setLinePhonoSW(uint8_t val)
 	linePhonoSW = val;
 	if (linePhonoSW == 0)
 	{
-		linePhonoSW = 1;
 		send_switch_to_linein();
 		HAL_GPIO_WritePin(LP_LED_GPIO_Port, LP_LED_Pin, GPIO_PIN_RESET);
 	}
 	else
 	{
-		linePhonoSW = 0;
 		send_switch_to_phonoin();
 		HAL_GPIO_WritePin(LP_LED_GPIO_Port, LP_LED_Pin, GPIO_PIN_SET);
 	}
@@ -318,7 +316,8 @@ void setKeys(uint8_t code)
 	{
 		if (!isLinePhonoSWChanged)
 		{
-			setLinePhonoSW(linePhonoSW);
+			setLinePhonoSW(!linePhonoSW);
+			setBootDfuFlag(false);
 			isLinePhonoSWChanged = true;
 		}
 	}
