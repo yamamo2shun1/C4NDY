@@ -277,14 +277,6 @@ int main(void)
 
   uint64_t linePhonoSW = read_flash_data(0);
   setLinePhonoSW(linePhonoSW);
-  if (linePhonoSW)
-  {
-	  HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
-  }
-  else
-  {
-	  HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
-  }
   SEGGER_RTT_printf(0, "Phono/Line SW = %u\n", getLinePhonoSW());
 
   uint64_t test_val = 0;
@@ -312,6 +304,7 @@ int main(void)
 		  SEGGER_RTT_printf(0, "]\n");
 	  }
   }
+  HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
   /* USER CODE END 2 */
 
   /* Infinite loop */
