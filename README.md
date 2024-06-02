@@ -42,6 +42,7 @@ If you are using Windows, you will need to install the driver on [Zadig](https:/
 To update the firmware, it is recommended to install and use [STM32CubeProg](https://www.st.com/ja/development-tools/stm32cubeprog.html).
 The procedure to update the firmware using STM32CubeProg is as follows
 
+0. Download the latest ELF file from [here](https://github.com/yamamo2shun1/C4NDY/releases).
 1. launch STM32CubeProg.
 2. Rewrite "PID" to "0x0001.
 3. Rewrite "VID" to "0x31BF".
@@ -50,7 +51,7 @@ The procedure to update the firmware using STM32CubeProg is as follows
 6. Click the "Erasing & Programming" button, the second green button from the top on the left side of the window.
 7. Check the "Verify programming" and "Run after programming" check boxes.
 8. Confirm that "Full chip erase" is not checked.
-9．Set the path of the latest .hex file in "File path".
+9. Set the path of downloaded .elf file in "File path".
 10. Click "Start Programming" to start programming.
 
 https://github.com/yamamo2shun1/C4NDY/assets/96638/fc8503f9-ba2c-4c98-849b-17fdc625cbd1
