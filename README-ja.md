@@ -39,6 +39,7 @@ Windowsユーザーの場合、ブートローダーモードに初めて切り�
 ファームウェアを更新するためには、STMicroelectronics社がリリースしている [STM32CubeProg](https://www.st.com/ja/development-tools/stm32cubeprog.html) インストールして使うことを推奨しています。
 STM32CubeProgを使ってファームウェアを更新する手順は下記の通りです。
 
+0. 最新のELFファイルを[ここ](https://github.com/yamamo2shun1/C4NDY/releases)からダウンロードします
 1. STM32CubeProgを起動します
 2. 「PID」に「0x0001」と入力します
 3. 「VID」に「0x31BF」と入力します
@@ -47,8 +48,8 @@ STM32CubeProgを使ってファームウェアを更新する手順は下記の�
 6. ウィンドウ左端に並んでいる緑色アイコンの上から2つ目にある「Erasing & Programming」ボタンをクリックします
 7. 「Verify programming」と「Run after programming」のチェックボックスにチェックを入れます
 8. 「Full chip erase」にチェックが入っていないことを確認します
-9．「File path」に更新する.hexファイルをセットします
-10. 「Start Programming」をクリックし、9でセットした.hexを書き込みます
+9．「File path」にダウンロードした.elfファイルをセットします
+10. 「Start Programming」をクリックし、9でセットした.elfを書き込みます
 
 https://github.com/yamamo2shun1/C4NDY/assets/96638/fc8503f9-ba2c-4c98-849b-17fdc625cbd1
 
