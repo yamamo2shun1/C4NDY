@@ -24,3 +24,19 @@ KiCad/KVL_direct/
 *.drl
 
 *.gbrjob
+
+*.o
+
+*.su
+
+*.d
+
+*.cyclo
+
+*.idx
+
+*.mk
+
+*.list
+
+*.map
