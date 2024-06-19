@@ -372,7 +372,7 @@ void hid_keyscan_task(void)
 		HAL_GPIO_WritePin(HC164_A_GPIO_Port, HC164_A_Pin, GPIO_PIN_SET);
 
 		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_RESET);
-		asm("NOP");
+		HAL_Delay(1);
 		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_SET);
 
 		for (int j = 0; j < 16; j++)
