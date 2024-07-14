@@ -4,6 +4,7 @@ KVL-backups/
 tmp/
 jlcpcb/
 plasticity/
+production/
 
 *.zip
 
