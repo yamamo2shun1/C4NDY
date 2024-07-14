@@ -1,3 +1,6 @@
 [submodule "STM32CubeIDE/C4NDY_KeyVLM/tinyusb"]
 	path = STM32CubeIDE/C4NDY_KeyVLM/tinyusb
 	url = https://github.com/hathach/tinyusb
+[submodule "STM32CubeIDE/C4NDY_STK/tinyusb"]
+	path = STM32CubeIDE/C4NDY_STK/tinyusb
+	url = https://github.com/hathach/tinyusb
