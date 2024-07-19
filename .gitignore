@@ -41,3 +41,9 @@ KiCad/KVL_direct/
 *.list
 
 *.map
+
+*.obj
+
+*.stp
+
+*.step
