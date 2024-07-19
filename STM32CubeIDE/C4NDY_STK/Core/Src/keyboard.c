@@ -44,10 +44,10 @@ uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS] = {
 	{SC_LSHIFT,   SC_Z,    SC_X,      SC_C,    SC_V,  SC_B,     SC_N,     SC_M,      SC_COMMA,    SC_PERIOD, SC_SLASH, SC_RSHIFT, SC_GA},
 	{SC_LGUI,     SC_LNPH, SC_LAYOUT, SC_LALT, SC_BS, SC_ENTER, SC_SPACE, SC_HENKAN, SC_RCONTROL, SC_LEFT,   SC_DOWN,  SC_UP,     SC_RIGHT}
 #else
-	{SC_Q,    SC_W,      SC_E,    SC_R,    SC_T,     SC_Y,    SC_U,      SC_I,        SC_O,      SC_P},
-	{SC_A,    SC_S,      SC_D,    SC_F,    SC_G,     SC_H,    SC_J,      SC_K,        SC_L,      SC_SC},
-	{SC_Z,    SC_X,      SC_C,    SC_V,    SC_B,     SC_N,    SC_M,      SC_COMMA,    SC_PERIOD, SC_SLASH},
-	{SC_NULL, SC_LNPH, SC_LAYOUT, SC_NULL, SC_UPPER, SC_NULL, SC_LEFT,   SC_DOWN,     SC_UP,     SC_RIGHT}
+	{SC_Q,    SC_W,    SC_E,      SC_R,    SC_T,      SC_Y,    SC_U,      SC_I,        SC_O,      SC_P},
+	{SC_A,    SC_S,    SC_D,      SC_F,    SC_G,      SC_H,    SC_J,      SC_K,        SC_L,      SC_SC},
+	{SC_Z,    SC_X,    SC_C,      SC_V,    SC_B,      SC_N,    SC_M,      SC_COMMA,    SC_PERIOD, SC_SLASH},
+	{SC_NULL, SC_LNPH, SC_LAYOUT, SC_NULL, SC_LSHIFT, SC_NULL, SC_LEFT,   SC_DOWN,     SC_UP,     SC_RIGHT}
 #endif
 };
 
@@ -60,37 +60,37 @@ uint8_t keymaps_layout2[MATRIX_ROWS][MATRIX_COLUMNS] = {
 	{SC_LSHIFT,   SC_J,    SC_Q,      SC_SC,   SC_K,  SC_X,      SC_B,     SC_M,     SC_W,        SC_N,    SC_V,    SC_RSHIFT, SC_GA},
 	{SC_LGUI,     SC_LNPH, SC_LAYOUT, SC_LALT, SC_BS, SC_DELETE, SC_ENTER, SC_SPACE, SC_CAPSLOCK, SC_LEFT, SC_DOWN, SC_UP,     SC_RIGHT}
 #else
-	{SC_APS,  SC_COMMA, SC_O,      SC_U,    SC_Y,        SC_F,    SC_G,    SC_C,    SC_R,  SC_L},
-	{SC_P,    SC_I,     SC_E,      SC_A,    SC_PERIOD,   SC_D,    SC_S,    SC_T,    SC_H,  SC_Z},
-	{SC_J,    SC_Q,     SC_SC,     SC_K,    SC_X,        SC_B,    SC_M,    SC_W,    SC_N,  SC_V},
-	{SC_NULL, SC_LNPH,  SC_LAYOUT, SC_NULL, SC_UPPER, SC_NULL, SC_LEFT, SC_DOWN, SC_UP, SC_RIGHT}
+	{SC_APS,  SC_COMMA, SC_O,      SC_U,    SC_Y,      SC_F,    SC_G,    SC_C,    SC_R,  SC_L},
+	{SC_P,    SC_I,     SC_E,      SC_A,    SC_PERIOD, SC_D,    SC_S,    SC_T,    SC_H,  SC_Z},
+	{SC_J,    SC_Q,     SC_SC,     SC_K,    SC_X,      SC_B,    SC_M,    SC_W,    SC_N,  SC_V},
+	{SC_NULL, SC_LNPH,  SC_LAYOUT, SC_NULL, SC_LSHIFT, SC_NULL, SC_LEFT, SC_DOWN, SC_UP, SC_RIGHT}
 #endif
 };
 
 uint8_t keymaps_default_upper[MATRIX_ROWS][MATRIX_COLUMNS] = {
-	{SC_1,    SC_2,        SC_3,      SC_4,    SC_5,     SC_6,    SC_7,     SC_8,     SC_9,    SC_0},
-	{SC_Q,    SC_W,        SC_NULL,   SC_LGUI, SC_G,     SC_NULL, SC_MINUS, SC_EQUAL, SC_LSB,  SC_RSB},
-	{SC_NULL, SC_RCONTROL, SC_NULL,   SC_NULL, SC_NULL,  SC_NULL, SC_APS,   SC_YEN,   SC_GA,   SC_NULL},
-	{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL, SC_UPPER, SC_NULL, SC_NULL,  SC_NULL,  SC_NULL, SC_NULL}
+	{SC_1,    SC_2,        SC_3,      SC_4,    SC_5,      SC_6,    SC_7,     SC_8,     SC_9,    SC_0},
+	{SC_Q,    SC_W,        SC_NULL,   SC_LGUI, SC_G,      SC_NULL, SC_MINUS, SC_EQUAL, SC_LSB,  SC_APS},
+	{SC_NULL, SC_RCONTROL, SC_NULL,   SC_NULL, SC_NULL,   SC_NULL, SC_RSB,   SC_NULL,  SC_NULL, SC_YEN},
+	{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL, SC_LSHIFT, SC_NULL, SC_NULL,  SC_NULL,  SC_NULL, SC_GA}
 };
 
 uint8_t keymaps_layout2_upper[MATRIX_ROWS][MATRIX_COLUMNS] = {
-	{SC_1,    SC_2,        SC_3,      SC_4,    SC_5,      SC_6,    SC_7,     SC_8,      SC_9,     SC_0},
-	{SC_APS,  SC_COMMA,    SC_NULL,   SC_LGUI, SC_PERIOD, SC_NULL, SC_LSB,   SC_RSB,    SC_SLASH, SC_EQUAL},
-	{SC_NULL, SC_CAPSLOCK, SC_NULL,   SC_NULL, SC_NULL,   SC_NULL, SC_MINUS, SC_BSLASH, SC_GA,    SC_NULL},
-	{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL, SC_UPPER,  SC_NULL, SC_NULL,  SC_NULL,   SC_NULL,  SC_NULL}
+	{SC_1,    SC_2,        SC_3,      SC_4,    SC_5,      SC_6,    SC_7,     SC_8,    SC_9,     SC_0},
+	{SC_APS,  SC_COMMA,    SC_NULL,   SC_LGUI, SC_PERIOD, SC_NULL, SC_LSB,   SC_RSB,  SC_SLASH, SC_MINUS},
+	{SC_NULL, SC_CAPSLOCK, SC_NULL,   SC_NULL, SC_NULL,   SC_NULL, SC_EQUAL, SC_NULL, SC_NULL,  SC_BSLASH},
+	{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL, SC_LSHIFT, SC_NULL, SC_NULL,  SC_NULL, SC_NULL,  SC_GA}
 };
 
 uint8_t keymaps_default_stk[2][4] = {
 //   left,   right,     up,        down
-	{SC_BS,  SC_TAB,    SC_LSHIFT, SC_CAPSLOCK}, // left stick
-	{SC_ESC, SC_HENKAN, SC_RSHIFT, SC_SPACE}     // right stick
+	{SC_BS,  SC_TAB,    SC_UPPER, SC_CAPSLOCK}, // left stick
+	{SC_ESC, SC_HENKAN, SC_RALT,  SC_SPACE}     // right stick
 };
 
 uint8_t keymaps_layout2_stk[2][4] = {
 //   left,   right,    up,        down
-	{SC_BS,  SC_TAB,   SC_LSHIFT, SC_LCONTROL}, // left stick
-	{SC_ESC, SC_SPACE, SC_RSHIFT, SC_ENTER}     // right stick
+	{SC_BS,  SC_TAB,   SC_UPPER, SC_LCONTROL}, // left stick
+	{SC_ESC, SC_SPACE, SC_RALT,  SC_ENTER}     // right stick
 };
 
 // Invoked when sent REPORT successfully to host
@@ -337,6 +337,10 @@ void clearKeys(uint8_t code)
 		SEGGER_RTT_printf(0, "clear::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
 		isLinePhonoSWChanged = false;
 	}
+	else if (code == SC_UPPER)
+	{
+		isUpper = false;
+	}
 	else if (code >= SC_LCONTROL && code <= SC_RGUI)
 	{
 		SEGGER_RTT_printf(0, "clear::code = %d\r\n", code - SC_LCONTROL);
@@ -383,6 +387,13 @@ void setKeys(uint8_t code)
 			setLinePhonoSW(!linePhonoSW);
 			setBootDfuFlag(false);
 			isLinePhonoSWChanged = true;
+		}
+	}
+	else if (code == SC_UPPER)
+	{
+		if (!isUpper)
+		{
+			isUpper = true;
 		}
 	}
 	else if (code >= SC_LCONTROL && code <= SC_RGUI)
@@ -715,6 +726,8 @@ void hid_keyscan_task(void)
 		HAL_Delay(1);
 		HAL_GPIO_WritePin(HC165_SL_GPIO_Port, HC165_SL_Pin, GPIO_PIN_SET);
 
+		controlJoySticks();
+
 		for (int j = 0; j < 16; j++)
 		{
 			uint8_t jj = 255;
@@ -759,6 +772,7 @@ void hid_keyscan_task(void)
 							if (isUpper)
 							{
 								keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
+								//clearKeys(SC_LSHIFT);
 							}
 							SEGGER_RTT_printf(0, "%d %d %d %02X ", isUpper, i, jj, keycode);
 							clearKeys(keycode);
@@ -779,6 +793,7 @@ void hid_keyscan_task(void)
 						if (isUpper)
 						{
 							keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
+							//setKeys(SC_LSHIFT);
 						}
 						SEGGER_RTT_printf(0, "%d %d %d %02X ", isUpper, i, jj, keycode);
 						setKeys(keycode);
