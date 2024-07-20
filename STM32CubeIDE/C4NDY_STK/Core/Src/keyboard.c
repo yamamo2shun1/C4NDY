@@ -37,34 +37,18 @@ int8_t prevStkV[2] = {0};
 
 // deafult QWERTY layout
 uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS] = {
-#if 0
-	{SC_ESC,      SC_1,    SC_2,      SC_3,    SC_4,  SC_5,     SC_6,     SC_7,      SC_8,        SC_9,      SC_0,     SC_MINUS,  SC_EQUAL},
-	{SC_TAB,      SC_Q,    SC_W,      SC_E,    SC_R,  SC_T,     SC_Y,     SC_U,      SC_I,        SC_O,      SC_P,     SC_LSB,    SC_RSB},
-	{SC_CAPSLOCK, SC_A,    SC_S,      SC_D,    SC_F,  SC_G,     SC_H,     SC_J,      SC_K,        SC_L,      SC_SC,    SC_APS,    SC_YEN},
-	{SC_LSHIFT,   SC_Z,    SC_X,      SC_C,    SC_V,  SC_B,     SC_N,     SC_M,      SC_COMMA,    SC_PERIOD, SC_SLASH, SC_RSHIFT, SC_GA},
-	{SC_LGUI,     SC_LNPH, SC_LAYOUT, SC_LALT, SC_BS, SC_ENTER, SC_SPACE, SC_HENKAN, SC_RCONTROL, SC_LEFT,   SC_DOWN,  SC_UP,     SC_RIGHT}
-#else
 	{SC_Q,    SC_W,    SC_E,      SC_R,    SC_T,      SC_Y,    SC_U,      SC_I,        SC_O,      SC_P},
 	{SC_A,    SC_S,    SC_D,      SC_F,    SC_G,      SC_H,    SC_J,      SC_K,        SC_L,      SC_SC},
 	{SC_Z,    SC_X,    SC_C,      SC_V,    SC_B,      SC_N,    SC_M,      SC_COMMA,    SC_PERIOD, SC_SLASH},
 	{SC_NULL, SC_LNPH, SC_LAYOUT, SC_NULL, SC_LSHIFT, SC_NULL, SC_LEFT,   SC_DOWN,     SC_UP,     SC_RIGHT}
-#endif
 };
 
 // Improved Dvorak layout
 uint8_t keymaps_layout2[MATRIX_ROWS][MATRIX_COLUMNS] = {
-#if 0
-	{SC_ESC,      SC_1,    SC_2,      SC_3,    SC_4,  SC_5,      SC_6,     SC_7,     SC_8,        SC_9,    SC_0,    SC_LSB,    SC_RSB},
-	{SC_TAB,      SC_APS,  SC_COMMA,  SC_O,    SC_U,  SC_Y,      SC_F,     SC_G,     SC_C,        SC_R,    SC_L,    SC_SLASH,  SC_EQUAL},
-	{SC_LCONTROL, SC_P,    SC_I,      SC_E,    SC_A,  SC_PERIOD, SC_D,     SC_S,     SC_T,        SC_H,    SC_Z,    SC_MINUS,  SC_BSLASH},
-	{SC_LSHIFT,   SC_J,    SC_Q,      SC_SC,   SC_K,  SC_X,      SC_B,     SC_M,     SC_W,        SC_N,    SC_V,    SC_RSHIFT, SC_GA},
-	{SC_LGUI,     SC_LNPH, SC_LAYOUT, SC_LALT, SC_BS, SC_DELETE, SC_ENTER, SC_SPACE, SC_CAPSLOCK, SC_LEFT, SC_DOWN, SC_UP,     SC_RIGHT}
-#else
 	{SC_APS,  SC_COMMA, SC_O,      SC_U,    SC_Y,      SC_F,    SC_G,    SC_C,    SC_R,  SC_L},
 	{SC_P,    SC_I,     SC_E,      SC_A,    SC_PERIOD, SC_D,    SC_S,    SC_T,    SC_H,  SC_Z},
 	{SC_J,    SC_Q,     SC_SC,     SC_K,    SC_X,      SC_B,    SC_M,    SC_W,    SC_N,  SC_V},
 	{SC_NULL, SC_LNPH,  SC_LAYOUT, SC_NULL, SC_LSHIFT, SC_NULL, SC_LEFT, SC_DOWN, SC_UP, SC_RIGHT}
-#endif
 };
 
 uint8_t keymaps_default_upper[MATRIX_ROWS][MATRIX_COLUMNS] = {
@@ -313,6 +297,18 @@ void setKeyCode(uint8_t keymapId, uint8_t x, uint8_t y, uint8_t code)
 	else
 	{
 		keymaps_layout2[x][y] = code;
+	}
+}
+
+void setUpperKeyCode(uint8_t keymapId, uint8_t x, uint8_t y, uint8_t code)
+{
+	if (keymapId == 0)
+	{
+		keymaps_default_upper[x][y] = code;
+	}
+	else
+	{
+		keymaps_layout2_upper[x][y] = code;
 	}
 }
 
