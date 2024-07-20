@@ -142,19 +142,19 @@ void setBootDfuFlag(bool is_boot_dfu)
 	SEGGER_RTT_printf(0, "erase & write FLASH...\n");
 	HAL_FLASH_Unlock();
 
-	uint64_t currentKeyMap[2][5][13] = {0x0};
+	uint64_t currentKeyMap[2][MATRIX_ROWS][MATRIX_COLUMNS] = {0x0};
 
 	SEGGER_RTT_printf(0, "current KeyMap\n");
 	for (int k = 0; k < 2; k++)
 	{
 		SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
 		SEGGER_RTT_printf(0, "[\n");
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < MATRIX_ROWS; i++)
 		{
 			SEGGER_RTT_printf(0, "[");
-			for (int j = 0; j < 13; j++)
+			for (int j = 0; j < MATRIX_COLUMNS; j++)
 			{
-				currentKeyMap[k][i][j] = read_flash_data(2 + k * 65 + i * 13 + j);
+				currentKeyMap[k][i][j] = read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
 				SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
 			}
 			SEGGER_RTT_printf(0, "]\n");
@@ -179,12 +179,12 @@ void setBootDfuFlag(bool is_boot_dfu)
 	{
 		SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
 		SEGGER_RTT_printf(0, "[\n");
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < MATRIX_ROWS; i++)
 		{
 			SEGGER_RTT_printf(0, "[");
-			for (int j = 0; j < 13; j++)
+			for (int j = 0; j < MATRIX_COLUMNS; j++)
 			{
-				write_flash_data(2 + k * 65 + i * 13 + j, currentKeyMap[k][i][j]);
+				write_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentKeyMap[k][i][j]);
 				SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
 			}
 			SEGGER_RTT_printf(0, "]\n");
@@ -264,12 +264,12 @@ int main(void)
 	  write_flash_data(0, 0);
 	  write_flash_data(1, 99);
 
-	  for (int i = 0; i < 4; i++)
+	  for (int i = 0; i < MATRIX_ROWS; i++)
 	  {
-		  for (int j = 0; j < 10; j++)
+		  for (int j = 0; j < MATRIX_COLUMNS; j++)
 		  {
-			  write_flash_data(2 + 0 * 65 + i * 13 + j, getKeyCode(0, i, j));
-			  write_flash_data(2 + 1 * 65 + i * 13 + j, getKeyCode(1, i, j));
+			  write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
+			  write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
 		  }
 	  }
 
@@ -287,20 +287,20 @@ int main(void)
   for (int k = 0; k < 2; k++)
   {
 	  SEGGER_RTT_printf(0, "\n");
-	  for (int i = 0; i < 4; i++)
+	  for (int i = 0; i < MATRIX_ROWS; i++)
 	  {
 		  SEGGER_RTT_printf(0, "[ ");
-		  for (int j = 0; j < 10; j++)
+		  for (int j = 0; j < MATRIX_COLUMNS; j++)
 		  {
 			  if (k == 0)
 			  {
-				  setKeyCode(0, i, j, read_flash_data(2 + k * 65 + i * 13 + j));
+				  setKeyCode(0, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
 			  }
 			  else
 			  {
-				  setKeyCode(1, i, j, read_flash_data(2 + k * 65 + i * 13 + j));
+				  setKeyCode(1, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
 			  }
-			  SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + k * 65 + i * 13 + j));
+			  SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
 		  }
 		  SEGGER_RTT_printf(0, "]\n");
 	  }

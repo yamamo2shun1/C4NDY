@@ -166,14 +166,14 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 	  SEGGER_RTT_printf(0, "read:\n");
 	  if (keymapID == 0)
 	  {
-		  for (int j = 0; j < 13; j++)
+		  for (int j = 0; j < MATRIX_COLUMNS; j++)
 		  {
 			  rbuf[j] = keymaps_default[buffer[0] - 0xF0][j];
 		  }
 	  }
 	  else
 	  {
-		  for (int j = 0; j < 13; j++)
+		  for (int j = 0; j < MATRIX_COLUMNS; j++)
 		  {
 			  rbuf[j] = keymaps_layout2[buffer[0] - 0xF0][j];
 		  }
@@ -192,7 +192,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
   {
 	  SEGGER_RTT_printf(0, "write to layout1:\n");
 
-	  for (int j = 0; j < 13; j++)
+	  for (int j = 0; j < MATRIX_COLUMNS; j++)
 	  {
 		  keymaps_default[buffer[0] - 0xF0][j] = buffer[j + 2];
 	  }
@@ -201,7 +201,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
   {
 	  SEGGER_RTT_printf(0, "write to layout2:\n");
 
-	  for (int j = 0; j < 13; j++)
+	  for (int j = 0; j < MATRIX_COLUMNS; j++)
 	  {
 		  keymaps_layout2[buffer[0] - 0xF0][j] = buffer[j + 2];
 	  }
@@ -209,7 +209,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
   else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x03)
   {
 	  SEGGER_RTT_printf(0, "read from layout1:\n");
-	  for (int j = 0; j < 13; j++)
+	  for (int j = 0; j < MATRIX_COLUMNS; j++)
 	  {
 		  rbuf[j] = keymaps_default[buffer[0] - 0xF0][j];
 	  }
@@ -219,7 +219,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
   else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x04)
   {
 	  SEGGER_RTT_printf(0, "read from layout2:\n");
-	  for (int j = 0; j < 13; j++)
+	  for (int j = 0; j < MATRIX_COLUMNS; j++)
 	  {
 		  rbuf[j] = keymaps_layout2[buffer[0] - 0xF0][j];
 	  }
@@ -236,12 +236,12 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 	  write_flash_data(0, linePhonoSW);
 	  write_flash_data(1, 99);
 
-	  for (int i = 0; i < 5; i++)
+	  for (int i = 0; i < MATRIX_ROWS; i++)
 	  {
-		  for (int j = 0; j < 13; j++)
+		  for (int j = 0; j < MATRIX_COLUMNS; j++)
 		  {
-			  write_flash_data(2 + 0 * 65 + i * 13 + j, keymaps_default[i][j]);
-			  write_flash_data(2 + 1 * 65 + i * 13 + j, keymaps_layout2[i][j]);
+			  write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_default[i][j]);
+			  write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_layout2[i][j]);
 		  }
 	  }
 
