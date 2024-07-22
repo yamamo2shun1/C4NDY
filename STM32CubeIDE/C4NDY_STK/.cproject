@@ -235,7 +235,7 @@
 		<buildTargets>
 			<target name="compile_commands" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>compiledb</buildCommand>
-				<buildArguments>make all</buildArguments>
+				<buildArguments>-o ../compile_commands.json make all -j8</buildArguments>
 				<buildTarget/>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
