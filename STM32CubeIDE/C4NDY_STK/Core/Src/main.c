@@ -313,8 +313,20 @@ int main(void)
 
 			  write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(0, i, j));
 			  write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(1, i, j));
+
+			  write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
+			  write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
 		  }
 	  }
+
+	  for (int i = 0; i < 2; i++)
+  	  {
+	  	  for (int j = 0; j < 4; j++)
+	  	  {
+			  write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
+  			  write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
+  		  }
+  	  }
 
 	  HAL_FLASH_Lock();
   }
@@ -371,6 +383,29 @@ int main(void)
 		  }
 		  SEGGER_RTT_printf(0, "]\n");
 	  }
+  }
+
+  SEGGER_RTT_printf(0, "// Stick");
+  for (int k = 0; k < 2; k++)
+  {
+	  SEGGER_RTT_printf(0, "\n");
+	  for (int i = 0; i < 2; i++)
+	  {
+		  SEGGER_RTT_printf(0, "[ ");
+  		  for (int j = 0; j < 4; j++)
+  		  {
+  			  if (k == 0)
+  			  {
+  				  setStickKeyCode(0, i, j, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
+  			  }
+  			  else
+  			  {
+  				  setStickKeyCode(1, i, j, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
+  			  }
+  			  SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
+  		  }
+  		  SEGGER_RTT_printf(0, "]\n");
+  	  }
   }
   HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
   /* USER CODE END 2 */

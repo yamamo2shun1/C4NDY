@@ -192,6 +192,15 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
   }
   else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x03)
   {
+  	  SEGGER_RTT_printf(0, "write to layout1 stick:\n");
+
+  	  for (int j = 0; j < 4; j++)
+  	  {
+  		  keymaps_default_stk[buffer[0] - 0xF0][j] = buffer[j + 2];
+  	  }
+  }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x04)
+  {
 	  SEGGER_RTT_printf(0, "write to layout2:\n");
 
 	  for (int j = 0; j < MATRIX_COLUMNS; j++)
@@ -199,7 +208,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 		  keymaps_layout2[buffer[0] - 0xF0][j] = buffer[j + 2];
 	  }
   }
-  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x04)
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x05)
   {
   	  SEGGER_RTT_printf(0, "write to layout2 upper:\n");
 
@@ -208,7 +217,16 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
   		  keymaps_layout2_upper[buffer[0] - 0xF0][j] = buffer[j + 2];
   	  }
   }
-  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x05)
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x06)
+  {
+   	  SEGGER_RTT_printf(0, "write to layout2 stick:\n");
+
+   	  for (int j = 0; j < 4; j++)
+   	  {
+    	  keymaps_layout2_stk[buffer[0] - 0xF0][j] = buffer[j + 2];
+   	  }
+  }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x07)
   {
 	  SEGGER_RTT_printf(0, "read from layout1:\n");
 	  for (int j = 0; j < MATRIX_COLUMNS; j++)
@@ -218,7 +236,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
 	  tud_hid_n_report(1, 0, rbuf, 16);
   }
-  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x06)
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x08)
   {
 	  SEGGER_RTT_printf(0, "read from layout1 upper:\n");
 	  for (int j = 0; j < MATRIX_COLUMNS; j++)
@@ -228,7 +246,17 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
 	  tud_hid_n_report(1, 0, rbuf, 16);
   }
-  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x07)
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x09)
+  {
+	  SEGGER_RTT_printf(0, "read from layout1 stick:\n");
+	  for (int j = 0; j < 4; j++)
+	  {
+		  rbuf[j] = keymaps_default_stk[buffer[0] - 0xF0][j];
+	  }
+
+	  tud_hid_n_report(1, 0, rbuf, 16);
+  }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x0A)
   {
 	  SEGGER_RTT_printf(0, "read from layout2:\n");
 	  for (int j = 0; j < MATRIX_COLUMNS; j++)
@@ -238,12 +266,22 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
 	  tud_hid_n_report(1, 0, rbuf, 16);
   }
-  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x08)
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x0B)
   {
-	  SEGGER_RTT_printf(0, "read from layout2:\n");
+	  SEGGER_RTT_printf(0, "read from layout2 upper:\n");
 	  for (int j = 0; j < MATRIX_COLUMNS; j++)
 	  {
 		  rbuf[j] = keymaps_layout2_upper[buffer[0] - 0xF0][j];
+	  }
+
+	  tud_hid_n_report(1, 0, rbuf, 16);
+  }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x0C)
+  {
+	  SEGGER_RTT_printf(0, "read from layout2 stick:\n");
+	  for (int j = 0; j < 4; j++)
+	  {
+		  rbuf[j] = keymaps_layout2_stk[buffer[0] - 0xF0][j];
 	  }
 
 	  tud_hid_n_report(1, 0, rbuf, 16);
@@ -269,6 +307,15 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 			  write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(1, i, j));
 		  }
 	  }
+
+	  for (int i = 0; i < 2; i++)
+  	  {
+	  	  for (int j = 0; j < 4; j++)
+	  	  {
+			  write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
+  			  write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
+  		  }
+  	  }
 
 	  HAL_FLASH_Lock();
 
@@ -329,6 +376,18 @@ uint8_t getUpperKeyCode(uint8_t keymapId, uint8_t x, uint8_t y)
 	}
 }
 
+uint8_t getStickKeyCode(uint8_t keymapId, uint8_t id, uint8_t direction)
+{
+	if (keymapId == 0)
+	{
+		return keymaps_default_stk[id][direction];
+	}
+	else
+	{
+		return keymaps_layout2_stk[id][direction];
+	}
+}
+
 void setKeyCode(uint8_t keymapId, uint8_t x, uint8_t y, uint8_t code)
 {
 	if (keymapId == 0)
@@ -350,6 +409,18 @@ void setUpperKeyCode(uint8_t keymapId, uint8_t x, uint8_t y, uint8_t code)
 	else
 	{
 		keymaps_layout2_upper[x][y] = code;
+	}
+}
+
+void setStickKeyCode(uint8_t keymapId, uint8_t id, uint8_t direction, uint8_t code)
+{
+	if (keymapId == 0)
+	{
+		keymaps_default_stk[id][direction] = code;
+	}
+	else
+	{
+		keymaps_layout2_stk[id][direction] = code;
 	}
 }
 
