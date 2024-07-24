@@ -11,7 +11,6 @@
 #define MATRIX_ROWS 4
 #define MATRIX_COLUMNS 10
 
-#define SC_NULL     0x00
 #define SC_A        0x04 // a
 #define SC_B        0x05 // b
 #define SC_C        0x06 // c
@@ -105,9 +104,10 @@
 #define SC_RGUI     0xE7 // Right GUI(Win/Command)
 
 // original code
-#define SC_UPPER    0xFD
-#define SC_LNPH     0xFE // Line Phono Swtich
-#define SC_LAYOUT   0xFF // Layout Switch
+#define SC_UPPER    0xFC
+#define SC_LNPH     0xFD // Line Phono Swtich
+#define SC_LAYOUT   0xFE // Layout Switch
+#define SC_NULL     0xFF
 
 // deafult QWERTY layout
 extern uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS];

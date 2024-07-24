@@ -183,6 +183,15 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
   }
   else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x02)
   {
+  	  SEGGER_RTT_printf(0, "write to layout1 upper:\n");
+
+  	  for (int j = 0; j < MATRIX_COLUMNS; j++)
+  	  {
+  		  keymaps_default_upper[buffer[0] - 0xF0][j] = buffer[j + 2];
+  	  }
+  }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x03)
+  {
 	  SEGGER_RTT_printf(0, "write to layout2:\n");
 
 	  for (int j = 0; j < MATRIX_COLUMNS; j++)
@@ -190,7 +199,16 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 		  keymaps_layout2[buffer[0] - 0xF0][j] = buffer[j + 2];
 	  }
   }
-  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x03)
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x04)
+  {
+  	  SEGGER_RTT_printf(0, "write to layout2 upper:\n");
+
+  	  for (int j = 0; j < MATRIX_COLUMNS; j++)
+  	  {
+  		  keymaps_layout2_upper[buffer[0] - 0xF0][j] = buffer[j + 2];
+  	  }
+  }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x05)
   {
 	  SEGGER_RTT_printf(0, "read from layout1:\n");
 	  for (int j = 0; j < MATRIX_COLUMNS; j++)
@@ -200,12 +218,32 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
 	  tud_hid_n_report(1, 0, rbuf, 16);
   }
-  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x04)
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x06)
+  {
+	  SEGGER_RTT_printf(0, "read from layout1 upper:\n");
+	  for (int j = 0; j < MATRIX_COLUMNS; j++)
+	  {
+		  rbuf[j] = keymaps_default_upper[buffer[0] - 0xF0][j];
+	  }
+
+	  tud_hid_n_report(1, 0, rbuf, 16);
+  }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x07)
   {
 	  SEGGER_RTT_printf(0, "read from layout2:\n");
 	  for (int j = 0; j < MATRIX_COLUMNS; j++)
 	  {
 		  rbuf[j] = keymaps_layout2[buffer[0] - 0xF0][j];
+	  }
+
+	  tud_hid_n_report(1, 0, rbuf, 16);
+  }
+  else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x08)
+  {
+	  SEGGER_RTT_printf(0, "read from layout2:\n");
+	  for (int j = 0; j < MATRIX_COLUMNS; j++)
+	  {
+		  rbuf[j] = keymaps_layout2_upper[buffer[0] - 0xF0][j];
 	  }
 
 	  tud_hid_n_report(1, 0, rbuf, 16);
@@ -224,8 +262,11 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 	  {
 		  for (int j = 0; j < MATRIX_COLUMNS; j++)
 		  {
-			  write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_default[i][j]);
-			  write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_layout2[i][j]);
+			  write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
+			  write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
+
+			  write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(0, i, j));
+			  write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(1, i, j));
 		  }
 	  }
 
