@@ -27,11 +27,13 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32g4xx_hal.h"
+#include "stm32g4xx_hal.h" // IWYU pragma: keep
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "tusb.h"
+#include "tusb.h" // IWYU pragma: keep
+
+#include "SEGGER_RTT.h" // IWYU pragma: keep
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -53,7 +55,9 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void erase_flash_data(void);
+void write_flash_data(uint8_t index, uint8_t val);
+void setBootDfuFlag(bool is_boot_dfu);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

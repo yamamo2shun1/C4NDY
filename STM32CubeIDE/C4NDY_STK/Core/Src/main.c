@@ -33,10 +33,12 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "usb_descriptors.h"
+#include "usb_descriptors.h" // IWYU pragma: keep
 
 #include "keyboard.h"
 #include "audio_control.h"
+
+//#include "ADAU1761_IC_1.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
