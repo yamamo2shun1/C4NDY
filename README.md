@@ -20,7 +20,7 @@ The C4NDY KeyVLM is a USB keyboard with a 65-key Ortholinear layout. Its greates
 ![keymap-layout](https://github.com/yamamo2shun1/C4NDY/assets/96638/bc8e57b4-f748-4dd8-b59a-7187f392ab16)
 
 ## Keymap Configurator
-The keymap can be changed using the [KeyVLM Configurator](https://github.com/yamamo2shun1/KeyVLM_Configurator), a dedicated configuration tool developed in the Go language.
+The keymap can be changed using the [KeyConfigurator](https://github.com/yamamo2shun1/KeyConfigurator), a dedicated configuration tool developed in the Go language.
 
 ## Firmware Update
 ### Introduction
