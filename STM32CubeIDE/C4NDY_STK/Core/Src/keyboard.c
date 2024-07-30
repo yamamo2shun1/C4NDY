@@ -30,6 +30,9 @@ uint8_t linePhonoSW = 0;
 
 bool isUpper = false;
 
+uint8_t countReturnNeutral = 0;
+#define MAX_COUNT_RETURN_NEUTRAL 100
+
 int8_t currentStkH[2] = {0};
 int8_t currentStkV[2] = {0};
 int8_t prevStkH[2] = {0};
@@ -456,7 +459,7 @@ void clearKeys(uint8_t code)
 	}
 	else
 	{
-		SEGGER_RTT_printf(0, "clear::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
+		SEGGER_RTT_printf(0, "clear0::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
 		for (int k = 0; k < 6; k++)
 		{
 			if (keyboardHID.key[k] == code)
@@ -464,6 +467,7 @@ void clearKeys(uint8_t code)
 				keyboardHID.key[k] = 0;
 			}
 		}
+		SEGGER_RTT_printf(0, "clear1::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
 	}
 
 	longPressCounter = 0;
@@ -511,7 +515,7 @@ void setKeys(uint8_t code)
 	}
 	else
 	{
-		SEGGER_RTT_printf(0, "set::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
+		SEGGER_RTT_printf(0, "set0::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
 		for (int k = 0; k < 6; k++)
 		{
 			if (keyboardHID.key[k] == code)
@@ -536,6 +540,7 @@ void setKeys(uint8_t code)
 				break;
 			}
 		}
+		SEGGER_RTT_printf(0, "set1::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
 	}
 }
 
@@ -593,6 +598,8 @@ void controlJoySticks()
 				{
 					clearKeys(keymaps_layout2_stk[0][0]);
 				}
+				resetKeys();
+				countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 			}
 			else if (prevStkH[0] == 1)
 			{
@@ -604,6 +611,8 @@ void controlJoySticks()
 				{
 					clearKeys(keymaps_layout2_stk[0][1]);
 				}
+				resetKeys();
+				countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 			}
 			break;
 		}
@@ -628,7 +637,7 @@ void controlJoySticks()
 		switch (currentStkV[0])
 		{
 		case -1:
-			SEGGER_RTT_printf(0, "CONTROL\r\n");
+			SEGGER_RTT_printf(0, "ESC\r\n");
 			if (keymapID == 0)
 			{
 				setKeys(keymaps_default_stk[0][3]);
@@ -639,7 +648,7 @@ void controlJoySticks()
 			}
 			break;
 		case 1:
-			SEGGER_RTT_printf(0, "LSHIFT\r\n");
+			SEGGER_RTT_printf(0, "UPPER\r\n");
 			if (keymapID == 0)
 			{
 				setKeys(keymaps_default_stk[0][2]);
@@ -661,6 +670,8 @@ void controlJoySticks()
 				{
 					clearKeys(keymaps_layout2_stk[0][3]);
 				}
+				resetKeys();
+				countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 			}
 			else if (prevStkV[0] == 1)
 			{
@@ -672,6 +683,8 @@ void controlJoySticks()
 				{
 					clearKeys(keymaps_layout2_stk[0][2]);
 				}
+				resetKeys();
+				countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 			}
 			break;
 		}
@@ -696,7 +709,7 @@ void controlJoySticks()
 		switch (currentStkH[1])
 		{
 		case -1:
-			SEGGER_RTT_printf(0, "ESC\r\n");
+			SEGGER_RTT_printf(0, "DEL\r\n");
 			if (keymapID == 0)
 			{
 				setKeys(keymaps_default_stk[1][0]);
@@ -729,6 +742,8 @@ void controlJoySticks()
 				{
 					clearKeys(keymaps_layout2_stk[1][0]);
 				}
+				resetKeys();
+				countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 			}
 			else if (prevStkH[1] == 1)
 			{
@@ -740,6 +755,8 @@ void controlJoySticks()
 				{
 					clearKeys(keymaps_layout2_stk[1][1]);
 				}
+				resetKeys();
+				countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 			}
 			break;
 		}
@@ -775,7 +792,7 @@ void controlJoySticks()
 			}
 			break;
 		case 1:
-			SEGGER_RTT_printf(0, "RSHIFT\r\n");
+			SEGGER_RTT_printf(0, "RCONTROL\r\n");
 			if (keymapID == 0)
 			{
 				setKeys(keymaps_default_stk[1][2]);
@@ -797,6 +814,8 @@ void controlJoySticks()
 				{
 					clearKeys(keymaps_layout2_stk[1][3]);
 				}
+				resetKeys();
+				countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 			}
 			else if (prevStkV[1] == 1)
 			{
@@ -808,6 +827,8 @@ void controlJoySticks()
 				{
 					clearKeys(keymaps_layout2_stk[1][2]);
 				}
+				resetKeys();
+				countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 			}
 			break;
 		}
@@ -860,6 +881,13 @@ void hid_keyscan_task(void)
 			{
 				if (HAL_GPIO_ReadPin(HC165_QH_GPIO_Port, HC165_QH_Pin))
 				{
+					if (countReturnNeutral > 0)
+					{
+						countReturnNeutral--;
+
+						break;
+					}
+
 					keyState[i] &= ~((uint16_t)1 << jj);
 
 					if (((keyState[i] >> jj) & 0x0001) != ((prevKeyState[i] >> jj) & 0x0001))
@@ -889,6 +917,13 @@ void hid_keyscan_task(void)
 				}
 				else
 				{
+					if (countReturnNeutral > 0)
+					{
+						countReturnNeutral--;
+
+						break;
+					}
+
 					keyState[i] |= ((uint16_t)1 << jj);
 
 					uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
@@ -917,8 +952,6 @@ void hid_keyscan_task(void)
 		break;
 	case 4:
 		//SEGGER_RTT_printf(0, "pot_val = [%d, %d, %d, %d]\r\n", pot_value[2], pot_value[0], pot_value[4], pot_value[3]);
-
-		controlJoySticks();
 
 		for (int k = 0; k < MATRIX_ROWS; k++)
 		{
