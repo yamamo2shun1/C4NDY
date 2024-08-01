@@ -514,7 +514,7 @@ void codec_control_task(void)
 {
     //SEGGER_RTT_printf(0, "pot_val = [%d, %d, %d, %d, %d]\r\n", pot_value[1], pot_value[0], pot_value[2], pot_value[3], pot_value[4]);
 
-	xfade_buffer[xfade_buffer_index] = pot_value[1] >> 2;
+	xfade_buffer[xfade_buffer_index] = pot_value[0] >> 2;
 	xfade_buffer_index = (xfade_buffer_index + 1) & (16 - 1);
 	xfade = 0;
 	for (int i = 0; i < 16; i++)

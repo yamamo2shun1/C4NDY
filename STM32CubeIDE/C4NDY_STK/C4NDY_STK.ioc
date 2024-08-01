@@ -1,9 +1,9 @@
 #MicroXplorer Configuration settings - do not modify
-ADC2.Channel-0\#ChannelRegularConversion=ADC_CHANNEL_1
-ADC2.Channel-1\#ChannelRegularConversion=ADC_CHANNEL_2
-ADC2.Channel-2\#ChannelRegularConversion=ADC_CHANNEL_12
-ADC2.Channel-3\#ChannelRegularConversion=ADC_CHANNEL_13
-ADC2.Channel-4\#ChannelRegularConversion=ADC_CHANNEL_17
+ADC2.Channel-0\#ChannelRegularConversion=ADC_CHANNEL_2
+ADC2.Channel-1\#ChannelRegularConversion=ADC_CHANNEL_12
+ADC2.Channel-2\#ChannelRegularConversion=ADC_CHANNEL_1
+ADC2.Channel-3\#ChannelRegularConversion=ADC_CHANNEL_17
+ADC2.Channel-4\#ChannelRegularConversion=ADC_CHANNEL_13
 ADC2.ClockPrescaler=ADC_CLOCK_ASYNC_DIV4
 ADC2.CommonPathInternal=null|null|null|null
 ADC2.ContinuousConvMode=ENABLE
