@@ -109,12 +109,6 @@
 #define SC_LAYOUT   0xFE // Layout Switch
 #define SC_NULL     0xFF
 
-// deafult QWERTY layout
-extern uint8_t keymaps_default[MATRIX_ROWS][MATRIX_COLUMNS];
-
-// Pinky-less Dvorak layout
-extern uint8_t keymaps_pinkyless[MATRIX_ROWS][MATRIX_COLUMNS];
-
 void setLinePhonoSW(uint8_t val);
 uint8_t getLinePhonoSW(void);
 uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y);
