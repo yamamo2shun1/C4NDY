@@ -528,15 +528,17 @@ void controlJoySticks()
 	{
 		for (int j = 0; j < 2; j++)
 		{
+			int8_t direction = (j == 0) ? ((currentStk[j][i] + 1) / 2) : ((5 - currentStk[j][i]) / 2);
+
 			if (currentStk[j][i] != prevStk[j][i])
 			{
 				if (currentStk[j][i] == -1 || currentStk[j][i] == 1)
 				{
-					setKeys(keymaps_stk[keymapID][i][(currentStk[j][i] + 1) / 2]);
+					setKeys(keymaps_stk[keymapID][i][direction]);
 				}
 				else if (prevStk[j][i] == -1 || prevStk[j][i] == 1)
 				{
-					clearKeys(keymaps_stk[keymapID][i][(currentStk[j][i] + 1) / 2]);
+					clearKeys(keymaps_stk[keymapID][i][direction]);
 					resetKeys();
 					countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 				}
