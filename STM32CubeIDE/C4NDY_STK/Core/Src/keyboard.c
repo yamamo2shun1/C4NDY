@@ -33,11 +33,8 @@ bool isUpper = false;
 uint8_t countReturnNeutral = 0;
 #define MAX_COUNT_RETURN_NEUTRAL 100
 
-int8_t currentStkH[2] = {0};
-int8_t currentStkV[2] = {0};
-int8_t prevStkH[2] = {0};
-int8_t prevStkV[2] = {0};
-
+int8_t currentStk[2][2] = {0};
+int8_t prevStk[2][2] = {0};
 
 uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
 	{
@@ -501,64 +498,48 @@ void controlJoySticks()
 		{
 			if (pot_value[i] < 2048 - 1500)
 			{
-				currentStkH[(i - 1) / 2 ] = 1;
+				currentStk[H][(i - 1) / 2 ] = 1;
 			}
 			else if (pot_value[i] >= 2048 + 1500)
 			{
-				currentStkH[(i - 1) / 2 ] = -1;
+				currentStk[H][(i - 1) / 2 ] = -1;
 			}
 			else {
-				currentStkH[(i - 1) / 2 ] = 0;
+				currentStk[H][(i - 1) / 2 ] = 0;
 			}
 		}
 		else
 		{
 			if (pot_value[i] < 2048 - 1500)
 			{
-				currentStkV[i / 2 - 1] = -1;
+				currentStk[V][i / 2 - 1] = -1;
 			}
 			else if (pot_value[i] >= 2048 + 1500)
 			{
-				currentStkV[i / 2 - 1] = 1;
+				currentStk[V][i / 2 - 1] = 1;
 			}
 			else {
-				currentStkV[i / 2 - 1] = 0;
+				currentStk[V][i / 2 - 1] = 0;
 			}
 		}
 	}
 
-	// Horizontal
 	for (int i = 0; i < 2; i++)
 	{
-		if (currentStkH[i] != prevStkH[i])
+		for (int j = 0; j < 2; j++)
 		{
-			if (currentStkH[i] == -1 || currentStkH[i] == 1)
+			if (currentStk[j][i] != prevStk[j][i])
 			{
-				setKeys(keymaps_stk[keymapID][i][(currentStkH[i] + 1) / 2]);
-			}
-			else if (prevStkH[i] == -1 || prevStkH[i] == 1)
-			{
-				clearKeys(keymaps_stk[keymapID][i][(currentStkH[i] + 1) / 2]);
-				resetKeys();
-				countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
-			}
-		}
-	}
-
-	// Vertical
-	for (int i = 0; i < 2; i++)
-	{
-		if (currentStkV[i] != prevStkV[i])
-		{
-			if (currentStkV[i] == -1 || currentStkV[i] == 1)
-			{
-				setKeys(keymaps_stk[keymapID][i][(5 - currentStkV[i]) / 2]);
-			}
-			else if (prevStkV[i] == -1 || prevStkV[i] == 1)
-			{
-				clearKeys(keymaps_stk[keymapID][i][(5 - currentStkV[i]) / 2]);
-				resetKeys();
-				countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
+				if (currentStk[j][i] == -1 || currentStk[j][i] == 1)
+				{
+					setKeys(keymaps_stk[keymapID][i][(currentStk[j][i] + 1) / 2]);
+				}
+				else if (prevStk[j][i] == -1 || prevStk[j][i] == 1)
+				{
+					clearKeys(keymaps_stk[keymapID][i][(currentStk[j][i] + 1) / 2]);
+					resetKeys();
+					countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
+				}
 			}
 		}
 	}
@@ -685,10 +666,10 @@ void hid_keyscan_task(void)
 		for (int k = 0; k < MATRIX_ROWS; k++)
 		{
 			if (keyState[k] != 0x0 || (keyState[k] == 0x0 && keyState[k] != prevKeyState[k]) ||
-					currentStkH[0] != prevStkH[0] ||
-					currentStkV[0] != prevStkV[0] ||
-					currentStkH[1] != prevStkH[1] ||
-					currentStkV[1] != prevStkV[1])
+					currentStk[H][0] != prevStk[H][0] ||
+					currentStk[V][0] != prevStk[V][0] ||
+					currentStk[H][1] != prevStk[H][1] ||
+					currentStk[V][1] != prevStk[V][1])
 			{
 				if (!tud_hid_ready())
 					return;
@@ -704,11 +685,11 @@ void hid_keyscan_task(void)
 			prevKeyState[k] = keyState[k];
 		}
 
-		prevStkH[0] = currentStkH[0];
-		prevStkV[0] = currentStkV[0];
+		prevStk[H][0] = currentStk[H][0];
+		prevStk[V][0] = currentStk[V][0];
 
-		prevStkH[1] = currentStkH[1];
-		prevStkV[1] = currentStkV[1];
+		prevStk[H][1] = currentStk[H][1];
+		prevStk[V][1] = currentStk[V][1];
 
 		i = 0;
 		break;

@@ -109,6 +109,9 @@
 #define SC_LAYOUT   0xFE // Layout Switch
 #define SC_NULL     0xFF
 
+#define H 0
+#define V 1
+
 void setLinePhonoSW(uint8_t val);
 uint8_t getLinePhonoSW(void);
 uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y);
