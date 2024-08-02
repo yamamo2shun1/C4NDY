@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2023 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -33,12 +33,12 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "usb_descriptors.h" // IWYU pragma: keep
+#include "usb_descriptors.h"  // IWYU pragma: keep
 
 #include "keyboard.h"
 #include "audio_control.h"
 
-//#include "ADAU1761_IC_1.h"
+// #include "ADAU1761_IC_1.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -80,13 +80,13 @@ void SystemClock_Config(void);
 // Invoked when device is mounted
 void tud_mount_cb(void)
 {
-  //blink_interval_ms = BLINK_MOUNTED;
+    // blink_interval_ms = BLINK_MOUNTED;
 }
 
 // Invoked when device is unmounted
 void tud_umount_cb(void)
 {
-  //blink_interval_ms = BLINK_NOT_MOUNTED;
+    // blink_interval_ms = BLINK_NOT_MOUNTED;
 }
 
 // Invoked when usb bus is suspended
@@ -94,383 +94,381 @@ void tud_umount_cb(void)
 // Within 7ms, device must draw an average of current less than 2.5 mA from bus
 void tud_suspend_cb(bool remote_wakeup_en)
 {
-  (void)remote_wakeup_en;
-  //blink_interval_ms = BLINK_SUSPENDED;
+    (void) remote_wakeup_en;
+    // blink_interval_ms = BLINK_SUSPENDED;
 }
 
 // Invoked when usb bus is resumed
 void tud_resume_cb(void)
 {
-  //blink_interval_ms = BLINK_MOUNTED;
+    // blink_interval_ms = BLINK_MOUNTED;
 }
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
-	if (htim == &htim6)
-	{
-
-	}
+    if (htim == &htim6)
+    {
+    }
 }
 
 void erase_flash_data(void)
 {
-	static FLASH_EraseInitTypeDef EraseInitStruct;
-	uint32_t PAGEError;
-	EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
-	EraseInitStruct.Page = 255;
-	EraseInitStruct.NbPages = 1;
+    static FLASH_EraseInitTypeDef EraseInitStruct;
+    uint32_t PAGEError;
+    EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+    EraseInitStruct.Page      = 255;
+    EraseInitStruct.NbPages   = 1;
 
-	if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK)
-	{
-		SEGGER_RTT_printf(0, "flash erase error...\n");
-	}
+    if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK)
+    {
+        SEGGER_RTT_printf(0, "flash erase error...\n");
+    }
 }
 
 void write_flash_data(uint8_t index, uint8_t val)
 {
-	if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, FLASH_DATA_ADDR + 8 * index, val) != HAL_OK)
-	{
-		SEGGER_RTT_printf(0, "[%d]:flash program error...\r\n", index);
-	}
+    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, FLASH_DATA_ADDR + 8 * index, val) != HAL_OK)
+    {
+        SEGGER_RTT_printf(0, "[%d]:flash program error...\r\n", index);
+    }
 }
 
 uint64_t read_flash_data(uint8_t index)
 {
-	return *(uint64_t *)(FLASH_DATA_ADDR + 8 * index);
+    return *(uint64_t*) (FLASH_DATA_ADDR + 8 * index);
 }
 
 void setBootDfuFlag(bool is_boot_dfu)
 {
-	SEGGER_RTT_printf(0, "erase & write FLASH...\n");
-	HAL_FLASH_Unlock();
+    SEGGER_RTT_printf(0, "erase & write FLASH...\n");
+    HAL_FLASH_Unlock();
 
-	uint64_t currentKeyMap[2][MATRIX_ROWS][MATRIX_COLUMNS] = {0x0};
+    uint64_t currentKeyMap[2][MATRIX_ROWS][MATRIX_COLUMNS] = {0x0};
 
-	SEGGER_RTT_printf(0, "current KeyMap\n");
-	for (int k = 0; k < 2; k++)
-	{
-		SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
-		SEGGER_RTT_printf(0, "[\n");
-		for (int i = 0; i < MATRIX_ROWS; i++)
-		{
-			SEGGER_RTT_printf(0, "[");
-			for (int j = 0; j < MATRIX_COLUMNS; j++)
-			{
-				currentKeyMap[k][i][j] = read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
-				SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
-			}
-			SEGGER_RTT_printf(0, "]\n");
-		}
-		SEGGER_RTT_printf(0, "]\n\n");
-	}
+    SEGGER_RTT_printf(0, "current KeyMap\n");
+    for (int k = 0; k < 2; k++)
+    {
+        SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
+        SEGGER_RTT_printf(0, "[\n");
+        for (int i = 0; i < MATRIX_ROWS; i++)
+        {
+            SEGGER_RTT_printf(0, "[");
+            for (int j = 0; j < MATRIX_COLUMNS; j++)
+            {
+                currentKeyMap[k][i][j] = read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
+                SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
+            }
+            SEGGER_RTT_printf(0, "]\n");
+        }
+        SEGGER_RTT_printf(0, "]\n\n");
+    }
 
-	uint64_t currentUpperKeyMap[2][MATRIX_ROWS][MATRIX_COLUMNS] = {0x0};
+    uint64_t currentUpperKeyMap[2][MATRIX_ROWS][MATRIX_COLUMNS] = {0x0};
 
-	SEGGER_RTT_printf(0, "current Upper KeyMap\n");
-	for (int k = 0; k < 2; k++)
-	{
-		SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
-		SEGGER_RTT_printf(0, "[\n");
-		for (int i = 0; i < MATRIX_ROWS; i++)
-		{
-			SEGGER_RTT_printf(0, "[");
-			for (int j = 0; j < MATRIX_COLUMNS; j++)
-			{
-				currentUpperKeyMap[k][i][j] = read_flash_data(2 + (MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
-				SEGGER_RTT_printf(0, "%02X ", currentUpperKeyMap[k][i][j]);
-			}
-			SEGGER_RTT_printf(0, "]\n");
-		}
-		SEGGER_RTT_printf(0, "]\n\n");
-	}
+    SEGGER_RTT_printf(0, "current Upper KeyMap\n");
+    for (int k = 0; k < 2; k++)
+    {
+        SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
+        SEGGER_RTT_printf(0, "[\n");
+        for (int i = 0; i < MATRIX_ROWS; i++)
+        {
+            SEGGER_RTT_printf(0, "[");
+            for (int j = 0; j < MATRIX_COLUMNS; j++)
+            {
+                currentUpperKeyMap[k][i][j] = read_flash_data(2 + (MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
+                SEGGER_RTT_printf(0, "%02X ", currentUpperKeyMap[k][i][j]);
+            }
+            SEGGER_RTT_printf(0, "]\n");
+        }
+        SEGGER_RTT_printf(0, "]\n\n");
+    }
 
-	erase_flash_data();
+    erase_flash_data();
 
-	write_flash_data(0, getLinePhonoSW());
-	if (is_boot_dfu)
-	{
-		write_flash_data(1, 1);
-	}
-	else
-	{
-		write_flash_data(1, 0);
-	}
+    write_flash_data(0, getLinePhonoSW());
+    if (is_boot_dfu)
+    {
+        write_flash_data(1, 1);
+    }
+    else
+    {
+        write_flash_data(1, 0);
+    }
 
-	SEGGER_RTT_printf(0, "reload KeyMap\n");
-	for (int k = 0; k < 2; k++)
-	{
-		SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
-		SEGGER_RTT_printf(0, "[\n");
-		for (int i = 0; i < MATRIX_ROWS; i++)
-		{
-			SEGGER_RTT_printf(0, "[");
-			for (int j = 0; j < MATRIX_COLUMNS; j++)
-			{
-				write_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentKeyMap[k][i][j]);
-				SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
-			}
-			SEGGER_RTT_printf(0, "]\n");
-		}
-		SEGGER_RTT_printf(0, "]\n\n");
-	}
+    SEGGER_RTT_printf(0, "reload KeyMap\n");
+    for (int k = 0; k < 2; k++)
+    {
+        SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
+        SEGGER_RTT_printf(0, "[\n");
+        for (int i = 0; i < MATRIX_ROWS; i++)
+        {
+            SEGGER_RTT_printf(0, "[");
+            for (int j = 0; j < MATRIX_COLUMNS; j++)
+            {
+                write_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentKeyMap[k][i][j]);
+                SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
+            }
+            SEGGER_RTT_printf(0, "]\n");
+        }
+        SEGGER_RTT_printf(0, "]\n\n");
+    }
 
-	SEGGER_RTT_printf(0, "reload Upper KeyMap\n");
-	for (int k = 0; k < 2; k++)
-	{
-		SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
-		SEGGER_RTT_printf(0, "[\n");
-		for (int i = 0; i < MATRIX_ROWS; i++)
-		{
-			SEGGER_RTT_printf(0, "[");
-			for (int j = 0; j < MATRIX_COLUMNS; j++)
-			{
-				write_flash_data(2 + (MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentUpperKeyMap[k][i][j]);
-				SEGGER_RTT_printf(0, "%02X ", currentUpperKeyMap[k][i][j]);
-			}
-			SEGGER_RTT_printf(0, "]\n");
-		}
-		SEGGER_RTT_printf(0, "]\n\n");
-	}
+    SEGGER_RTT_printf(0, "reload Upper KeyMap\n");
+    for (int k = 0; k < 2; k++)
+    {
+        SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
+        SEGGER_RTT_printf(0, "[\n");
+        for (int i = 0; i < MATRIX_ROWS; i++)
+        {
+            SEGGER_RTT_printf(0, "[");
+            for (int j = 0; j < MATRIX_COLUMNS; j++)
+            {
+                write_flash_data(2 + (MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentUpperKeyMap[k][i][j]);
+                SEGGER_RTT_printf(0, "%02X ", currentUpperKeyMap[k][i][j]);
+            }
+            SEGGER_RTT_printf(0, "]\n");
+        }
+        SEGGER_RTT_printf(0, "]\n\n");
+    }
 
-	HAL_FLASH_Lock();
+    HAL_FLASH_Lock();
 }
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
+    /* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+    /* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+    /* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+    HAL_Init();
 
-  /* USER CODE BEGIN Init */
+    /* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+    /* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+    /* Configure the system clock */
+    SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+    /* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+    /* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_SAI1_Init();
-  MX_QUADSPI1_Init();
-  MX_I2C2_Init();
-  MX_USB_PCD_Init();
-  MX_TIM6_Init();
-  MX_ADC2_Init();
-  /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
+    /* Initialize all configured peripherals */
+    MX_GPIO_Init();
+    MX_DMA_Init();
+    MX_SAI1_Init();
+    MX_QUADSPI1_Init();
+    MX_I2C2_Init();
+    MX_USB_PCD_Init();
+    MX_TIM6_Init();
+    MX_ADC2_Init();
+    /* USER CODE BEGIN 2 */
+    HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
 
-  //SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", HAL_GetDEVID(), HAL_GetDEVID());
-  SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", DBGMCU->IDCODE, DBGMCU->IDCODE);
+    // SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", HAL_GetDEVID(), HAL_GetDEVID());
+    SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", DBGMCU->IDCODE, DBGMCU->IDCODE);
 
-  SEGGER_RTT_printf(0, "initialize ADAU1761...\n");
-  default_download_IC_1();
+    SEGGER_RTT_printf(0, "initialize ADAU1761...\n");
+    default_download_IC_1();
 
-  SEGGER_RTT_printf(0, "initialize tinyUSB...\n");
-  tusb_init();
+    SEGGER_RTT_printf(0, "initialize tinyUSB...\n");
+    tusb_init();
 
-  SEGGER_RTT_printf(0, "start ADC DMA...\n");
-  start_adc();
+    SEGGER_RTT_printf(0, "start ADC DMA...\n");
+    start_adc();
 
-  SEGGER_RTT_printf(0, "start SAI DMA...\n");
-  start_sai();
+    SEGGER_RTT_printf(0, "start SAI DMA...\n");
+    start_sai();
 
-  //HAL_TIM_Base_Start_IT(&htim6);
+    // HAL_TIM_Base_Start_IT(&htim6);
 
-  SEGGER_RTT_printf(0, "user_sw = %d\n", HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin));
-  if (!HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin))
-  {
-	  SEGGER_RTT_printf(0, "init flash data\n\r");
+    SEGGER_RTT_printf(0, "user_sw = %d\n", HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin));
+    if (!HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin))
+    {
+        SEGGER_RTT_printf(0, "init flash data\n\r");
 
-	  HAL_FLASH_Unlock();
+        HAL_FLASH_Unlock();
 
-	  erase_flash_data();
+        erase_flash_data();
 
-	  write_flash_data(0, 0);
-	  write_flash_data(1, 99);
+        write_flash_data(0, 0);
+        write_flash_data(1, 99);
 
-	  for (int i = 0; i < MATRIX_ROWS; i++)
-	  {
-		  for (int j = 0; j < MATRIX_COLUMNS; j++)
-		  {
-			  write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
-			  write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
+        for (int i = 0; i < MATRIX_ROWS; i++)
+        {
+            for (int j = 0; j < MATRIX_COLUMNS; j++)
+            {
+                write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
+                write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
 
-			  write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(0, i, j));
-			  write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(1, i, j));
+                write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(0, i, j));
+                write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(1, i, j));
 
-			  write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
-			  write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
-		  }
-	  }
+                write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
+                write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
+            }
+        }
 
-	  for (int i = 0; i < 2; i++)
-  	  {
-	  	  for (int j = 0; j < 4; j++)
-	  	  {
-			  write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
-  			  write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
-  		  }
-  	  }
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
+                write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
+            }
+        }
 
-	  HAL_FLASH_Lock();
-  }
+        HAL_FLASH_Lock();
+    }
 
-  uint64_t linePhonoSW = read_flash_data(0);
-  setLinePhonoSW(linePhonoSW);
-  SEGGER_RTT_printf(0, "Phono/Line SW = %u\n", getLinePhonoSW());
+    uint64_t linePhonoSW = read_flash_data(0);
+    setLinePhonoSW(linePhonoSW);
+    SEGGER_RTT_printf(0, "Phono/Line SW = %u\n", getLinePhonoSW());
 
-  uint64_t test_val = 0;
-  test_val = read_flash_data(1);
-  SEGGER_RTT_printf(0, "test_val1 = %u\n", test_val);
+    uint64_t test_val = 0;
+    test_val          = read_flash_data(1);
+    SEGGER_RTT_printf(0, "test_val1 = %u\n", test_val);
 
-  SEGGER_RTT_printf(0, "// Normal");
-  for (int k = 0; k < 2; k++)
-  {
-	  SEGGER_RTT_printf(0, "\n");
-	  for (int i = 0; i < MATRIX_ROWS; i++)
-	  {
-		  SEGGER_RTT_printf(0, "[ ");
-		  for (int j = 0; j < MATRIX_COLUMNS; j++)
-		  {
-			  if (k == 0)
-			  {
-				  setKeyCode(0, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-			  }
-			  else
-			  {
-				  setKeyCode(1, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-			  }
-			  SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-		  }
-		  SEGGER_RTT_printf(0, "]\n");
-	  }
-  }
+    SEGGER_RTT_printf(0, "// Normal");
+    for (int k = 0; k < 2; k++)
+    {
+        SEGGER_RTT_printf(0, "\n");
+        for (int i = 0; i < MATRIX_ROWS; i++)
+        {
+            SEGGER_RTT_printf(0, "[ ");
+            for (int j = 0; j < MATRIX_COLUMNS; j++)
+            {
+                if (k == 0)
+                {
+                    setKeyCode(0, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
+                }
+                else
+                {
+                    setKeyCode(1, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
+                }
+                SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
+            }
+            SEGGER_RTT_printf(0, "]\n");
+        }
+    }
 
-  SEGGER_RTT_printf(0, "// Upper");
-  for (int k = 0; k < 2; k++)
-  {
-	  SEGGER_RTT_printf(0, "\n");
-	  for (int i = 0; i < MATRIX_ROWS; i++)
-	  {
-		  SEGGER_RTT_printf(0, "[ ");
-		  for (int j = 0; j < MATRIX_COLUMNS; j++)
-		  {
-			  if (k == 0)
-			  {
-				  setUpperKeyCode(0, i, j, read_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-			  }
-			  else
-			  {
-				  setUpperKeyCode(1, i, j, read_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-			  }
-			  SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-		  }
-		  SEGGER_RTT_printf(0, "]\n");
-	  }
-  }
+    SEGGER_RTT_printf(0, "// Upper");
+    for (int k = 0; k < 2; k++)
+    {
+        SEGGER_RTT_printf(0, "\n");
+        for (int i = 0; i < MATRIX_ROWS; i++)
+        {
+            SEGGER_RTT_printf(0, "[ ");
+            for (int j = 0; j < MATRIX_COLUMNS; j++)
+            {
+                if (k == 0)
+                {
+                    setUpperKeyCode(0, i, j, read_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
+                }
+                else
+                {
+                    setUpperKeyCode(1, i, j, read_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
+                }
+                SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
+            }
+            SEGGER_RTT_printf(0, "]\n");
+        }
+    }
 
-  SEGGER_RTT_printf(0, "// Stick");
-  for (int k = 0; k < 2; k++)
-  {
-	  SEGGER_RTT_printf(0, "\n");
-	  for (int i = 0; i < 2; i++)
-	  {
-		  SEGGER_RTT_printf(0, "[ ");
-  		  for (int j = 0; j < 4; j++)
-  		  {
-  			  if (k == 0)
-  			  {
-  				  setStickKeyCode(0, i, j, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
-  			  }
-  			  else
-  			  {
-  				  setStickKeyCode(1, i, j, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
-  			  }
-  			  SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
-  		  }
-  		  SEGGER_RTT_printf(0, "]\n");
-  	  }
-  }
-  HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
-  /* USER CODE END 2 */
+    SEGGER_RTT_printf(0, "// Stick");
+    for (int k = 0; k < 2; k++)
+    {
+        SEGGER_RTT_printf(0, "\n");
+        for (int i = 0; i < 2; i++)
+        {
+            SEGGER_RTT_printf(0, "[ ");
+            for (int j = 0; j < 4; j++)
+            {
+                if (k == 0)
+                {
+                    setStickKeyCode(0, i, j, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
+                }
+                else
+                {
+                    setStickKeyCode(1, i, j, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
+                }
+                SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
+            }
+            SEGGER_RTT_printf(0, "]\n");
+        }
+    }
+    HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
+    /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  tud_task();
+    /* Infinite loop */
+    /* USER CODE BEGIN WHILE */
+    while (1)
+    {
+        tud_task();
 
-	  codec_control_task();
+        codec_control_task();
 
-	  hid_keyscan_task();
+        hid_keyscan_task();
 
-    /* USER CODE END WHILE */
+        /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+        /* USER CODE BEGIN 3 */
+    }
+    /* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage
-  */
-  HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
+    /** Configure the main internal regulator output voltage
+     */
+    HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
-  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
-  RCC_OscInitStruct.PLL.PLLN = 24;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV6;
-  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    /** Initializes the RCC Oscillators according to the specified parameters
+     * in the RCC_OscInitTypeDef structure.
+     */
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48 | RCC_OSCILLATORTYPE_HSE;
+    RCC_OscInitStruct.HSEState       = RCC_HSE_BYPASS;
+    RCC_OscInitStruct.HSI48State     = RCC_HSI48_ON;
+    RCC_OscInitStruct.PLL.PLLState   = RCC_PLL_ON;
+    RCC_OscInitStruct.PLL.PLLSource  = RCC_PLLSOURCE_HSE;
+    RCC_OscInitStruct.PLL.PLLM       = RCC_PLLM_DIV1;
+    RCC_OscInitStruct.PLL.PLLN       = 24;
+    RCC_OscInitStruct.PLL.PLLP       = RCC_PLLP_DIV2;
+    RCC_OscInitStruct.PLL.PLLQ       = RCC_PLLQ_DIV6;
+    RCC_OscInitStruct.PLL.PLLR       = RCC_PLLR_DIV2;
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+    {
+        Error_Handler();
+    }
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+    /** Initializes the CPU, AHB and APB buses clocks
+     */
+    RCC_ClkInitStruct.ClockType      = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+    RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK;
+    RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
+    {
+        Error_Handler();
+    }
 }
 
 /* USER CODE BEGIN 4 */
@@ -478,33 +476,33 @@ void SystemClock_Config(void)
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
-  /* USER CODE END Error_Handler_Debug */
+    /* USER CODE BEGIN Error_Handler_Debug */
+    /* User can add his own implementation to report the HAL error return state */
+    __disable_irq();
+    while (1)
+    {
+    }
+    /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t *file, uint32_t line)
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
+void assert_failed(uint8_t* file, uint32_t line)
 {
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
+    /* USER CODE BEGIN 6 */
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
