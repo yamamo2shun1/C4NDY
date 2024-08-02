@@ -73,14 +73,14 @@ uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
 
 uint8_t keymaps_stk[2][2][4] = {
     // clang-format off
-    //   left,   right,     up,        down
+    //   left,   right,     down,        up
 	{
-		{SC_BS,  SC_TAB,    SC_UPPER, SC_CAPSLOCK}, // left stick
-		{SC_ESC, SC_HENKAN, SC_RALT,  SC_SPACE}     // right stick
+		{SC_BS,  SC_TAB,    SC_CAPSLOCK, SC_UPPER}, // left stick
+		{SC_ESC, SC_HENKAN, SC_SPACE,    SC_RALT}   // right stick
 	},
 	{
-		{SC_BS,  SC_TAB,   SC_UPPER, SC_LCONTROL}, // left stick
-		{SC_ESC, SC_SPACE, SC_RALT,  SC_ENTER}     // right stick
+		{SC_BS,  SC_TAB,   SC_LCONTROL, SC_UPPER}, // left stick
+		{SC_ESC, SC_SPACE, SC_ENTER,    SC_RALT}   // right stick
 	}
     // clang-format on
 };
@@ -500,35 +500,20 @@ void controlJoySticks()
 {
     for (int i = 1; i < 5; i++)
     {
-        if (i == 1 || i == 3)
+        int hv = (i == 1 || i == 3) ? H : V;
+        int id = (i == 1 || i == 3) ? (i - 1) / 2 : (i - 2) / 2;
+
+        if (pot_value[i] < 2048 - 1500)
         {
-            if (pot_value[i] < 2048 - 1500)
-            {
-                currentStk[H][(i - 1) / 2] = 1;
-            }
-            else if (pot_value[i] >= 2048 + 1500)
-            {
-                currentStk[H][(i - 1) / 2] = -1;
-            }
-            else
-            {
-                currentStk[H][(i - 1) / 2] = 0;
-            }
+            currentStk[hv][id] = 1;
+        }
+        else if (pot_value[i] >= 2048 + 1500)
+        {
+            currentStk[hv][id] = -1;
         }
         else
         {
-            if (pot_value[i] < 2048 - 1500)
-            {
-                currentStk[V][i / 2 - 1] = -1;
-            }
-            else if (pot_value[i] >= 2048 + 1500)
-            {
-                currentStk[V][i / 2 - 1] = 1;
-            }
-            else
-            {
-                currentStk[V][i / 2 - 1] = 0;
-            }
+            currentStk[hv][id] = 0;
         }
     }
 
@@ -536,16 +521,16 @@ void controlJoySticks()
     {
         for (int j = 0; j < 2; j++)
         {
-            int8_t direction = (j == 0) ? ((currentStk[j][i] + 1) / 2) : ((5 - currentStk[j][i]) / 2);
-
             if (currentStk[j][i] != prevStk[j][i])
             {
                 if (currentStk[j][i] == -1 || currentStk[j][i] == 1)
                 {
+                    int8_t direction = (j == 0) ? ((currentStk[j][i] + 1) / 2) : ((5 - currentStk[j][i]) / 2);
                     setKeys(keymaps_stk[keymapID][i][direction]);
                 }
                 else if (prevStk[j][i] == -1 || prevStk[j][i] == 1)
                 {
+                    int8_t direction = (j == 0) ? ((prevStk[j][i] + 1) / 2) : ((5 - prevStk[j][i]) / 2);
                     clearKeys(keymaps_stk[keymapID][i][direction]);
                     resetKeys();
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
