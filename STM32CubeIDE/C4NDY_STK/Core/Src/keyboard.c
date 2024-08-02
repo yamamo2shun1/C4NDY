@@ -31,7 +31,7 @@ uint8_t linePhonoSW = 0;
 bool isUpper = false;
 
 uint8_t countReturnNeutral = 0;
-#define MAX_COUNT_RETURN_NEUTRAL 100
+#define MAX_COUNT_RETURN_NEUTRAL 60
 
 int8_t currentStk[2][2] = {0};
 int8_t prevStk[2][2] = {0};
