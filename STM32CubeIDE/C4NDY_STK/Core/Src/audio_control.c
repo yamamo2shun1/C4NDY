@@ -450,7 +450,7 @@ void send_master_gain(uint16_t master_val)
     master_gain_array[5]         = 0x00;
     master_gain_array[6]         = 0x80;
     master_gain_array[7]         = 0x00;
-#if 0
+#if 1
 	SEGGER_RTT_printf(0, "%d -> %02X,%02X,%02X,%02X\n", master_val,
 													  master_gain_array[0],
 													  master_gain_array[1],
@@ -511,7 +511,7 @@ void codec_control_task(void)
         send_xfade(xfade);
         xfade_prev = xfade;
     }
-
+#if 0
     master_gain_buffer[buffer_index] = 1500;  // pot_value[0] >> 2;
     buffer_index                     = (buffer_index + 1) & (16 - 1);
     master_gain                      = 0;
@@ -526,4 +526,5 @@ void codec_control_task(void)
         send_master_gain(master_gain);
         master_gain_prev = master_gain;
     }
+#endif
 }

@@ -104,10 +104,12 @@
 #define SC_RGUI     0xE7  // Right GUI(Win/Command)
 
 // original code
-#define SC_UPPER  0xFC
-#define SC_LNPH   0xFD  // Line Phono Swtich
-#define SC_LAYOUT 0xFE  // Layout Switch
-#define SC_NULL   0xFF
+#define SC_MGAIN_UP   0xFA  // Master Gain Up
+#define SC_MGAIN_DOWN 0xFB  // Master Gain Down
+#define SC_UPPER      0xFC  // Upper
+#define SC_LNPH       0xFD  // Line Phono Swtich
+#define SC_LAYOUT     0xFE  // Layout Switch
+#define SC_NULL       0xFF
 
 #define H 0
 #define V 1

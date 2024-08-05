@@ -392,12 +392,10 @@ void clearKeys(uint8_t code)
 {
     if (code == SC_LAYOUT)
     {
-        SEGGER_RTT_printf(0, "clear::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
         isKeymapIDChanged = false;
     }
     else if (code == SC_LNPH)
     {
-        SEGGER_RTT_printf(0, "clear::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
         isLinePhonoSWChanged = false;
     }
     else if (code == SC_UPPER)
@@ -406,12 +404,10 @@ void clearKeys(uint8_t code)
     }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
     {
-        SEGGER_RTT_printf(0, "clear::code = %d\r\n", code - SC_LCONTROL);
         keyboardHID.modifiers &= ~(1 << (code - SC_LCONTROL));
     }
     else
     {
-        SEGGER_RTT_printf(0, "clear0::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
         for (int k = 0; k < 6; k++)
         {
             if (keyboardHID.key[k] == code)
@@ -419,7 +415,6 @@ void clearKeys(uint8_t code)
                 keyboardHID.key[k] = 0;
             }
         }
-        SEGGER_RTT_printf(0, "clear1::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
     }
 
     longPressCounter = 0;
@@ -427,6 +422,8 @@ void clearKeys(uint8_t code)
 
 void setKeys(uint8_t code)
 {
+    static int master_gain_val = 1600;
+
     if (code == SC_LAYOUT)
     {
         if (!isKeymapIDChanged)
@@ -453,6 +450,24 @@ void setKeys(uint8_t code)
             isLinePhonoSWChanged = true;
         }
     }
+    else if (code == SC_MGAIN_UP)
+    {
+        master_gain_val += 8;
+        if (master_gain_val >= 2040)
+        {
+            master_gain_val = 2040;
+        }
+        send_master_gain(master_gain_val);
+    }
+    else if (code == SC_MGAIN_DOWN)
+    {
+        master_gain_val -= 8;
+        if (master_gain_val <= 0)
+        {
+            master_gain_val = 0;
+        }
+        send_master_gain(master_gain_val);
+    }
     else if (code == SC_UPPER)
     {
         if (!isUpper)
@@ -462,12 +477,10 @@ void setKeys(uint8_t code)
     }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
     {
-        SEGGER_RTT_printf(0, "set::code = %d\r\n", code - SC_LCONTROL);
         keyboardHID.modifiers |= 1 << (code - SC_LCONTROL);
     }
     else
     {
-        SEGGER_RTT_printf(0, "set0::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
         for (int k = 0; k < 6; k++)
         {
             if (keyboardHID.key[k] == code)
@@ -492,7 +505,6 @@ void setKeys(uint8_t code)
                 break;
             }
         }
-        SEGGER_RTT_printf(0, "set1::key = {%X,%X,%X,%X,%X,%X}, modifier = %X\r\n", keyboardHID.key[0], keyboardHID.key[1], keyboardHID.key[2], keyboardHID.key[3], keyboardHID.key[4], keyboardHID.key[5], keyboardHID.modifiers);
     }
 }
 
@@ -597,11 +609,7 @@ void hid_keyscan_task(void)
 
                     if (((keyState[i] >> jj) & 0x0001) != ((prevKeyState[i] >> jj) & 0x0001))
                     {
-                        SEGGER_RTT_printf(0, "c::0x%X\r\n", keyState[i]);
-                        SEGGER_RTT_printf(0, "p::0x%X\r\n", prevKeyState[i]);
-
                         uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-                        SEGGER_RTT_printf(0, "%d %d %02X\r\n", i, jj, keycode);
 
                         if (isUpper && keycode == SC_UPPER)
                         {
@@ -615,7 +623,6 @@ void hid_keyscan_task(void)
                                 keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
                                 // clearKeys(SC_LSHIFT);
                             }
-                            SEGGER_RTT_printf(0, "%d %d %d %02X ", isUpper, i, jj, keycode);
                             clearKeys(keycode);
                         }
                     }
@@ -643,7 +650,6 @@ void hid_keyscan_task(void)
                             keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
                             // setKeys(SC_LSHIFT);
                         }
-                        SEGGER_RTT_printf(0, "%d %d %d %02X ", isUpper, i, jj, keycode);
                         setKeys(keycode);
                     }
                 }
@@ -656,8 +662,6 @@ void hid_keyscan_task(void)
         i++;
         break;
     case 4:
-        // SEGGER_RTT_printf(0, "pot_val = [%d, %d, %d, %d]\r\n", pot_value[2], pot_value[0], pot_value[4], pot_value[3]);
-
         for (int k = 0; k < MATRIX_ROWS; k++)
         {
             if (keyState[k] != 0x0 || (keyState[k] == 0x0 && keyState[k] != prevKeyState[k]) ||
@@ -669,7 +673,6 @@ void hid_keyscan_task(void)
                 if (!tud_hid_ready())
                     return;
 
-                SEGGER_RTT_printf(0, "modifiers = %d, key = %d\r\n", keyboardHID.modifiers, keyboardHID.key);
                 tud_hid_keyboard_report(REPORT_ID_KEYBOARD, keyboardHID.modifiers, keyboardHID.key);
                 break;
             }
