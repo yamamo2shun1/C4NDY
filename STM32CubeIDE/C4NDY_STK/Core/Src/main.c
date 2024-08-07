@@ -35,6 +35,7 @@
 
 #include "usb_descriptors.h"  // IWYU pragma: keep
 
+#include "icled.h"
 #include "keyboard.h"
 #include "audio_control.h"
 
@@ -271,7 +272,9 @@ int main(void)
     MX_USB_PCD_Init();
     MX_TIM6_Init();
     MX_ADC2_Init();
+    MX_TIM8_Init();
     /* USER CODE BEGIN 2 */
+
     HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
 
     // SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", HAL_GetDEVID(), HAL_GetDEVID());
@@ -407,6 +410,13 @@ int main(void)
         }
     }
     HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
+
+    setLedBuf(0, 255, 0, 0);
+    setLedBuf(1, 0, 255, 0);
+    setLedBuf(2, 0, 0, 255);
+    setLedBuf(3, 255, 255, 0);
+
+    renew();
     /* USER CODE END 2 */
 
     /* Infinite loop */
