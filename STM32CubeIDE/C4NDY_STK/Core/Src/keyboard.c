@@ -9,6 +9,7 @@
 #include "keyboard.h"
 #include "audio_control.h"
 #include "adc.h"
+#include "icled.h"
 
 struct keyboardHID_t
 {
@@ -522,10 +523,30 @@ void controlJoySticks()
         else if (pot_value[i] >= 2048 + 1500)
         {
             currentStk[hv][id] = -1;
+
+            if (hv == V && id == 0)
+            {
+                setLedBuf(0, 0xFF, 0xFF, 0xFF);
+                setLedBuf(1, 0xFF, 0xFF, 0xFF);
+                setLedBuf(2, 0xFF, 0xFF, 0xFF);
+                setLedBuf(3, 0xFF, 0xFF, 0xFF);
+
+                renew();
+            }
         }
         else
         {
             currentStk[hv][id] = 0;
+
+            if (hv == V && id == 0)
+            {
+                setLedBuf(0, 0xFF, 0xB2, 0xD5);
+                setLedBuf(1, 0xFF, 0xB2, 0xD5);
+                setLedBuf(2, 0xFF, 0xB2, 0xD5);
+                setLedBuf(3, 0xFF, 0xB2, 0xD5);
+
+                renew();
+            }
         }
     }
 
