@@ -1,7 +1,7 @@
 /*
  * File:           C:\Users\shun\C4NDY\SigmaDSP\ADAU1761_IC_1_REG.h
  *
- * Created:        Wednesday, January 24, 2024 9:52:57 PM
+ * Created:        Wednesday, August 21, 2024 2:10:34 PM
  * Description:    ADAU1761:IC 1 control register definitions.
  *
  * This software is distributed in the hope that it will be useful,

@@ -1,7 +1,7 @@
 /*
  * File:           C:\Users\shun\C4NDY\SigmaDSP\ADAU1761_IC_1.h
  *
- * Created:        Wednesday, January 24, 2024 9:52:57 PM
+ * Created:        Wednesday, August 21, 2024 2:10:34 PM
  * Description:    ADAU1761:IC 1 program data.
  *
  * This software is distributed in the hope that it will be useful,
@@ -353,7 +353,7 @@ ADI_REG_TYPE Param_Data_IC_1[PARAM_SIZE_IC_1] = {
 0x00, 0x40, 0x00, 0x00, 
 0x00, 0x40, 0x00, 0x00, 
 0x00, 0x7C, 0x1C, 0xEB, 
-0x00, 0x00, 0x80, 0x00, 
+0x00, 0x00, 0x08, 0x00, 
 };
 
 
