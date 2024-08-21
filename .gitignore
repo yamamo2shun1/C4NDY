@@ -51,3 +51,5 @@ KiCad/KVL_direct/
 3Dmodel/STK_enclosure_all3d.plasticity
 
 3Dmodel/STK_left_side_panel_all3d.plasticity
+
+*.elf
