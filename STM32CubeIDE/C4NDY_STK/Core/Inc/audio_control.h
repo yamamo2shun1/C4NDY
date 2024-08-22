@@ -42,6 +42,7 @@ void copybuf_sai2codec(void);
 
 void send_xfade(uint16_t fader_val);
 void send_master_gain(uint16_t master_val);
+void send_master_gain2(double master_rate);
 void send_switch_to_linein(void);
 void send_switch_to_phonoin(void);
 

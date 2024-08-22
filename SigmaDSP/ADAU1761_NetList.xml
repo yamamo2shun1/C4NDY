@@ -29,6 +29,9 @@
             <Algorithm name="DCInpAlg2" friendlyname="dc Input " cell="DC2 " location="{X=540, Y=205} " Growth="0 " GrowthB="0 " FS="48000">
                 <Link pin="O_C164_A0_P1_out" dir="out" link="Link14" />
             </Algorithm>
+            <Algorithm name="DCInpAlg3" friendlyname="dc Input " cell="DC3 " location="{X=1099, Y=-83} " Growth="0 " GrowthB="0 " FS="48000">
+                <Link pin="O_C57_A0_P1_out" dir="out" link="Link32" />
+            </Algorithm>
             <Algorithm name="GainS200AlgGrowDBStep1" friendlyname="Gain (DB) - Growable " cell="Single 1 " location="{X=64, Y=375} " Growth="2 " GrowthB="0">
                 <Link pin="I_C16_A0_P1_in" dir="in" link="Link17" />
                 <Link pin="I_C16_A0_P3_in" dir="in" link="Link0" />
@@ -109,11 +112,18 @@
                 <Link pin="O_C213_A0_P2_out" dir="out" link="Link24" />
                 <Link pin="O_C213_A0_P4_out" dir="out" link="Link25" />
             </Algorithm>
-            <Algorithm name="ICSigmaLP1Out1" friendlyname="1761 output " cell="Output1 " location="{X=1133, Y=14} " Growth="0 " GrowthB="0">
-                <Link pin="I_C11_A0_P1_in" dir="in" link="Link24" />
+            <Algorithm name="ExtSWGainDB3" friendlyname="Ext vol (SW slew) " cell="SW vol 3 " location="{X=1221, Y=31} " Growth="2 " GrowthB="0">
+                <Link pin="I_C43_A0_P1_in" dir="in" link="Link32" />
+                <Link pin="I_C43_A0_P2_in" dir="in" link="Link24" />
+                <Link pin="I_C43_A0_P4_in" dir="in" link="Link25" />
+                <Link pin="O_C43_A0_P3_out" dir="out" link="Link30" />
+                <Link pin="O_C43_A0_P5_out" dir="out" link="Link31" />
             </Algorithm>
-            <Algorithm name="ICSigmaLP1Out2" friendlyname="1761 output " cell="Output2 " location="{X=1136, Y=79} " Growth="0 " GrowthB="0">
-                <Link pin="I_C13_A0_P1_in" dir="in" link="Link25" />
+            <Algorithm name="ICSigmaLP1Out1" friendlyname="1761 output " cell="Output1 " location="{X=1327, Y=12} " Growth="0 " GrowthB="0">
+                <Link pin="I_C11_A0_P1_in" dir="in" link="Link30" />
+            </Algorithm>
+            <Algorithm name="ICSigmaLP1Out2" friendlyname="1761 output " cell="Output2 " location="{X=1330, Y=77} " Growth="0 " GrowthB="0">
+                <Link pin="I_C13_A0_P1_in" dir="in" link="Link31" />
             </Algorithm>
         </Schematic>
     </IC>
