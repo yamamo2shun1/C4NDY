@@ -423,7 +423,7 @@ void clearKeys(uint8_t code)
 
 void setKeys(uint8_t code)
 {
-    static int master_gain_val = 1600;
+    static double master_gain = 1.0;
 
     if (code == SC_LAYOUT)
     {
@@ -453,21 +453,21 @@ void setKeys(uint8_t code)
     }
     else if (code == SC_MGAIN_UP)
     {
-        master_gain_val += 8;
-        if (master_gain_val >= 2040)
+        master_gain += 0.01;
+        if (master_gain >= 1.0)
         {
-            master_gain_val = 2040;
+            master_gain = 1.0;
         }
-        send_master_gain(master_gain_val);
+        send_master_gain2(master_gain);
     }
     else if (code == SC_MGAIN_DOWN)
     {
-        master_gain_val -= 8;
-        if (master_gain_val <= 0)
+        master_gain -= 0.01;
+        if (master_gain <= 0.0)
         {
-            master_gain_val = 0;
+            master_gain = 0.0;
         }
-        send_master_gain(master_gain_val);
+        send_master_gain2(master_gain);
     }
     else if (code == SC_UPPER)
     {
