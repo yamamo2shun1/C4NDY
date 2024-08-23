@@ -527,12 +527,7 @@ void controlJoySticks()
 
             if (hv == V && id == 0)
             {
-                setLedBuf(0, 0xFF, 0xFF, 0xFF);
-                setLedBuf(1, 0xFF, 0xFF, 0xFF);
-                setLedBuf(2, 0xFF, 0xFF, 0xFF);
-                setLedBuf(3, 0xFF, 0xFF, 0xFF);
-
-                renew();
+                setAllLedBuf(0xFF, 0xFF, 0xFF);
             }
         }
         else
@@ -541,12 +536,7 @@ void controlJoySticks()
 
             if (hv == V && id == 0)
             {
-                setLedBuf(0, 0xFF, 0xB2, 0xD5);
-                setLedBuf(1, 0xFF, 0xB2, 0xD5);
-                setLedBuf(2, 0xFF, 0xB2, 0xD5);
-                setLedBuf(3, 0xFF, 0xB2, 0xD5);
-
-                renew();
+                setAllLedBuf(0xFE, 0x01, 0x9A);
             }
         }
     }
