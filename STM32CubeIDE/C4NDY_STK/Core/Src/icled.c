@@ -48,25 +48,22 @@ void setLedBuf(uint8_t index, uint8_t red, uint8_t green, uint8_t blue)
 
 void setAllLedBuf(uint8_t red, uint8_t green, uint8_t blue)
 {
-    if (!isGradation)
+    for (int i = 0; i < LED_NUMS; i++)
     {
-        for (int i = 0; i < LED_NUMS; i++)
+        grb_prev[i][0] = grb_current[i][0];
+        grb_prev[i][1] = grb_current[i][1];
+        grb_prev[i][2] = grb_current[i][2];
+
+        grb_current[i][0] = (uint8_t) ((double) green * LED_INTENSITY_RATE);
+        grb_current[i][1] = (uint8_t) ((double) red * LED_INTENSITY_RATE);
+        grb_current[i][2] = (uint8_t) ((double) blue * LED_INTENSITY_RATE);
+
+        if (grb_prev[i][0] != grb_current[i][0] ||
+            grb_prev[i][1] != grb_current[i][1] ||
+            grb_prev[i][2] != grb_current[i][2])
         {
-            grb_prev[i][0] = grb_current[i][0];
-            grb_prev[i][1] = grb_current[i][1];
-            grb_prev[i][2] = grb_current[i][2];
-
-            grb_current[i][0] = (uint8_t) ((double) green * LED_INTENSITY_RATE);
-            grb_current[i][1] = (uint8_t) ((double) red * LED_INTENSITY_RATE);
-            grb_current[i][2] = (uint8_t) ((double) blue * LED_INTENSITY_RATE);
-
-            if (grb_prev[i][0] != grb_current[i][0] ||
-                grb_prev[i][1] != grb_current[i][1] ||
-                grb_prev[i][2] != grb_current[i][2])
-            {
-                isGradation = true;
-                g_rate      = 0.0;
-            }
+            isGradation = true;
+            g_rate      = 0.0;
         }
     }
 }
