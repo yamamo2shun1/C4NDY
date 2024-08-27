@@ -486,11 +486,12 @@ void setKeys(uint8_t code)
         {
             if (keyboardHID.key[k] == code)
             {
-                // LGUI + ESC 長押しでDFUモーでリセット
-                if (keyboardHID.modifiers == 0x08 && keyboardHID.key[k] == SC_ESC)
+                // RESET or LGUI + ESC 長押しでDFUモーでリセット
+                if (keyboardHID.key[k] == SC_RESET || (keyboardHID.modifiers == 0x08 && keyboardHID.key[k] == SC_ESC))
                 {
                     longPressCounter++;
-                    if (longPressCounter == 5000)
+                    SEGGER_RTT_printf(0, "longPressCounter = %d\n", longPressCounter);
+                    if (longPressCounter == MAX_LONG_PRESS_COUNT)
                     {
                         setBootDfuFlag(true);
                         SEGGER_RTT_printf(0, "Boot Custom DFU...\n");
@@ -526,12 +527,7 @@ void controlJoySticks()
 
             if (hv == V && id == 0)
             {
-                setLedBuf(0, 0xFF, 0xFF, 0xFF);
-                setLedBuf(1, 0xFF, 0xFF, 0xFF);
-                setLedBuf(2, 0xFF, 0xFF, 0xFF);
-                setLedBuf(3, 0xFF, 0xFF, 0xFF);
-
-                renew();
+                setAllLedBuf(0xFF, 0xFF, 0xFF);
             }
         }
         else
@@ -540,12 +536,7 @@ void controlJoySticks()
 
             if (hv == V && id == 0)
             {
-                setLedBuf(0, 0xFF, 0xB2, 0xD5);
-                setLedBuf(1, 0xFF, 0xB2, 0xD5);
-                setLedBuf(2, 0xFF, 0xB2, 0xD5);
-                setLedBuf(3, 0xFF, 0xB2, 0xD5);
-
-                renew();
+                setAllLedBuf(0xFE, 0x01, 0x9A);
             }
         }
     }
