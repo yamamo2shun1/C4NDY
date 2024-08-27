@@ -401,11 +401,36 @@ void clearKeys(uint8_t code)
     }
     else if (code == SC_UPPER)
     {
-        isUpper = false;
+        if (isUpper)
+        {
+            isUpper = false;
+
+            if (((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
+                ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01))
+            {
+                setAllLedBuf(0x67, 0x10, 0x70);
+            }
+            else
+            {
+                setAllLedBuf(0xFE, 0x01, 0x9A);
+            }
+        }
     }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
     {
         keyboardHID.modifiers &= ~(1 << (code - SC_LCONTROL));
+
+        if (code == SC_LSHIFT || code == SC_RSHIFT)
+        {
+            if (isUpper)
+            {
+                setAllLedBuf(0xFF, 0xFF, 0xFF);
+            }
+            else
+            {
+                setAllLedBuf(0xFE, 0x01, 0x9A);
+            }
+        }
     }
     else
     {
@@ -474,10 +499,21 @@ void setKeys(uint8_t code)
         if (!isUpper)
         {
             isUpper = true;
+
+            setAllLedBuf(0xFF, 0xFF, 0xFF);
         }
     }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
     {
+        if (!((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) &&
+            !((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01))
+        {
+            if (code == SC_LSHIFT || code == SC_RSHIFT)
+            {
+                setAllLedBuf(0x67, 0x10, 0x70);
+            }
+        }
+
         keyboardHID.modifiers |= 1 << (code - SC_LCONTROL);
     }
     else
@@ -517,27 +553,17 @@ void controlJoySticks()
         int hv = (i == 1 || i == 3) ? H : V;
         int id = (i == 1 || i == 3) ? (i - 1) / 2 : (i - 2) / 2;
 
-        if (pot_value[i] < 2048 - 1500)
+        if (pot_value[i] < JOYSTICK_CENTER - JOYSTICK_ON_THRESHOLD)
         {
             currentStk[hv][id] = 1;
         }
-        else if (pot_value[i] >= 2048 + 1500)
+        else if (pot_value[i] >= JOYSTICK_CENTER + JOYSTICK_ON_THRESHOLD)
         {
             currentStk[hv][id] = -1;
-
-            if (hv == V && id == 0)
-            {
-                setAllLedBuf(0xFF, 0xFF, 0xFF);
-            }
         }
         else
         {
             currentStk[hv][id] = 0;
-
-            if (hv == V && id == 0)
-            {
-                setAllLedBuf(0xFE, 0x01, 0x9A);
-            }
         }
     }
 
