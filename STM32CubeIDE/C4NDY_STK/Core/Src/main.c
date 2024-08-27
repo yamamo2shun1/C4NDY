@@ -427,13 +427,6 @@ int main(void)
         }
     }
     HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
-
-    setLedBuf(0, 0xFF, 0xB2, 0xD5);
-    setLedBuf(1, 0xFF, 0xB2, 0xD5);
-    setLedBuf(2, 0xFF, 0xB2, 0xD5);
-    setLedBuf(3, 0xFF, 0xB2, 0xD5);
-
-    renew();
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -446,6 +439,7 @@ int main(void)
 
         hid_keyscan_task();
 
+        led_control_task();
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
