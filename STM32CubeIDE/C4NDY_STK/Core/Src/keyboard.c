@@ -408,7 +408,7 @@ void clearKeys(uint8_t code)
             if (((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
                 ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01))
             {
-                setAllLedBuf(0x86, 0x2C, 0x92);
+                setAllLedBuf(0x67, 0x10, 0x70);
             }
             else
             {
@@ -510,7 +510,7 @@ void setKeys(uint8_t code)
         {
             if (code == SC_LSHIFT || code == SC_RSHIFT)
             {
-                setAllLedBuf(0x86, 0x2C, 0x92);
+                setAllLedBuf(0x67, 0x10, 0x70);
             }
         }
 
