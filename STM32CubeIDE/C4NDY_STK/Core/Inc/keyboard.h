@@ -104,6 +104,7 @@
 #define SC_RGUI     0xE7  // Right GUI(Win/Command)
 
 // original code
+#define SC_RESET      0xF9  // Reset
 #define SC_MGAIN_UP   0xFA  // Master Gain Up
 #define SC_MGAIN_DOWN 0xFB  // Master Gain Down
 #define SC_UPPER      0xFC  // Upper
@@ -113,6 +114,11 @@
 
 #define H 0
 #define V 1
+
+#define JOYSTICK_CENTER       2048
+#define JOYSTICK_ON_THRESHOLD 1500
+
+#define MAX_LONG_PRESS_COUNT 500
 
 void setLinePhonoSW(uint8_t val);
 uint8_t getLinePhonoSW(void);

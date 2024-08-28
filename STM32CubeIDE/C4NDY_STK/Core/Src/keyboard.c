@@ -9,6 +9,7 @@
 #include "keyboard.h"
 #include "audio_control.h"
 #include "adc.h"
+#include "icled.h"
 
 struct keyboardHID_t
 {
@@ -28,6 +29,8 @@ uint8_t keymapID       = 0;
 
 bool isLinePhonoSWChanged = false;
 uint8_t linePhonoSW       = 0;
+
+bool isMasterGainChanged = false;
 
 bool isUpper = false;
 
@@ -398,13 +401,42 @@ void clearKeys(uint8_t code)
     {
         isLinePhonoSWChanged = false;
     }
+    else if (code == SC_MGAIN_UP || code == SC_MGAIN_DOWN)
+    {
+        isMasterGainChanged = false;
+    }
     else if (code == SC_UPPER)
     {
-        isUpper = false;
+        if (isUpper)
+        {
+            isUpper = false;
+
+            if (((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
+                ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01))
+            {
+                setAllLedBuf(0x67, 0x10, 0x70);
+            }
+            else
+            {
+                setAllLedBuf(0xFE, 0x01, 0x9A);
+            }
+        }
     }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
     {
         keyboardHID.modifiers &= ~(1 << (code - SC_LCONTROL));
+
+        if (code == SC_LSHIFT || code == SC_RSHIFT)
+        {
+            if (isUpper)
+            {
+                setAllLedBuf(0xFF, 0xFF, 0xFF);
+            }
+            else
+            {
+                setAllLedBuf(0xFE, 0x01, 0x9A);
+            }
+        }
     }
     else
     {
@@ -422,7 +454,7 @@ void clearKeys(uint8_t code)
 
 void setKeys(uint8_t code)
 {
-    static int master_gain_val = 1600;
+    static int master_gain = 0;
 
     if (code == SC_LAYOUT)
     {
@@ -452,31 +484,52 @@ void setKeys(uint8_t code)
     }
     else if (code == SC_MGAIN_UP)
     {
-        master_gain_val += 8;
-        if (master_gain_val >= 2040)
+        if (!isMasterGainChanged && master_gain < MASTER_GAIN_MAX)
         {
-            master_gain_val = 2040;
+            master_gain += 1;
+            if (master_gain >= MASTER_GAIN_MAX)
+            {
+                master_gain = MASTER_GAIN_MAX;
+            }
+            send_master_gain_db(master_gain);
+
+            isMasterGainChanged = true;
         }
-        send_master_gain(master_gain_val);
     }
     else if (code == SC_MGAIN_DOWN)
     {
-        master_gain_val -= 8;
-        if (master_gain_val <= 0)
+        if (!isMasterGainChanged && master_gain > MASTER_GAIN_MIN)
         {
-            master_gain_val = 0;
+            master_gain -= 1;
+            if (master_gain <= MASTER_GAIN_MIN)
+            {
+                master_gain = MASTER_GAIN_MIN;
+            }
+            send_master_gain_db(master_gain);
+
+            isMasterGainChanged = true;
         }
-        send_master_gain(master_gain_val);
     }
     else if (code == SC_UPPER)
     {
         if (!isUpper)
         {
             isUpper = true;
+
+            setAllLedBuf(0xFF, 0xFF, 0xFF);
         }
     }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
     {
+        if (!((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) &&
+            !((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01))
+        {
+            if (code == SC_LSHIFT || code == SC_RSHIFT)
+            {
+                setAllLedBuf(0x67, 0x10, 0x70);
+            }
+        }
+
         keyboardHID.modifiers |= 1 << (code - SC_LCONTROL);
     }
     else
@@ -485,11 +538,12 @@ void setKeys(uint8_t code)
         {
             if (keyboardHID.key[k] == code)
             {
-                // LGUI + ESC 長押しでDFUモーでリセット
-                if (keyboardHID.modifiers == 0x08 && keyboardHID.key[k] == SC_ESC)
+                // RESET or LGUI + ESC 長押しでDFUモーでリセット
+                if (keyboardHID.key[k] == SC_RESET || (keyboardHID.modifiers == 0x08 && keyboardHID.key[k] == SC_ESC))
                 {
                     longPressCounter++;
-                    if (longPressCounter == 5000)
+                    SEGGER_RTT_printf(0, "longPressCounter = %d\n", longPressCounter);
+                    if (longPressCounter == MAX_LONG_PRESS_COUNT)
                     {
                         setBootDfuFlag(true);
                         SEGGER_RTT_printf(0, "Boot Custom DFU...\n");
@@ -515,11 +569,11 @@ void controlJoySticks()
         int hv = (i == 1 || i == 3) ? H : V;
         int id = (i == 1 || i == 3) ? (i - 1) / 2 : (i - 2) / 2;
 
-        if (pot_value[i] < 2048 - 1500)
+        if (pot_value[i] < JOYSTICK_CENTER - JOYSTICK_ON_THRESHOLD)
         {
             currentStk[hv][id] = 1;
         }
-        else if (pot_value[i] >= 2048 + 1500)
+        else if (pot_value[i] >= JOYSTICK_CENTER + JOYSTICK_ON_THRESHOLD)
         {
             currentStk[hv][id] = -1;
         }

@@ -439,7 +439,7 @@ void send_master_gain(uint16_t master_val)
     double c_curve_val = 1038.0 * tanh((double) master_val / 448.0);
     double master_db   = (135.0 / 1023.0) * c_curve_val - 120.0;
 
-    double master_rate = pow(10.0, master_db / 20);
+    double master_rate = pow(10.0, master_db / 20.0);
 
     uint8_t master_gain_array[8] = {0x00};
     master_gain_array[0]         = ((uint32_t) (master_rate * pow(2, 23)) >> 24) & 0x000000FF;
@@ -451,11 +451,29 @@ void send_master_gain(uint16_t master_val)
     master_gain_array[6]         = 0x80;
     master_gain_array[7]         = 0x00;
 #if 1
-	SEGGER_RTT_printf(0, "%d -> %02X,%02X,%02X,%02X\n", master_val,
-													  master_gain_array[0],
-													  master_gain_array[1],
-													  master_gain_array[2],
-													  master_gain_array[3]);
+    SEGGER_RTT_printf(0, "%d -> %02X,%02X,%02X,%02X\n", master_val, master_gain_array[0], master_gain_array[1], master_gain_array[2], master_gain_array[3]);
+#endif
+    SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 8, master_gain_array);
+
+    uint8_t target_address_count[8] = {0x00, 0x00, 0x00, MOD_MASTERGAIN_ALG0_TARGET_ADDR - 1, 0x00, 0x00, 0x00, MOD_MASTERGAIN_COUNT};
+    SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address_count);
+}
+
+void send_master_gain_db(int master_db)
+{
+    double master_rate = pow(10.0, (double) master_db / 20.0);
+
+    uint8_t master_gain_array[8] = {0x00};
+    master_gain_array[0]         = ((uint32_t) (master_rate * pow(2, 23)) >> 24) & 0x000000FF;
+    master_gain_array[1]         = ((uint32_t) (master_rate * pow(2, 23)) >> 16) & 0x000000FF;
+    master_gain_array[2]         = ((uint32_t) (master_rate * pow(2, 23)) >> 8) & 0x000000FF;
+    master_gain_array[3]         = (uint32_t) (master_rate * pow(2, 23)) & 0x000000FF;
+    master_gain_array[4]         = 0x00;  // if_step
+    master_gain_array[5]         = 0x00;
+    master_gain_array[6]         = 0x80;
+    master_gain_array[7]         = 0x00;
+#if 1
+    SEGGER_RTT_printf(0, "%d -> %02X,%02X,%02X,%02X\n", master_db, master_gain_array[0], master_gain_array[1], master_gain_array[2], master_gain_array[3]);
 #endif
     SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_DATA_1, 8, master_gain_array);
 

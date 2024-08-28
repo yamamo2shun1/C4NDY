@@ -5168,7 +5168,7 @@
 	)
 	(wire
 		(pts
-			(xy 45.72 72.39) (xy 31.75 72.39)
+			(xy 41.91 72.39) (xy 31.75 72.39)
 		)
 		(stroke
 			(width 0)
@@ -6478,7 +6478,7 @@
 	)
 	(wire
 		(pts
-			(xy 45.72 53.34) (xy 45.72 72.39)
+			(xy 41.91 53.34) (xy 41.91 72.39)
 		)
 		(stroke
 			(width 0)
@@ -6488,7 +6488,7 @@
 	)
 	(wire
 		(pts
-			(xy 43.18 69.85) (xy 43.18 55.88)
+			(xy 39.37 69.85) (xy 39.37 55.88)
 		)
 		(stroke
 			(width 0)
@@ -7098,7 +7098,7 @@
 	)
 	(wire
 		(pts
-			(xy 43.18 69.85) (xy 31.75 69.85)
+			(xy 39.37 69.85) (xy 31.75 69.85)
 		)
 		(stroke
 			(width 0)
@@ -7298,7 +7298,7 @@
 	)
 	(wire
 		(pts
-			(xy 43.18 55.88) (xy 55.88 55.88)
+			(xy 39.37 55.88) (xy 55.88 55.88)
 		)
 		(stroke
 			(width 0)
@@ -7678,7 +7678,7 @@
 	)
 	(wire
 		(pts
-			(xy 45.72 53.34) (xy 55.88 53.34)
+			(xy 41.91 53.34) (xy 55.88 53.34)
 		)
 		(stroke
 			(width 0)
@@ -8630,6 +8630,28 @@
 		(uuid "81a519dc-4295-4ef8-a2e5-eac69ccca410")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 158.3842 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "PA15"
+		(shape input)
+		(at 50.8 78.74 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "97eea18b-e653-4dc7-a80b-fb4e7ec906df")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 43.0372 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)

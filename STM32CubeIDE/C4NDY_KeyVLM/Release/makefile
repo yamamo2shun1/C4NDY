@@ -10,13 +10,14 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include tinyusb/src/typec/subdir.mk
--include tinyusb/src/portable/wch/subdir.mk
+-include tinyusb/src/portable/wch/ch32v307/subdir.mk
 -include tinyusb/src/portable/valentyusb/eptri/subdir.mk
 -include tinyusb/src/portable/ti/msp430x5xx/subdir.mk
 -include tinyusb/src/portable/template/subdir.mk
 -include tinyusb/src/portable/synopsys/dwc2/subdir.mk
 -include tinyusb/src/portable/sunxi/subdir.mk
 -include tinyusb/src/portable/st/typec/subdir.mk
+-include tinyusb/src/portable/st/synopsys/subdir.mk
 -include tinyusb/src/portable/st/stm32_fsdev/subdir.mk
 -include tinyusb/src/portable/sony/cxd56/subdir.mk
 -include tinyusb/src/portable/renesas/rusb2/subdir.mk
@@ -43,7 +44,6 @@ RM := rm -rf
 -include tinyusb/src/portable/chipidea/ci_hs/subdir.mk
 -include tinyusb/src/portable/chipidea/ci_fs/subdir.mk
 -include tinyusb/src/portable/bridgetek/ft9xx/subdir.mk
--include tinyusb/src/portable/analog/max3421/subdir.mk
 -include tinyusb/src/host/subdir.mk
 -include tinyusb/src/device/subdir.mk
 -include tinyusb/src/common/subdir.mk
@@ -85,34 +85,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := C4NDY_STK
+BUILD_ARTIFACT_NAME := C4NDY_KeyVLM
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-C4NDY_STK.elf \
+C4NDY_KeyVLM.elf \
 
 MAP_FILES += \
-C4NDY_STK.map \
+C4NDY_KeyVLM.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-C4NDY_STK.list \
+C4NDY_KeyVLM.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: C4NDY_STK.elf secondary-outputs
+main-build: C4NDY_KeyVLM.elf secondary-outputs
 
 # Tool invocations
-C4NDY_STK.elf C4NDY_STK.map: $(OBJS) $(USER_OBJS) C:\Users\shun\C4NDY\STM32CubeIDE\C4NDY_STK\STM32G491CETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "C4NDY_STK.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\shun\C4NDY\STM32CubeIDE\C4NDY_STK\STM32G491CETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="C4NDY_STK.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+C4NDY_KeyVLM.elf C4NDY_KeyVLM.map: $(OBJS) $(USER_OBJS) C:\Users\shun\C4NDY\STM32CubeIDE\C4NDY_KeyVLM\STM32G491CETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "C4NDY_KeyVLM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\shun\C4NDY\STM32CubeIDE\C4NDY_KeyVLM\STM32G491CETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="C4NDY_KeyVLM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -121,14 +121,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-C4NDY_STK.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "C4NDY_STK.list"
+C4NDY_KeyVLM.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "C4NDY_KeyVLM.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) C4NDY_STK.elf C4NDY_STK.list C4NDY_STK.map default.size.stdout
+	-$(RM) C4NDY_KeyVLM.elf C4NDY_KeyVLM.list C4NDY_KeyVLM.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

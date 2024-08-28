@@ -424,18 +424,18 @@ Parameter Data :
 Cell Name         = master gain
 Parameter Name    = SWGain1940DBAlg2target
 Parameter Address = 46
-Parameter Value   = 0.969632506370544
+Parameter Value   = 1
 Parameter Data :
-0x00 ,	0x7C ,	0x1C ,	0xEB ,	
+0x00 ,	0x80 ,	0x00 ,	0x00 ,	
 
 
 
 Cell Name         = master gain
 Parameter Name    = SWGain1940DBAlg2step
 Parameter Address = 47
-Parameter Value   = 0.00390625
+Parameter Value   = 0.000244140625
 Parameter Data :
-0x00 ,	0x00 ,	0x80 ,	0x00 ,	
+0x00 ,	0x00 ,	0x08 ,	0x00 ,	
 
 
 
@@ -478,9 +478,9 @@ Parameter Data :
 Cell Name         = Single 1
 Parameter Name    = targetGainS200AlgGrowDBStep1
 Parameter Address = 11
-Parameter Value   = 0.630957365036011
+Parameter Value   = 1
 Parameter Data :
-0x00, 0x50, 0xC3, 0x36, 
+0x00, 0x80, 0x00, 0x00, 
 
 
 
@@ -515,7 +515,7 @@ See also ADAU1761.hex file
 0x00 , 	0x40 , 	0x00 , 	0x00 , 	
 0x00 , 	0x40 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x10 , 	0x00 , 	
-0x00 , 	0x50 , 	0xC3 , 	0x36 , 	
+0x00 , 	0x80 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x80 , 	0x00 , 	0x00 , 	
 0x00 , 	0x84 , 	0xBF , 	0xBA , 	
@@ -550,8 +550,8 @@ See also ADAU1761.hex file
 0x00 , 	0x01 , 	0x00 , 	0x00 , 	
 0x00 , 	0x40 , 	0x00 , 	0x00 , 	
 0x00 , 	0x40 , 	0x00 , 	0x00 , 	
-0x00 , 	0x7C , 	0x1C , 	0xEB , 	
-0x00 , 	0x00 , 	0x80 , 	0x00 , 	
+0x00 , 	0x80 , 	0x00 , 	0x00 , 	
+0x00 , 	0x00 , 	0x08 , 	0x00 , 	
 
 Parameter data for: IC 1 (Binary format starting at parameter address 0)
 00000000	00000000	00010000	00000000	
@@ -565,7 +565,7 @@ Parameter data for: IC 1 (Binary format starting at parameter address 0)
 00000000	01000000	00000000	00000000	
 00000000	01000000	00000000	00000000	
 00000000	00000000	00010000	00000000	
-00000000	01010000	11000011	00110110	
+00000000	10000000	00000000	00000000	
 00000000	00000000	00000000	00000000	
 00000000	10000000	00000000	00000000	
 00000000	10000100	10111111	10111010	
@@ -600,6 +600,6 @@ Parameter data for: IC 1 (Binary format starting at parameter address 0)
 00000000	00000001	00000000	00000000	
 00000000	01000000	00000000	00000000	
 00000000	01000000	00000000	00000000	
-00000000	01111100	00011100	11101011	
-00000000	00000000	10000000	00000000	
+00000000	10000000	00000000	00000000	
+00000000	00000000	00001000	00000000	
 

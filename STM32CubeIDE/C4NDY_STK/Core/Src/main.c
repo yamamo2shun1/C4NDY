@@ -35,6 +35,7 @@
 
 #include "usb_descriptors.h"  // IWYU pragma: keep
 
+#include "icled.h"
 #include "keyboard.h"
 #include "audio_control.h"
 
@@ -175,8 +176,28 @@ void setBootDfuFlag(bool is_boot_dfu)
             SEGGER_RTT_printf(0, "[");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                currentUpperKeyMap[k][i][j] = read_flash_data(2 + (MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
+                currentUpperKeyMap[k][i][j] = read_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
                 SEGGER_RTT_printf(0, "%02X ", currentUpperKeyMap[k][i][j]);
+            }
+            SEGGER_RTT_printf(0, "]\n");
+        }
+        SEGGER_RTT_printf(0, "]\n\n");
+    }
+
+    uint64_t currentStickKeyMap[2][2][4] = {0x0};
+
+    SEGGER_RTT_printf(0, "current Stick KeyMap\n");
+    for (int k = 0; k < 2; k++)
+    {
+        SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
+        SEGGER_RTT_printf(0, "[\n");
+        for (int i = 0; i < 2; i++)
+        {
+            SEGGER_RTT_printf(0, "[");
+            for (int j = 0; j < 4; j++)
+            {
+                currentStickKeyMap[k][i][j] = read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j);
+                SEGGER_RTT_printf(0, "%02X ", currentStickKeyMap[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
         }
@@ -188,7 +209,7 @@ void setBootDfuFlag(bool is_boot_dfu)
     write_flash_data(0, getLinePhonoSW());
     if (is_boot_dfu)
     {
-        write_flash_data(1, 1);
+        write_flash_data(1, 2);
     }
     else
     {
@@ -223,8 +244,26 @@ void setBootDfuFlag(bool is_boot_dfu)
             SEGGER_RTT_printf(0, "[");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                write_flash_data(2 + (MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentUpperKeyMap[k][i][j]);
+                write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentUpperKeyMap[k][i][j]);
                 SEGGER_RTT_printf(0, "%02X ", currentUpperKeyMap[k][i][j]);
+            }
+            SEGGER_RTT_printf(0, "]\n");
+        }
+        SEGGER_RTT_printf(0, "]\n\n");
+    }
+
+    SEGGER_RTT_printf(0, "reload Stick KeyMap\n");
+    for (int k = 0; k < 2; k++)
+    {
+        SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
+        SEGGER_RTT_printf(0, "[\n");
+        for (int i = 0; i < 2; i++)
+        {
+            SEGGER_RTT_printf(0, "[");
+            for (int j = 0; j < 4; j++)
+            {
+                write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j, currentStickKeyMap[k][i][j]);
+                SEGGER_RTT_printf(0, "%02X ", currentStickKeyMap[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
         }
@@ -271,7 +310,9 @@ int main(void)
     MX_USB_PCD_Init();
     MX_TIM6_Init();
     MX_ADC2_Init();
+    MX_TIM8_Init();
     /* USER CODE BEGIN 2 */
+
     HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
 
     // SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", HAL_GetDEVID(), HAL_GetDEVID());
@@ -347,14 +388,7 @@ int main(void)
             SEGGER_RTT_printf(0, "[ ");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                if (k == 0)
-                {
-                    setKeyCode(0, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                }
-                else
-                {
-                    setKeyCode(1, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                }
+                setKeyCode(k, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
                 SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
             }
             SEGGER_RTT_printf(0, "]\n");
@@ -370,14 +404,7 @@ int main(void)
             SEGGER_RTT_printf(0, "[ ");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                if (k == 0)
-                {
-                    setUpperKeyCode(0, i, j, read_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                }
-                else
-                {
-                    setUpperKeyCode(1, i, j, read_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                }
+                setUpperKeyCode(k, i, j, read_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
                 SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
             }
             SEGGER_RTT_printf(0, "]\n");
@@ -393,20 +420,15 @@ int main(void)
             SEGGER_RTT_printf(0, "[ ");
             for (int j = 0; j < 4; j++)
             {
-                if (k == 0)
-                {
-                    setStickKeyCode(0, i, j, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
-                }
-                else
-                {
-                    setStickKeyCode(1, i, j, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
-                }
+                setStickKeyCode(k, i, j, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
                 SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
             }
             SEGGER_RTT_printf(0, "]\n");
         }
     }
     HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
+
+    setAllLedBuf(0xFE, 0x01, 0x9A);
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -419,6 +441,7 @@ int main(void)
 
         hid_keyscan_task();
 
+        led_control_task();
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
