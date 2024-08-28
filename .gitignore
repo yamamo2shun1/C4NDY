@@ -35,7 +35,7 @@ Debug
 
 ### VitePress
 docs/.vitepress/cache/
-docs/node_modules/
+node_modules/
 
 *.zip
 *.bak
