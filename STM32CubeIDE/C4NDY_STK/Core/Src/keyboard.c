@@ -30,6 +30,8 @@ uint8_t keymapID       = 0;
 bool isLinePhonoSWChanged = false;
 uint8_t linePhonoSW       = 0;
 
+bool isMasterGainChanged = false;
+
 bool isUpper = false;
 
 uint8_t countReturnNeutral = 0;
@@ -399,6 +401,10 @@ void clearKeys(uint8_t code)
     {
         isLinePhonoSWChanged = false;
     }
+    else if (code == SC_MGAIN_UP || code == SC_MGAIN_DOWN)
+    {
+        isMasterGainChanged = false;
+    }
     else if (code == SC_UPPER)
     {
         if (isUpper)
@@ -448,7 +454,7 @@ void clearKeys(uint8_t code)
 
 void setKeys(uint8_t code)
 {
-    static double master_gain = 1.0;
+    static int master_gain = 0;
 
     if (code == SC_LAYOUT)
     {
@@ -478,21 +484,31 @@ void setKeys(uint8_t code)
     }
     else if (code == SC_MGAIN_UP)
     {
-        master_gain += 0.01;
-        if (master_gain >= 1.0)
+        if (!isMasterGainChanged)
         {
-            master_gain = 1.0;
+            master_gain += 1;
+            if (master_gain >= 10)
+            {
+                master_gain = 10;
+            }
+            send_master_gain_db(master_gain);
+
+            isMasterGainChanged = true;
         }
-        send_master_gain2(master_gain);
     }
     else if (code == SC_MGAIN_DOWN)
     {
-        master_gain -= 0.01;
-        if (master_gain <= 0.0)
+        if (!isMasterGainChanged)
         {
-            master_gain = 0.0;
+            master_gain -= 1;
+            if (master_gain <= -60)
+            {
+                master_gain = -60;
+            }
+            send_master_gain_db(master_gain);
+
+            isMasterGainChanged = true;
         }
-        send_master_gain2(master_gain);
     }
     else if (code == SC_UPPER)
     {
