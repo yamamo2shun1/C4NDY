@@ -484,12 +484,12 @@ void setKeys(uint8_t code)
     }
     else if (code == SC_MGAIN_UP)
     {
-        if (!isMasterGainChanged)
+        if (!isMasterGainChanged && master_gain < MASTER_GAIN_MAX)
         {
             master_gain += 1;
-            if (master_gain >= 10)
+            if (master_gain >= MASTER_GAIN_MAX)
             {
-                master_gain = 10;
+                master_gain = MASTER_GAIN_MAX;
             }
             send_master_gain_db(master_gain);
 
@@ -498,12 +498,12 @@ void setKeys(uint8_t code)
     }
     else if (code == SC_MGAIN_DOWN)
     {
-        if (!isMasterGainChanged)
+        if (!isMasterGainChanged && master_gain > MASTER_GAIN_MIN)
         {
             master_gain -= 1;
-            if (master_gain <= -60)
+            if (master_gain <= MASTER_GAIN_MIN)
             {
-                master_gain = -60;
+                master_gain = MASTER_GAIN_MIN;
             }
             send_master_gain_db(master_gain);
 

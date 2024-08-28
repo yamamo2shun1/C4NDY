@@ -25,6 +25,9 @@
 #define SAI_RNG_BUF_SIZE 10240  // 20480
 #define SAI_BUF_SIZE     512
 
+#define MASTER_GAIN_MIN -60
+#define MASTER_GAIN_MAX 10
+
 // Speaker data size received in the last frame
 extern int spk_data_size;
 
