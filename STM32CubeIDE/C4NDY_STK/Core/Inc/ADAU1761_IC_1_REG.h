@@ -1,7 +1,7 @@
 /*
  * File:           C:\Users\shun\C4NDY\SigmaDSP\ADAU1761_IC_1_REG.h
  *
- * Created:        Wednesday, August 28, 2024 9:12:33 AM
+ * Created:        Wednesday, August 28, 2024 12:30:53 PM
  * Description:    ADAU1761:IC 1 control register definitions.
  *
  * This software is distributed in the hope that it will be useful,
@@ -33,7 +33,7 @@
 /* PLLCrlRegister  - Registers (IC 1) */
 #define REG_PLLCRLREGISTER_IC_1_ADDR              0x4002
 #define REG_PLLCRLREGISTER_IC_1_BYTE              6
-#define REG_PLLCRLREGISTER_IC_1_VALUE             0x000100002003
+#define REG_PLLCRLREGISTER_IC_1_VALUE             0x00FD000C2001
 
 /* MicCtrlRegister  - Registers (IC 1) */
 #define REG_MICCTRLREGISTER_IC_1_ADDR             0x4008
@@ -108,7 +108,7 @@
 /* Serail Port Control 1  - Registers (IC 1) */
 #define REG_SERAIL_PORT_CONTROL_1_IC_1_ADDR       0x4016
 #define REG_SERAIL_PORT_CONTROL_1_IC_1_BYTE       1
-#define REG_SERAIL_PORT_CONTROL_1_IC_1_VALUE      0x2
+#define REG_SERAIL_PORT_CONTROL_1_IC_1_VALUE      0x0
 
 /* Converter Ctrl 0  - Registers (IC 1) */
 #define REG_CONVERTER_CTRL_0_IC_1_ADDR            0x4017
@@ -248,7 +248,7 @@
 /* CRC Ideal_1  - Registers (IC 1) */
 #define REG_CRC_IDEAL_1_IC_1_ADDR                 0x40C0
 #define REG_CRC_IDEAL_1_IC_1_BYTE                 1
-#define REG_CRC_IDEAL_1_IC_1_VALUE                0x63
+#define REG_CRC_IDEAL_1_IC_1_VALUE                0x7F
 
 /* CRC Ideal_2  - Registers (IC 1) */
 #define REG_CRC_IDEAL_2_IC_1_ADDR                 0x40C1
@@ -258,7 +258,7 @@
 /* CRC Ideal_3  - Registers (IC 1) */
 #define REG_CRC_IDEAL_3_IC_1_ADDR                 0x40C2
 #define REG_CRC_IDEAL_3_IC_1_BYTE                 1
-#define REG_CRC_IDEAL_3_IC_1_VALUE                0x18
+#define REG_CRC_IDEAL_3_IC_1_VALUE                0x7F
 
 /* CRC Ideal_4  - Registers (IC 1) */
 #define REG_CRC_IDEAL_4_IC_1_ADDR                 0x40C3
@@ -400,12 +400,12 @@
 
 /* PLLCrlRegister (IC 1) */
 #define R2_PLL_POWER_DOWN_IC_1                    0x1    /* 1b	[0] */
-#define R2_PLL_LOCK_IC_1                          0x1    /* 1b	[1] */
+#define R2_PLL_LOCK_IC_1                          0x0    /* 0b	[1] */
 #define R2_PLL_TYPE_IC_1                          0x0    /* 0b	[8] */
 #define R2_INPUT_DIVIDER_IC_1                     0x0    /* 00b	[10:9] */
 #define R2_R_FEEDBACK_IC_1                        0x4    /* 0100b	[14:11] */
-#define R2_N_NUMERATOR_IC_1                       0x0000 /* 0000000000000000b	[31:16] */
-#define R2_M_DENOMINATOR_IC_1                     0x0001 /* 0000000000000001b	[47:32] */
+#define R2_N_NUMERATOR_IC_1                       0x000C /* 0000000000001100b	[31:16] */
+#define R2_M_DENOMINATOR_IC_1                     0x00FD /* 0000000011111101b	[47:32] */
 #define R2_PLL_POWER_DOWN_IC_1_MASK               0x1
 #define R2_PLL_POWER_DOWN_IC_1_SHIFT              0
 #define R2_PLL_LOCK_IC_1_MASK                     0x2
@@ -573,7 +573,7 @@
 #define R16_DITHER_ENABLE_IC_1_SHIFT              7
 
 /* Serail Port Control 1 (IC 1) */
-#define R17_DATA_DELAY_FROM_LRCLK_IC_1            0x2    /* 10b	[1:0] */
+#define R17_DATA_DELAY_FROM_LRCLK_IC_1            0x0    /* 00b	[1:0] */
 #define R17_SP_CTRL1_MSB_POSITION_IC_1            0x0    /* 0b	[2] */
 #define R17_SP_CTRL1_DAC_CHAN_POSITION_IC_1       0x0    /* 0b	[3] */
 #define R17_SP_CTRL1_ADC_CHAN_POSITION_IC_1       0x0    /* 0b	[4] */
@@ -875,7 +875,7 @@
 #define R44_DEJITTER_IC_1_SHIFT                   0
 
 /* CRC Ideal_1 (IC 1) */
-#define R45_CRC_IDEAL_1_IC_1                      0x63   /* 01100011b	[7:0] */
+#define R45_CRC_IDEAL_1_IC_1                      0x7F   /* 01111111b	[7:0] */
 #define R45_CRC_IDEAL_1_IC_1_MASK                 0xFF
 #define R45_CRC_IDEAL_1_IC_1_SHIFT                0
 
@@ -885,7 +885,7 @@
 #define R46_CRC_IDEAL_2_IC_1_SHIFT                0
 
 /* CRC Ideal_3 (IC 1) */
-#define R47_CRC_IDEAL_3_IC_1                      0x18   /* 00011000b	[7:0] */
+#define R47_CRC_IDEAL_3_IC_1                      0x7F   /* 01111111b	[7:0] */
 #define R47_CRC_IDEAL_3_IC_1_MASK                 0xFF
 #define R47_CRC_IDEAL_3_IC_1_SHIFT                0
 
