@@ -4,6 +4,7 @@ import{
 
     // https://vitepress.dev/reference/site-config
     export default defineConfig({
+        base: '/C4NDY/docs/',
         title: "C4NDY KeyVLM / STK",
         description: "C4NDY Project Site",
         themeConfig: {
