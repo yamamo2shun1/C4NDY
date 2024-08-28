@@ -478,9 +478,9 @@ Parameter Data :
 Cell Name         = Single 1
 Parameter Name    = targetGainS200AlgGrowDBStep1
 Parameter Address = 12
-Parameter Value   = 0.630957365036011
+Parameter Value   = 1
 Parameter Data :
-0x00, 0x50, 0xC3, 0x36, 
+0x00, 0x80, 0x00, 0x00, 
 
 
 
@@ -534,7 +534,7 @@ See also ADAU1761.hex file
 0x00 , 	0x40 , 	0x00 , 	0x00 , 	
 0x00 , 	0x80 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x10 , 	0x00 , 	
-0x00 , 	0x50 , 	0xC3 , 	0x36 , 	
+0x00 , 	0x80 , 	0x00 , 	0x00 , 	
 0x00 , 	0x00 , 	0x00 , 	0x00 , 	
 0x00 , 	0x80 , 	0x00 , 	0x00 , 	
 0x00 , 	0x84 , 	0xBF , 	0xBA , 	
@@ -586,7 +586,7 @@ Parameter data for: IC 1 (Binary format starting at parameter address 0)
 00000000	01000000	00000000	00000000	
 00000000	10000000	00000000	00000000	
 00000000	00000000	00010000	00000000	
-00000000	01010000	11000011	00110110	
+00000000	10000000	00000000	00000000	
 00000000	00000000	00000000	00000000	
 00000000	10000000	00000000	00000000	
 00000000	10000100	10111111	10111010	
