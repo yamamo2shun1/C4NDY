@@ -25,6 +25,9 @@
 #define SAI_RNG_BUF_SIZE 10240  // 20480
 #define SAI_BUF_SIZE     512
 
+#define MASTER_GAIN_MIN -60
+#define MASTER_GAIN_MAX 10
+
 // Speaker data size received in the last frame
 extern int spk_data_size;
 
@@ -42,7 +45,7 @@ void copybuf_sai2codec(void);
 
 void send_xfade(uint16_t fader_val);
 void send_master_gain(uint16_t master_val);
-void send_master_gain2(double master_rate);
+void send_master_gain_db(int master_db);
 void send_switch_to_linein(void);
 void send_switch_to_phonoin(void);
 

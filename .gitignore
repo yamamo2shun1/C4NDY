@@ -5,51 +5,37 @@ tmp/
 jlcpcb/
 plasticity/
 production/
+KiCad/KVL_direct/
 
-*.zip
+### Plasticity
+3Dmodel/STK_enclosure_all3d.plasticity
+3Dmodel/STK_left_side_panel_all3d.plasticity
+*.gbr
+*.drl
+*.gbrjob
+*.idx
+*.obj
+*.stp
+*.step
 
 ### STM32CubeIDE
 .metadata
 .settings
 Debug
-
+*.elf
 *.swp
 *.launch
-
-KiCad/KVL_direct/
-
-*.bak
-
-*.gbr
-
-*.drl
-
-*.gbrjob
-
 *.o
-
 *.su
-
 *.d
-
+*.mk
+*.list
+*.map
 *.cyclo
 
-*.idx
+### VitePress
+docs/.vitepress/cache/
+node_modules/
 
-*.mk
-
-*.list
-
-*.map
-
-*.obj
-
-*.stp
-
-*.step
-
-3Dmodel/STK_enclosure_all3d.plasticity
-
-3Dmodel/STK_left_side_panel_all3d.plasticity
-
-*.elf
+*.zip
+*.bak
