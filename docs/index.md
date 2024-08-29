@@ -23,12 +23,15 @@ features:
       src: /images/keyvlm.jpg
       width: 560px
     title: C4NDY KeyVLM
-    details: 65-keys Ortholinear Keyboard with Audio I/O.
+    details: 65-Key Ortholinear Layout and Audio I/O(Phono/Line in & HP out).
+    link: https://booth.pm/ja/items/5785829
+    linkText: buy (Japanese)
+    rel: external
   - icon:
       src: /images/stk.jpg
       width: 560px
     title: C4NDY STK
-    details: 37-keys Ortholinear Keyboard with 2-JoySticks and Audio I/O.
+    details: 37-Key Ortholinear Layout, 2-JoySticks and Audio I/O(Phono/Line in & HP out).
 #  - title: Feature C
 #    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
