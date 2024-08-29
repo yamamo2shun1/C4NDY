@@ -581,6 +581,12 @@ void controlJoySticks()
                 SEGGER_RTT_printf(0, "%d:up (%d)\n", i, (int) theta);
                 currentStk[i][V] = -1;
             }
+            else if (theta >= 135 - JOYSTICK_ON_ANGLE && theta < 135 + JOYSTICK_ON_ANGLE)
+            {
+                SEGGER_RTT_printf(0, "%d:up left (%d)\n", i, (int) theta);
+                currentStk[i][H] = -1;
+                currentStk[i][V] = -1;
+            }
             else if (theta >= -90 - JOYSTICK_ON_ANGLE && theta < -90 + JOYSTICK_ON_ANGLE)
             {
                 SEGGER_RTT_printf(0, "%d:down (%d)\n", i, (int) theta);
@@ -611,11 +617,22 @@ void controlJoySticks()
         {
             SEGGER_RTT_printf(0, "currentStk[%d][H] = %d\n", i, currentStk[i][H]);
             SEGGER_RTT_printf(0, "currentStk[%d][V] = %d\n", i, currentStk[i][V]);
+
+            if (currentStk[i][H] == -1 && currentStk[i][H] == -1)
+            {
+                setKeys(SC_LSHIFT);
+            }
         }
         else
         {
             for (int j = 0; j < JOYSTICK_AXIS; j++)
             {
+                if ((currentStk[i][H] == 0 && currentStk[i][V] == 0) && (prevStk[i][H] == -1 && prevStk[i][V] == -1))
+                {
+                    clearKeys(SC_LSHIFT);
+                    resetKeys();
+                    countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
+                }
                 if (currentStk[i][j] != prevStk[i][j])
                 {
                     SEGGER_RTT_printf(0, "currentStk[%d][%d] = %d (%d, %d, %d, %d)\n", i, j, currentStk[i][j], pot_value[1], pot_value[2], pot_value[3], pot_value[4]);
