@@ -7,7 +7,7 @@ hero:
   text: "Ortholinear Keyboard connectable a Turntable."
   tagline: The UAC and HID composite device project based on STM32G491.
   image:
-    src: ./c4ndy-logo.png
+    src: /images/c4ndy-logo.png
     alt: logo
   actions:
     - theme: brand
