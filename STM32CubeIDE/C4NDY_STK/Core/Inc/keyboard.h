@@ -115,8 +115,11 @@
 #define H 0
 #define V 1
 
+#define JOYSTICK_NUMS 2
+#define JOYSTICK_AXIS 2
+
 #define JOYSTICK_CENTER       2048
-#define JOYSTICK_ON_THRESHOLD 1500
+#define JOYSTICK_ON_THRESHOLD 1200
 
 #define MAX_LONG_PRESS_COUNT 500
 
