@@ -7,7 +7,8 @@ hero:
   text: "Ortholinear Keyboard connectable a Turntable."
   tagline: The UAC and HID composite device project based on STM32G491.
   image:
-    src: /images/c4ndy-logo.png
+    dark: /images/c4ndy-dark.png
+    light: /images/c4ndy-light.png
     alt: logo
   actions:
     - theme: brand
@@ -17,11 +18,17 @@ hero:
       text: View on GitHub
       link: https://github.com/yamamo2shun1/C4NDY 
 
-#features:
-#  - title: Feature A
-#    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-#  - title: Feature B
-#    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+features:
+  - icon:
+      src: /images/keyvlm.jpg
+      width: 560px
+    title: C4NDY KeyVLM
+    details: 65-keys Ortholinear Keyboard with Audio I/O.
+  - icon:
+      src: /images/stk.jpg
+      width: 560px
+    title: C4NDY STK
+    details: 37-keys Ortholinear Keyboard with 2-JoySticks and Audio I/O.
 #  - title: Feature C
 #    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
