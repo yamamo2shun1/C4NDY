@@ -1,6 +1,6 @@
 # Example Layout
 ## KeyVLM
-![layout-keyvlm](images/keymap-layout-KeyVLM.png)
+![layout-keyvlm](/images/keymap-layout-KeyVLM.png)
 
 ## STK
-![layout-stk](images/keymap-layout-STK.png)
+![layout-stk](/images/keymap-layout-STK.png)
