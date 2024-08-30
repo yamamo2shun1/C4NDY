@@ -23,6 +23,7 @@ import{
                         {text: 'Side Panel I/O', link: '/side-panel'},
                         {text: 'Example Layout', link: '/example-layout'},
                         {text: 'How to remap', link: '/keymap-configurator'},
+                        {text: 'Firmware Update', link: '/firmware-update'},
                     ]
                 }
             ],
