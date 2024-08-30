@@ -4,7 +4,7 @@ import{
 
     // https://vitepress.dev/reference/site-config
     export default defineConfig({
-        base: '/C4NDY/',
+        // base: '/C4NDY/',
         title: "C4NDY KeyVLM / STK",
         description: "C4NDY Project Site",
         themeConfig: {
@@ -19,8 +19,11 @@ import{
                     text: 'Tutorial',
                     items: [
                         {text: 'Features', link: '/features'},
+                        {text: 'Specifications', link: '/specifications'},
                         {text: 'Side Panel I/O', link: '/side-panel'},
                         {text: 'Example Layout', link: '/example-layout'},
+                        {text: 'How to remap', link: '/keymap-configurator'},
+                        {text: 'Firmware Update', link: '/firmware-update'},
                     ]
                 }
             ],

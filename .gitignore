@@ -39,3 +39,9 @@ node_modules/
 
 *.zip
 *.bak
+
+*.psd
+
+*.jpg
+
+*.ai
