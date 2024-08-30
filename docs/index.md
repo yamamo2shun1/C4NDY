@@ -20,7 +20,7 @@ hero:
 
 features:
   - icon:
-      src: /images/keyvlm.jpg
+      src: /images/keyvlm.png
       width: 560px
     title: C4NDY KeyVLM
     details: 65-Key Ortholinear Layout and Audio I/O(Phono/Line in & HP out).
@@ -28,7 +28,7 @@ features:
     linkText: buy (Japanese)
     rel: external
   - icon:
-      src: /images/stk.jpg
+      src: /images/stk.png
       width: 560px
     title: C4NDY STK
     details: 37-Key Ortholinear Layout, 2-JoySticks and Audio I/O(Phono/Line in & HP out).
