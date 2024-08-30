@@ -602,6 +602,11 @@ void controlJoySticks()
                 SEGGER_RTT_printf(0, "%d:right (%d)\n", i, (int) theta);
                 currentStk[i][H] = 1;
             }
+            else
+            {
+                currentStk[i][H] = 0;
+                currentStk[i][V] = 0;
+            }
         }
         else
         {
