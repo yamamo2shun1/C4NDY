@@ -17,7 +17,7 @@
 
 #define LED_INTENSITY_RATE 0.5
 
-#define LED_NUMS 4
+#define LED_NUMS 34
 
 #define GRADATION_RATE_STEP 0.2
 #define GRADATION_COUNT_MAX 10
