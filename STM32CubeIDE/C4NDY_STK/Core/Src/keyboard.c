@@ -694,20 +694,19 @@ void setKeys(uint8_t code)
             {
                 keyboardHID.key[k] = code;
 
-                switch (code)
+                if (code == keymaps_stk[keymapID][0][0])  // L JoyStick -> Tilt left
                 {
-                // case SC_ENTER:
-                case SC_SPACE:
-                    setEnterFlag();
-                    break;
-                case SC_BS:
                     setBackspaceFlag();
-                    break;
-                // case SC_SPACE:
-                case SC_HENKAN:
-                    setSpaceFlag();
-                    break;
                 }
+                else if (code == keymaps_stk[keymapID][1][1])  // R JoyStick -> Tilt right
+                {
+                    setSpaceFlag();
+                }
+                else if (code == keymaps_stk[keymapID][1][2])  // R JoyStick -> Tilt down
+                {
+                    setEnterFlag();
+                }
+
                 break;
             }
         }
