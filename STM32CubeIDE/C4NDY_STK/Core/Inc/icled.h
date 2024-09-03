@@ -24,6 +24,18 @@
 
 #define DMA_BUF_SIZE (LED_NUMS * WL_LED_BIT_LEN + 1)
 
+typedef struct
+{
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+} RGB_Color_t;
+
+extern RGB_Color_t rgb_normal;
+extern RGB_Color_t rgb_upper;
+extern RGB_Color_t rgb_shift;
+extern RGB_Color_t rgb_blank;
+
 void setLedBuf(uint8_t index, uint8_t red, uint8_t green, uint8_t blue);
 void setAllLedBuf(uint8_t red, uint8_t green, uint8_t blue);
 void renew(void);

@@ -428,7 +428,7 @@ int main(void)
     }
     HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
 
-    setAllLedBuf(0xFE, 0x01, 0x9A);
+    setAllLedBuf(rgb_normal.r, rgb_normal.g, rgb_normal.b);
     /* USER CODE END 2 */
 
     /* Infinite loop */

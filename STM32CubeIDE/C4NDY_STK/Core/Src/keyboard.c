@@ -518,7 +518,65 @@ void setKeys(uint8_t code)
         {
             isUpper = true;
 
-            setAllLedBuf(0xFF, 0xFF, 0xFF);
+            for (int j = 0; j < MATRIX_ROWS; j++)
+            {
+                for (int i = 0; i < MATRIX_COLUMNS; i++)
+                {
+                    int index = MATRIX_COLUMNS * j + i;
+                    if (index < 30)
+                    {
+                        if ((((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
+                             ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01)))
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                            }
+                            else
+                            {
+                                setLedBuf(index, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                            }
+                        }
+                        else
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index, rgb_upper.r, rgb_upper.g, rgb_upper.b);
+                            }
+                            else
+                            {
+                                setLedBuf(index, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                            }
+                        }
+                    }
+                    else if (index >= 36)
+                    {
+                        if ((((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
+                             ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01)))
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index - 6, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                            }
+                            else
+                            {
+                                setLedBuf(index - 6, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                            }
+                        }
+                        else
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index - 6, rgb_upper.r, rgb_upper.g, rgb_upper.b);
+                            }
+                            else
+                            {
+                                setLedBuf(index - 6, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
@@ -528,7 +586,51 @@ void setKeys(uint8_t code)
         {
             if (code == SC_LSHIFT || code == SC_RSHIFT)
             {
-                setAllLedBuf(0x67, 0x10, 0x70);
+                for (int j = 0; j < MATRIX_ROWS; j++)
+                {
+                    for (int i = 0; i < MATRIX_COLUMNS; i++)
+                    {
+                        int index = MATRIX_COLUMNS * j + i;
+                        if (index < 30)
+                        {
+                            if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                            }
+                            else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                            }
+                            else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                            }
+                            else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                            }
+                        }
+                        else if (index >= 36)
+                        {
+                            if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index - 6, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                            }
+                            else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index - 6, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                            }
+                            else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index - 6, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                            }
+                            else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index - 6, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                            }
+                        }
+                    }
+                }
             }
         }
 

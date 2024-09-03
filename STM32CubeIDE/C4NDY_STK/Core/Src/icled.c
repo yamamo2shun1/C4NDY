@@ -9,6 +9,11 @@
 #include "icled.h"
 #include "tim.h"
 
+RGB_Color_t rgb_normal = {0xFE, 0x01, 0x9A};
+RGB_Color_t rgb_upper  = {0x00, 0xFF, 0xFF};
+RGB_Color_t rgb_shift  = {0xFF, 0xFF, 0xFF};
+RGB_Color_t rgb_blank  = {0x00, 0x00, 0x00};
+
 uint8_t grb_prev[LED_NUMS][3]    = {0};
 uint8_t grb_current[LED_NUMS][3] = {0};
 uint8_t grb[LED_NUMS][3]         = {0};
