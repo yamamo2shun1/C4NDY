@@ -35,6 +35,7 @@ uint8_t linePhonoSW       = 0;
 bool isMasterGainChanged = false;
 
 bool isUpper = false;
+bool isShift = false;
 
 uint8_t countReturnNeutral = 0;
 #define MAX_COUNT_RETURN_NEUTRAL 60
@@ -416,11 +417,11 @@ void clearKeys(uint8_t code)
             if (((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
                 ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01))
             {
-                setAllLedBuf(0x67, 0x10, 0x70);
+                setAllLedBuf(rgb_shift.r, rgb_shift.g, rgb_shift.b);
             }
             else
             {
-                setAllLedBuf(0xFE, 0x01, 0x9A);
+                setAllLedBuf(rgb_normal.r, rgb_normal.g, rgb_normal.b);
             }
         }
     }
@@ -430,13 +431,43 @@ void clearKeys(uint8_t code)
 
         if (code == SC_LSHIFT || code == SC_RSHIFT)
         {
+            isShift = false;
+
             if (isUpper)
             {
-                setAllLedBuf(0xFF, 0xFF, 0xFF);
+                for (int j = 0; j < MATRIX_ROWS; j++)
+                {
+                    for (int i = 0; i < MATRIX_COLUMNS; i++)
+                    {
+                        int index = MATRIX_COLUMNS * j + i;
+                        if (index < 30)
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index, rgb_upper.r, rgb_upper.g, rgb_upper.b);
+                            }
+                            else if (getUpperKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                            }
+                        }
+                        else if (index >= 36)
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index - 6, rgb_upper.r, rgb_upper.g, rgb_upper.b);
+                            }
+                            else if (getUpperKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index - 6, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                            }
+                        }
+                    }
+                }
             }
             else
             {
-                setAllLedBuf(0xFE, 0x01, 0x9A);
+                setAllLedBuf(rgb_normal.r, rgb_normal.g, rgb_normal.b);
             }
         }
     }
@@ -586,6 +617,8 @@ void setKeys(uint8_t code)
         {
             if (code == SC_LSHIFT || code == SC_RSHIFT)
             {
+                isShift = true;
+
                 for (int j = 0; j < MATRIX_ROWS; j++)
                 {
                     for (int i = 0; i < MATRIX_COLUMNS; i++)
@@ -660,6 +693,20 @@ void setKeys(uint8_t code)
             else if (keyboardHID.key[k] == 0x00)
             {
                 keyboardHID.key[k] = code;
+
+                switch (code)
+                {
+                case SC_ENTER:
+                    setEnterFlag();
+                    break;
+                case SC_BS:
+                    setBackspaceFlag();
+                    break;
+                case SC_SPACE:
+                case SC_HENKAN:
+                    setSpaceFlag();
+                    break;
+                }
                 break;
             }
         }
@@ -760,6 +807,16 @@ void controlJoySticks()
             }
         }
     }
+}
+
+bool isUpperPressed(void)
+{
+    return isUpper;
+}
+
+bool isShiftPressed(void)
+{
+    return isShift;
 }
 
 void hid_keyscan_task(void)

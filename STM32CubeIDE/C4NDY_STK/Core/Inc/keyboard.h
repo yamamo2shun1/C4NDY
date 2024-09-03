@@ -137,6 +137,8 @@ void setStickKeyCode(uint8_t keymapId, uint8_t id, uint8_t direction, uint8_t co
 void resetKeys(void);
 void clearKeys(uint8_t code);
 void setKeys(uint8_t code);
+bool isUpperPressed(void);
+bool isShiftPressed(void);
 void hid_keyscan_task(void);
 
 #endif /* INC_KEYBOARD_H_ */
