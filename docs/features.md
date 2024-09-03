@@ -2,7 +2,7 @@
 
 The C4NDY KeyVLM/STK is a USB keyboard with a Ortholinear layout. It's greatest feature is that it can be connected to a turntable, allowing you to mix the music you are playing on your computer or smartphone(USB host device) with the music on your vinyl records.
 
-Furthermore, C4NDY KeyVLM is open source hardware under the [MIT license](https://github.com/yamamo2shun1/C4NDY/blob/main/LICENSE.md). The [source codes](https://github.com/yamamo2shun1/C4NDY/tree/main/STM32CubeIDE) of the firmware as well as the [circuit board schematics](https://github.com/yamamo2shun1/C4NDY/tree/main/KiCad) and [3D model data](https://github.com/yamamo2shun1/C4NDY/tree/main/3Dmodel) of the enclosure are available to the public.
+Furthermore, C4NDY KeyVLM/STK is open source hardware under the [MIT license](https://github.com/yamamo2shun1/C4NDY/blob/main/LICENSE.md). The [source codes](https://github.com/yamamo2shun1/C4NDY/tree/main/STM32CubeIDE) of the firmware as well as the [circuit board schematics](https://github.com/yamamo2shun1/C4NDY/tree/main/KiCad) and [3D model data](https://github.com/yamamo2shun1/C4NDY/tree/main/3Dmodel) of the enclosure are available to the public.
 
 ## KeyVLM
 
