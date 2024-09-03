@@ -7,6 +7,7 @@
 
 #include "main.h"
 #include "icled.h"
+#include "keyboard.h"
 #include "tim.h"
 
 RGB_Color_t rgb_normal = {0xEC, 0x80, 0x8C};
@@ -124,6 +125,25 @@ void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color1
     }
 }
 
+void setColumn3ColorLedBuf(uint8_t row, uint16_t column0, uint16_t column1, RGB_Color_t* rgb_color2, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color0)
+{
+    for (int i = 0; i < 10; i++)
+    {
+        if ((column0 >> (9 - i)) & 0x01)
+        {
+            setLedBuf(i + row * 10, rgb_color1);
+        }
+        else if ((column1 >> (9 - i)) & 0x01)
+        {
+            setLedBuf(i + row * 10, rgb_color2);
+        }
+        else
+        {
+            setLedBuf(i + row * 10, rgb_color0);
+        }
+    }
+}
+
 void gradation(uint8_t index, double rate)
 {
     for (int k = 0; k < RGB; k++)
@@ -225,54 +245,54 @@ void led_control_task(void)
                     switch (stepSpace)
                     {
                     case 0:
-                        setColumn2ColorLedBuf(0, 0b1000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b1000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 1:
-                        setColumn2ColorLedBuf(0, 0b0100000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b1000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b1000000000, 0b0100000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b1000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 2:
-                        setColumn2ColorLedBuf(0, 0b0010000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0100000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b1000000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0100000000, 0b0010000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b1000000000, 0b0100000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b1000000000, 0b1000000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 3:
-                        setColumn2ColorLedBuf(0, 0b0001000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0010000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b1100000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0010000000, 0b0001000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0100000000, 0b0010000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b1000000000, 0b1100000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 4:
-                        setColumn2ColorLedBuf(0, 0b0000100000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0001000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b1110000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0001000000, 0b0000100000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0010000000, 0b0001000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b1100000000, 0b1110000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 5:
-                        setColumn2ColorLedBuf(0, 0b0000010000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000010000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000100000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000100000, 0b0000010000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0001000000, 0b0000010000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b1110000000, 0b0001100000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 6:
-                        setColumn2ColorLedBuf(0, 0b0000001000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000001000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000001000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000010000, 0b0000001000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000010000, 0b0000001000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000100000, 0b0000011000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 7:
-                        setColumn2ColorLedBuf(0, 0b0000000100, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000000100, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000100, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000001000, 0b0000000100, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000001000, 0b0000000100, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000011000, 0b0000000100, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 8:
-                        setColumn2ColorLedBuf(0, 0b0000000010, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000000010, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000010, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000000100, 0b0000000010, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000100, 0b0000000010, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000100, 0b0000000010, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 9:
-                        setColumn2ColorLedBuf(0, 0b0000000001, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000000001, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000001, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000000010, 0b0000000001, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000010, 0b0000000001, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000010, 0b0000000001, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     }
                 }
@@ -281,54 +301,54 @@ void led_control_task(void)
                     switch (stepSpace)
                     {
                     case 0:
-                        setColumn2ColorLedBuf(0, 0b1000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b1000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 1:
-                        setColumn2ColorLedBuf(0, 0b0100000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b1000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b1000000000, 0b0100000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b1000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 2:
-                        setColumn2ColorLedBuf(0, 0b0010000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0100000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b1000000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0100000000, 0b0010000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b1000000000, 0b0100000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b1000000000, 0b1000000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 3:
-                        setColumn2ColorLedBuf(0, 0b0001000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0010000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b1100000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0010000000, 0b0001000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0100000000, 0b0010000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b1000000000, 0b1100000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 4:
-                        setColumn2ColorLedBuf(0, 0b0000100000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0001000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b1110000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0001000000, 0b0000100000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0010000000, 0b0001000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b1100000000, 0b1110000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 5:
-                        setColumn2ColorLedBuf(0, 0b0000010000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000010000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000100000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000100000, 0b0000010000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0001000000, 0b0000010000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b1110000000, 0b0001100000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 6:
-                        setColumn2ColorLedBuf(0, 0b0000001000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000001000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000001000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000010000, 0b0000001000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000010000, 0b0000001000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000100000, 0b0000011000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 7:
-                        setColumn2ColorLedBuf(0, 0b0000000100, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000000100, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000100, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000001000, 0b0000000100, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000001000, 0b0000000100, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000011000, 0b0000000100, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 8:
-                        setColumn2ColorLedBuf(0, 0b0000000010, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000000010, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000010, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000000100, 0b0000000010, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000100, 0b0000000010, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000100, 0b0000000010, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 9:
-                        setColumn2ColorLedBuf(0, 0b0000000001, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000000001, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000001, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000000010, 0b0000000001, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000010, 0b0000000001, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000010, 0b0000000001, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     }
                 }
@@ -337,54 +357,54 @@ void led_control_task(void)
                     switch (stepSpace)
                     {
                     case 0:
-                        setColumn2ColorLedBuf(0, 0b1000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b1000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 1:
-                        setColumn2ColorLedBuf(0, 0b0100000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b1000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b1000000000, 0b0100000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b1000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 2:
-                        setColumn2ColorLedBuf(0, 0b0010000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0100000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b1000000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0100000000, 0b0010000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b1000000000, 0b0100000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b1000000000, 0b1000000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 3:
-                        setColumn2ColorLedBuf(0, 0b0001000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0010000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b1100000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0010000000, 0b0001000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0100000000, 0b0010000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b1000000000, 0b1100000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 4:
-                        setColumn2ColorLedBuf(0, 0b0000100000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0001000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b1110000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0001000000, 0b0000100000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0010000000, 0b0001000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b1100000000, 0b1110000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 5:
-                        setColumn2ColorLedBuf(0, 0b0000010000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000010000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000100000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000100000, 0b0000010000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0001000000, 0b0000010000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b1110000000, 0b0001100000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 6:
-                        setColumn2ColorLedBuf(0, 0b0000001000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000001000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000001000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000010000, 0b0000001000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000010000, 0b0000001000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000100000, 0b0000011000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 7:
-                        setColumn2ColorLedBuf(0, 0b0000000100, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000000100, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000100, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000001000, 0b0000000100, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000001000, 0b0000000100, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000011000, 0b0000000100, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 8:
-                        setColumn2ColorLedBuf(0, 0b0000000010, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000000010, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000010, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000000100, 0b0000000010, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000100, 0b0000000010, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000100, 0b0000000010, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 9:
-                        setColumn2ColorLedBuf(0, 0b0000000001, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000000001, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000001, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000000010, 0b0000000001, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000010, 0b0000000001, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000010, 0b0000000001, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     }
                 }
@@ -446,54 +466,54 @@ void led_control_task(void)
                     switch (stepBackspace)
                     {
                     case 0:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000001, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000001, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 1:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000000001, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000010, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000001, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000001, 0b0000000010, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 2:
-                        setColumn2ColorLedBuf(0, 0b0000000001, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000000010, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000100, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000001, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000001, 0b0000000010, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000010, 0b0000000100, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 3:
-                        setColumn2ColorLedBuf(0, 0b0000000011, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000000100, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000001000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000000001, 0b0000000011, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000010, 0b0000000100, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000100, 0b0000001000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 4:
-                        setColumn2ColorLedBuf(0, 0b0000000111, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000001000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000010000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000000011, 0b0000000111, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000100, 0b0000001000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000001000, 0b0000010000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 5:
-                        setColumn2ColorLedBuf(0, 0b0000010000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000100000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000100000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000000111, 0b0000011000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000001000, 0b0000100000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000010000, 0b0000100000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 6:
-                        setColumn2ColorLedBuf(0, 0b0001000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0001000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0001000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000011000, 0b0000100000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000100000, 0b0001000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000100000, 0b0001000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 7:
-                        setColumn2ColorLedBuf(0, 0b0010000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0010000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0010000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000100000, 0b0010000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0001000000, 0b0010000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0001000000, 0b0010000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 8:
-                        setColumn2ColorLedBuf(0, 0b0100000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0100000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0100000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0010000000, 0b0100000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0010000000, 0b0100000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0010000000, 0b0100000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 9:
-                        setColumn2ColorLedBuf(0, 0b1000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b1000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b1000000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0100000000, 0b1000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0100000000, 0b1000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0100000000, 0b1000000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     }
                 }
@@ -502,54 +522,54 @@ void led_control_task(void)
                     switch (stepBackspace)
                     {
                     case 0:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000001, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000001, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 1:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000000001, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000010, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000001, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000001, 0b0000000010, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 2:
-                        setColumn2ColorLedBuf(0, 0b0000000001, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000000010, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000100, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000001, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000001, 0b0000000010, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000010, 0b0000000100, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 3:
-                        setColumn2ColorLedBuf(0, 0b0000000011, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000000100, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000001000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000000001, 0b0000000011, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000010, 0b0000000100, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000100, 0b0000001000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 4:
-                        setColumn2ColorLedBuf(0, 0b0000000111, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000001000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000010000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000000011, 0b0000000111, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000100, 0b0000001000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000001000, 0b0000010000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 5:
-                        setColumn2ColorLedBuf(0, 0b0000010000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000100000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000100000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000000111, 0b0000011000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000001000, 0b0000100000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000010000, 0b0000100000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 6:
-                        setColumn2ColorLedBuf(0, 0b0001000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0001000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0001000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000011000, 0b0000100000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000100000, 0b0001000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000100000, 0b0001000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 7:
-                        setColumn2ColorLedBuf(0, 0b0010000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0010000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0010000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000100000, 0b0010000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0001000000, 0b0010000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0001000000, 0b0010000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 8:
-                        setColumn2ColorLedBuf(0, 0b0100000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0100000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0100000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0010000000, 0b0100000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0010000000, 0b0100000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0010000000, 0b0100000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 9:
-                        setColumn2ColorLedBuf(0, 0b1000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b1000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b1000000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0100000000, 0b1000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0100000000, 0b1000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0100000000, 0b1000000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     }
                 }
@@ -558,54 +578,54 @@ void led_control_task(void)
                     switch (stepBackspace)
                     {
                     case 0:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000001, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000001, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 1:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000000001, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000010, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000001, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000001, 0b0000000010, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 2:
-                        setColumn2ColorLedBuf(0, 0b0000000001, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000000010, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000100, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000001, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000001, 0b0000000010, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000010, 0b0000000100, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 3:
-                        setColumn2ColorLedBuf(0, 0b0000000011, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000000100, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000001000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000000001, 0b0000000011, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000010, 0b0000000100, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000100, 0b0000001000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 4:
-                        setColumn2ColorLedBuf(0, 0b0000000111, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000001000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000010000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000000011, 0b0000000111, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000100, 0b0000001000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000001000, 0b0000010000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 5:
-                        setColumn2ColorLedBuf(0, 0b0000010000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000100000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000100000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000000111, 0b0000011000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000001000, 0b0000100000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000010000, 0b0000100000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 6:
-                        setColumn2ColorLedBuf(0, 0b0001000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0001000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0001000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000011000, 0b0000100000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000100000, 0b0001000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000100000, 0b0001000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 7:
-                        setColumn2ColorLedBuf(0, 0b0010000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0010000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0010000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000100000, 0b0010000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0001000000, 0b0010000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0001000000, 0b0010000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 8:
-                        setColumn2ColorLedBuf(0, 0b0100000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0100000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0100000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0010000000, 0b0100000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0010000000, 0b0100000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0010000000, 0b0100000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 9:
-                        setColumn2ColorLedBuf(0, 0b1000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b1000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b1000000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0100000000, 0b1000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0100000000, 0b1000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0100000000, 0b1000000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     }
                 }
@@ -667,54 +687,54 @@ void led_control_task(void)
                     switch (stepEnter)
                     {
                     case 0:
-                        setColumn2ColorLedBuf(0, 0b0000110000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000110000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 1:
-                        setColumn2ColorLedBuf(0, 0b0001111000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000110000, 0b0001111000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 2:
-                        setColumn2ColorLedBuf(0, 0b0001001000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000110000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0001111000, 0b0001001000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000110000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 3:
-                        setColumn2ColorLedBuf(0, 0b0010000100, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0001111000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0001001000, 0b0010000100, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0000110000, 0b0001111000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 4:
-                        setColumn2ColorLedBuf(0, 0b0010000100, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0001001000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0000110000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0010000100, 0b0010000100, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0001111000, 0b0001001000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000110000, 0b0000110000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 5:
-                        setColumn2ColorLedBuf(0, 0b0100000010, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0010000100, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0001111000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0010000100, 0b0100000010, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0001001000, 0b0010000100, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0000110000, 0b0001111000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 6:
-                        setColumn2ColorLedBuf(0, 0b0100000010, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0010000100, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0001001000, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0100000010, 0b0100000010, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0010000100, 0b0010000100, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0001111000, 0b0001001000, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 7:
-                        setColumn2ColorLedBuf(0, 0b1000000001, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0100000010, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0010000100, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0100000010, 0b1000000001, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0010000100, 0b0100000010, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0001001000, 0b0010000100, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 8:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b1000000001, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b0100000010, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b1000000001, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b0100000010, 0b1000000001, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0010000100, 0b0100000010, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     case 9:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_shift);
-                        setColumn2ColorLedBuf(2, 0b1000000001, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(1, 0b1000000001, 0b0000000000, &rgb_normal, &rgb_blank, &rgb_shift);
+                        setColumn3ColorLedBuf(2, 0b0100000010, 0b1000000001, &rgb_normal, &rgb_blank, &rgb_shift);
                         break;
                     }
                 }
@@ -723,54 +743,54 @@ void led_control_task(void)
                     switch (stepEnter)
                     {
                     case 0:
-                        setColumn2ColorLedBuf(0, 0b0000110000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000110000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 1:
-                        setColumn2ColorLedBuf(0, 0b0001111000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000110000, 0b0001111000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 2:
-                        setColumn2ColorLedBuf(0, 0b0001001000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000110000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0001111000, 0b0001001000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000110000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 3:
-                        setColumn2ColorLedBuf(0, 0b0010000100, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0001111000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0001001000, 0b0010000100, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0000110000, 0b0001111000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 4:
-                        setColumn2ColorLedBuf(0, 0b0010000100, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0001001000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0000110000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0010000100, 0b0010000100, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0001111000, 0b0001001000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000110000, 0b0000110000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 5:
-                        setColumn2ColorLedBuf(0, 0b0100000010, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0010000100, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0001111000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0010000100, 0b0100000010, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0001001000, 0b0010000100, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0000110000, 0b0001111000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 6:
-                        setColumn2ColorLedBuf(0, 0b0100000010, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0010000100, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0001001000, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0100000010, 0b0100000010, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0010000100, 0b0010000100, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0001111000, 0b0001001000, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 7:
-                        setColumn2ColorLedBuf(0, 0b1000000001, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0100000010, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0010000100, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0100000010, 0b1000000001, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0010000100, 0b0100000010, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0001001000, 0b0010000100, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 8:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b1000000001, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b0100000010, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b1000000001, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b0100000010, 0b1000000001, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0010000100, 0b0100000010, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     case 9:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_upper);
-                        setColumn2ColorLedBuf(2, 0b1000000001, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(1, 0b1000000001, 0b0000000000, &rgb_shift, &rgb_blank, &rgb_upper);
+                        setColumn3ColorLedBuf(2, 0b0100000010, 0b1000000001, &rgb_shift, &rgb_blank, &rgb_upper);
                         break;
                     }
                 }
@@ -779,54 +799,54 @@ void led_control_task(void)
                     switch (stepEnter)
                     {
                     case 0:
-                        setColumn2ColorLedBuf(0, 0b0000110000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000110000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 1:
-                        setColumn2ColorLedBuf(0, 0b0001111000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000110000, 0b0001111000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 2:
-                        setColumn2ColorLedBuf(0, 0b0001001000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000110000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0001111000, 0b0001001000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000000000, 0b0000110000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 3:
-                        setColumn2ColorLedBuf(0, 0b0010000100, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0001111000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000000000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0001001000, 0b0010000100, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0000110000, 0b0001111000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 4:
-                        setColumn2ColorLedBuf(0, 0b0010000100, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0001001000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0000110000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0010000100, 0b0010000100, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0001111000, 0b0001001000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000110000, 0b0000110000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 5:
-                        setColumn2ColorLedBuf(0, 0b0100000010, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0010000100, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0001111000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0010000100, 0b0100000010, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0001001000, 0b0010000100, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0000110000, 0b0001111000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 6:
-                        setColumn2ColorLedBuf(0, 0b0100000010, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0010000100, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0001001000, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0100000010, 0b0100000010, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0010000100, 0b0010000100, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0001111000, 0b0001001000, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 7:
-                        setColumn2ColorLedBuf(0, 0b1000000001, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0100000010, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0010000100, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0100000010, 0b1000000001, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0010000100, 0b0100000010, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0001001000, 0b0010000100, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 8:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b1000000001, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b0100000010, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b1000000001, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b0100000010, 0b1000000001, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0010000100, 0b0100000010, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     case 9:
-                        setColumn2ColorLedBuf(0, 0b0000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(1, 0b0000000000, &rgb_blank, &rgb_normal);
-                        setColumn2ColorLedBuf(2, 0b1000000001, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(1, 0b1000000001, 0b0000000000, &rgb_upper, &rgb_blank, &rgb_normal);
+                        setColumn3ColorLedBuf(2, 0b0100000010, 0b1000000001, &rgb_upper, &rgb_blank, &rgb_normal);
                         break;
                     }
                 }
