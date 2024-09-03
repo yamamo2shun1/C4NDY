@@ -2,9 +2,12 @@
 
 ## Common
 
-- MCU: [STM32G491](https://www.st.com/en/microcontrollers-microprocessors/stm32g4x1.html)
+- Mainboard:
+  - MCU: [STM32G491](https://www.st.com/en/microcontrollers-microprocessors/stm32g4x1.html)
   - USB Stack: [TinyUSB](https://docs.tinyusb.org/en/latest/)
   - Debug Interface: SWD
+  - [Schematics](/pdf/main-sch.pdf)
+  - [PCB](/pdf/main-brd.pdf)
 - Codec: [Analog Devices ADAU1761](https://www.analog.com/jp/products/adau1761.html)
   - USB Audio Spec: 24bit 48kHz Input only
   - Analog Audio In/Out: Line/Phono In and HP Out, [Thonkiconn 3.5mm jack socket](https://www.thonk.co.uk/shop/thonkiconn/))
