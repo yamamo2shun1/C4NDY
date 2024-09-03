@@ -85,6 +85,7 @@
         "footprint_type_mismatch": "ignore",
         "hole_clearance": "error",
         "hole_near_hole": "error",
+        "holes_co_located": "warning",
         "invalid_outline": "error",
         "isolated_copper": "warning",
         "item_on_disabled_layer": "error",
@@ -648,12 +649,12 @@
   },
   "sheets": [
     [
-      "95d3b5cf-f65f-442c-bf39-1d0330504361",
-      "ルート"
-    ],
-    [
       "b501dded-0795-4b94-b467-4024a4d9920f",
       "ICs"
+    ],
+    [
+      "95d3b5cf-f65f-442c-bf39-1d0330504361",
+      "ルート"
     ]
   ],
   "text_variables": {}
