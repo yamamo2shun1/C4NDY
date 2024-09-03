@@ -109,17 +109,17 @@ void setAllLedBuf(RGB_Color_t* rgb_color)
     }
 }
 
-void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color0, RGB_Color_t* rgb_color1)
+void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color0)
 {
     for (int i = 0; i < 10; i++)
     {
         if ((column >> (9 - i)) & 0x01)
         {
-            setLedBuf(i + row * 10, rgb_color0);
+            setLedBuf(i + row * 10, rgb_color1);
         }
         else
         {
-            setLedBuf(i + row * 10, rgb_color1);
+            setLedBuf(i + row * 10, rgb_color0);
         }
     }
 }

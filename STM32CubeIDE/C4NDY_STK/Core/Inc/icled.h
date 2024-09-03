@@ -42,7 +42,7 @@ void setEnterFlag(void);
 
 void setLedBuf(uint8_t index, RGB_Color_t* rgb_color);
 void setAllLedBuf(RGB_Color_t* rgb_color);
-void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color0, RGB_Color_t* rgb_color1);
+void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color0);
 void renew(void);
 void led_control_task(void);
 
