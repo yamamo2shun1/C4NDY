@@ -13,9 +13,12 @@
 ## KeyVLM 
 
 - 65x Keys, 2x Pots(mix and main output gain), 9x GPIO Ports
+- [Schematics](/pdf/KeyVLM-sch.pdf)
+- [PCB](/pdf/KeyVLM-brd.pdf)
 
 ## STK
 
 - 37x Keys, 34x RGB LEDs, 2x Analog JoySticks, 1x Pot(mix), 6x GPIO Ports
-
+- [Schematics](/pdf/STK-sch.pdf)
+- [PCB](/pdf/STK-brd.pdf)
 
