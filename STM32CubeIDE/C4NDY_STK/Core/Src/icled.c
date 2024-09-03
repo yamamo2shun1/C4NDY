@@ -129,11 +129,11 @@ void setColumn3ColorLedBuf(uint8_t row, uint16_t column0, uint16_t column1, RGB_
 {
     for (int i = 0; i < 10; i++)
     {
-        if ((column0 >> (9 - i)) & 0x01)
+        if ((column1 >> (9 - i)) & 0x01)
         {
             setLedBuf(i + row * 10, rgb_color1);
         }
-        else if ((column1 >> (9 - i)) & 0x01)
+        else if ((column0 >> (9 - i)) & 0x01)
         {
             setLedBuf(i + row * 10, rgb_color2);
         }
