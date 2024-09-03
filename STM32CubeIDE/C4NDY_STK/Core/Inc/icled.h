@@ -40,9 +40,9 @@ void setSpaceFlag(void);
 void setBackspaceFlag(void);
 void setEnterFlag(void);
 
-void setLedBuf(uint8_t index, uint8_t red, uint8_t green, uint8_t blue);
-void setAllLedBuf(uint8_t red, uint8_t green, uint8_t blue);
-void setColumn2ColorLedBuf(uint8_t row, uint16_t column, uint8_t red0, uint8_t green0, uint8_t blue0, uint8_t red1, uint8_t green1, uint8_t blue1);
+void setLedBuf(uint8_t index, RGB_Color_t* rgb_color);
+void setAllLedBuf(RGB_Color_t* rgb_color);
+void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color0, RGB_Color_t* rgb_color1);
 void renew(void);
 void led_control_task(void);
 

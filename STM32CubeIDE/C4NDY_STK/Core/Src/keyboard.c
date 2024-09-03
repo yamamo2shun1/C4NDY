@@ -417,11 +417,11 @@ void clearKeys(uint8_t code)
             if (((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
                 ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01))
             {
-                setAllLedBuf(rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                setAllLedBuf(&rgb_shift);
             }
             else
             {
-                setAllLedBuf(rgb_normal.r, rgb_normal.g, rgb_normal.b);
+                setAllLedBuf(&rgb_normal);
             }
         }
     }
@@ -444,22 +444,22 @@ void clearKeys(uint8_t code)
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index, rgb_upper.r, rgb_upper.g, rgb_upper.b);
+                                setLedBuf(index, &rgb_upper);
                             }
                             else if (getUpperKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                                setLedBuf(index, &rgb_blank);
                             }
                         }
                         else if (index >= 36)
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index - 6, rgb_upper.r, rgb_upper.g, rgb_upper.b);
+                                setLedBuf(index - 6, &rgb_upper);
                             }
                             else if (getUpperKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index - 6, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                                setLedBuf(index - 6, &rgb_blank);
                             }
                         }
                     }
@@ -467,7 +467,7 @@ void clearKeys(uint8_t code)
             }
             else
             {
-                setAllLedBuf(rgb_normal.r, rgb_normal.g, rgb_normal.b);
+                setAllLedBuf(&rgb_normal);
             }
         }
     }
@@ -561,22 +561,22 @@ void setKeys(uint8_t code)
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                                setLedBuf(index, &rgb_shift);
                             }
                             else
                             {
-                                setLedBuf(index, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                                setLedBuf(index, &rgb_blank);
                             }
                         }
                         else
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index, rgb_upper.r, rgb_upper.g, rgb_upper.b);
+                                setLedBuf(index, &rgb_upper);
                             }
                             else
                             {
-                                setLedBuf(index, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                                setLedBuf(index, &rgb_blank);
                             }
                         }
                     }
@@ -587,22 +587,22 @@ void setKeys(uint8_t code)
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index - 6, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                                setLedBuf(index - 6, &rgb_shift);
                             }
                             else
                             {
-                                setLedBuf(index - 6, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                                setLedBuf(index - 6, &rgb_blank);
                             }
                         }
                         else
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index - 6, rgb_upper.r, rgb_upper.g, rgb_upper.b);
+                                setLedBuf(index - 6, &rgb_upper);
                             }
                             else
                             {
-                                setLedBuf(index - 6, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                                setLedBuf(index - 6, &rgb_blank);
                             }
                         }
                     }
@@ -628,38 +628,38 @@ void setKeys(uint8_t code)
                         {
                             if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                                setLedBuf(index, &rgb_shift);
                             }
                             else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                                setLedBuf(index, &rgb_blank);
                             }
                             else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                                setLedBuf(index, &rgb_shift);
                             }
                             else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                                setLedBuf(index, &rgb_blank);
                             }
                         }
                         else if (index >= 36)
                         {
                             if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index - 6, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                                setLedBuf(index - 6, &rgb_shift);
                             }
                             else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index - 6, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                                setLedBuf(index - 6, &rgb_blank);
                             }
                             else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index - 6, rgb_shift.r, rgb_shift.g, rgb_shift.b);
+                                setLedBuf(index - 6, &rgb_shift);
                             }
                             else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index - 6, rgb_blank.r, rgb_blank.g, rgb_blank.b);
+                                setLedBuf(index - 6, &rgb_blank);
                             }
                         }
                     }
