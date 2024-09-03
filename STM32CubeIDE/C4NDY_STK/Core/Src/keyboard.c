@@ -696,13 +696,14 @@ void setKeys(uint8_t code)
 
                 switch (code)
                 {
-                case SC_ENTER:
+                // case SC_ENTER:
+                case SC_SPACE:
                     setEnterFlag();
                     break;
                 case SC_BS:
                     setBackspaceFlag();
                     break;
-                case SC_SPACE:
+                // case SC_SPACE:
                 case SC_HENKAN:
                     setSpaceFlag();
                     break;
