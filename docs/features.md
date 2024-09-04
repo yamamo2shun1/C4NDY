@@ -17,3 +17,5 @@ KeyVLM is designed to be stress-free for first-time users of Ortholinear Layout 
 STK is a minimalist keyboard with 37 keys, but with 2 joysticks designed to reduce pinky finger fatigue and maximize thumb's performance.
 
 ![3](/images/3.png)
+
+![4](/images/4.png)
