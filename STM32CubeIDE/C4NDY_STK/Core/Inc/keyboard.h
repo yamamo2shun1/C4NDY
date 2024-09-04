@@ -8,6 +8,9 @@
 #ifndef INC_KEYBOARD_H_
 #define INC_KEYBOARD_H_
 
+#include <stdint.h>
+#include <stdbool.h>
+
 #define MATRIX_ROWS    4
 #define MATRIX_COLUMNS 10
 
@@ -112,8 +115,8 @@
 #define SC_LAYOUT     0xFE  // Layout Switch
 #define SC_NULL       0xFF
 
-#define H 0
-#define V 1
+#define JOYSTICK_H 0
+#define JOYSTICK_V 1
 
 #define JOYSTICK_NUMS 2
 #define JOYSTICK_AXIS 2
@@ -137,6 +140,8 @@ void setStickKeyCode(uint8_t keymapId, uint8_t id, uint8_t direction, uint8_t co
 void resetKeys(void);
 void clearKeys(uint8_t code);
 void setKeys(uint8_t code);
+bool isUpperPressed(void);
+bool isShiftPressed(void);
 void hid_keyscan_task(void);
 
 #endif /* INC_KEYBOARD_H_ */

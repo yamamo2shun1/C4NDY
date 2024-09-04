@@ -5,8 +5,8 @@
  *      Author: shun
  */
 
-#include "main.h"
 #include "keyboard.h"
+
 #include "audio_control.h"
 #include "adc.h"
 #include "icled.h"
@@ -35,6 +35,7 @@ uint8_t linePhonoSW       = 0;
 bool isMasterGainChanged = false;
 
 bool isUpper = false;
+bool isShift = false;
 
 uint8_t countReturnNeutral = 0;
 #define MAX_COUNT_RETURN_NEUTRAL 60
@@ -416,11 +417,11 @@ void clearKeys(uint8_t code)
             if (((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
                 ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01))
             {
-                setAllLedBuf(0x67, 0x10, 0x70);
+                setAllLedBuf(&rgb_shift);
             }
             else
             {
-                setAllLedBuf(0xFE, 0x01, 0x9A);
+                setAllLedBuf(&rgb_normal);
             }
         }
     }
@@ -430,13 +431,43 @@ void clearKeys(uint8_t code)
 
         if (code == SC_LSHIFT || code == SC_RSHIFT)
         {
+            isShift = false;
+
             if (isUpper)
             {
-                setAllLedBuf(0xFF, 0xFF, 0xFF);
+                for (int j = 0; j < MATRIX_ROWS; j++)
+                {
+                    for (int i = 0; i < MATRIX_COLUMNS; i++)
+                    {
+                        int index = MATRIX_COLUMNS * j + i;
+                        if (index < 30)
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index, &rgb_upper);
+                            }
+                            else if (getUpperKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index, &rgb_blank);
+                            }
+                        }
+                        else if (index >= 36)
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index - 6, &rgb_upper);
+                            }
+                            else if (getUpperKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index - 6, &rgb_blank);
+                            }
+                        }
+                    }
+                }
             }
             else
             {
-                setAllLedBuf(0xFE, 0x01, 0x9A);
+                setAllLedBuf(&rgb_normal);
             }
         }
     }
@@ -518,7 +549,65 @@ void setKeys(uint8_t code)
         {
             isUpper = true;
 
-            setAllLedBuf(0xFF, 0xFF, 0xFF);
+            for (int j = 0; j < MATRIX_ROWS; j++)
+            {
+                for (int i = 0; i < MATRIX_COLUMNS; i++)
+                {
+                    int index = MATRIX_COLUMNS * j + i;
+                    if (index < 30)
+                    {
+                        if ((((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
+                             ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01)))
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index, &rgb_shift);
+                            }
+                            else
+                            {
+                                setLedBuf(index, &rgb_blank);
+                            }
+                        }
+                        else
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index, &rgb_upper);
+                            }
+                            else
+                            {
+                                setLedBuf(index, &rgb_blank);
+                            }
+                        }
+                    }
+                    else if (index >= 36)
+                    {
+                        if ((((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
+                             ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01)))
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index - 6, &rgb_shift);
+                            }
+                            else
+                            {
+                                setLedBuf(index - 6, &rgb_blank);
+                            }
+                        }
+                        else
+                        {
+                            if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index - 6, &rgb_upper);
+                            }
+                            else
+                            {
+                                setLedBuf(index - 6, &rgb_blank);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
@@ -528,7 +617,53 @@ void setKeys(uint8_t code)
         {
             if (code == SC_LSHIFT || code == SC_RSHIFT)
             {
-                setAllLedBuf(0x67, 0x10, 0x70);
+                isShift = true;
+
+                for (int j = 0; j < MATRIX_ROWS; j++)
+                {
+                    for (int i = 0; i < MATRIX_COLUMNS; i++)
+                    {
+                        int index = MATRIX_COLUMNS * j + i;
+                        if (index < 30)
+                        {
+                            if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index, &rgb_shift);
+                            }
+                            else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index, &rgb_blank);
+                            }
+                            else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index, &rgb_shift);
+                            }
+                            else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index, &rgb_blank);
+                            }
+                        }
+                        else if (index >= 36)
+                        {
+                            if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index - 6, &rgb_shift);
+                            }
+                            else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index - 6, &rgb_blank);
+                            }
+                            else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                            {
+                                setLedBuf(index - 6, &rgb_shift);
+                            }
+                            else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
+                            {
+                                setLedBuf(index - 6, &rgb_blank);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -558,6 +693,20 @@ void setKeys(uint8_t code)
             else if (keyboardHID.key[k] == 0x00)
             {
                 keyboardHID.key[k] = code;
+
+                if (code == keymaps_stk[keymapID][0][0])  // L JoyStick -> Tilt left
+                {
+                    setBackspaceFlag();
+                }
+                else if (code == keymaps_stk[keymapID][1][1])  // R JoyStick -> Tilt right
+                {
+                    setSpaceFlag();
+                }
+                else if (code == keymaps_stk[keymapID][1][2])  // R JoyStick -> Tilt down
+                {
+                    setEnterFlag();
+                }
+
                 break;
             }
         }
@@ -579,51 +728,51 @@ void controlJoySticks()
             if (theta >= 90 - JOYSTICK_ON_ANGLE && theta < 90 + JOYSTICK_ON_ANGLE)
             {
                 SEGGER_RTT_printf(0, "%d:up (%d)\n", i, (int) theta);
-                currentStk[i][V] = -1;
+                currentStk[i][JOYSTICK_V] = -1;
             }
             else if (theta >= 135 - JOYSTICK_ON_ANGLE && theta < 135 + JOYSTICK_ON_ANGLE)
             {
                 SEGGER_RTT_printf(0, "%d:up left (%d)\n", i, (int) theta);
-                currentStk[i][H] = -1;
-                currentStk[i][V] = -1;
+                currentStk[i][JOYSTICK_H] = -1;
+                currentStk[i][JOYSTICK_V] = -1;
             }
             else if (theta >= -90 - JOYSTICK_ON_ANGLE && theta < -90 + JOYSTICK_ON_ANGLE)
             {
                 SEGGER_RTT_printf(0, "%d:down (%d)\n", i, (int) theta);
-                currentStk[i][V] = 1;
+                currentStk[i][JOYSTICK_V] = 1;
             }
             else if (theta < -180 + JOYSTICK_ON_ANGLE || theta >= 180 - JOYSTICK_ON_ANGLE)
             {
                 SEGGER_RTT_printf(0, "%d:left (%d)\n", i, (int) theta);
-                currentStk[i][H] = -1;
+                currentStk[i][JOYSTICK_H] = -1;
             }
             else if (theta >= 0 - JOYSTICK_ON_ANGLE && theta < 0 + JOYSTICK_ON_ANGLE)
             {
                 SEGGER_RTT_printf(0, "%d:right (%d)\n", i, (int) theta);
-                currentStk[i][H] = 1;
+                currentStk[i][JOYSTICK_H] = 1;
             }
             else
             {
-                currentStk[i][H] = 0;
-                currentStk[i][V] = 0;
+                currentStk[i][JOYSTICK_H] = 0;
+                currentStk[i][JOYSTICK_V] = 0;
             }
         }
         else
         {
-            currentStk[i][H] = 0;
-            currentStk[i][V] = 0;
+            currentStk[i][JOYSTICK_H] = 0;
+            currentStk[i][JOYSTICK_V] = 0;
         }
     }
 
     for (int i = 0; i < JOYSTICK_NUMS; i++)
     {
-        if (currentStk[i][H] != 0 && currentStk[i][V] != 0 &&
-            (prevStk[i][H] == 0 || prevStk[i][V] == 0))
+        if (currentStk[i][JOYSTICK_H] != 0 && currentStk[i][JOYSTICK_V] != 0 &&
+            (prevStk[i][JOYSTICK_H] == 0 || prevStk[i][JOYSTICK_V] == 0))
         {
-            SEGGER_RTT_printf(0, "currentStk[%d][H] = %d\n", i, currentStk[i][H]);
-            SEGGER_RTT_printf(0, "currentStk[%d][V] = %d\n", i, currentStk[i][V]);
+            SEGGER_RTT_printf(0, "currentStk[%d][H] = %d\n", i, currentStk[i][JOYSTICK_H]);
+            SEGGER_RTT_printf(0, "currentStk[%d][V] = %d\n", i, currentStk[i][JOYSTICK_V]);
 
-            if (currentStk[i][H] == -1 && currentStk[i][H] == -1)
+            if (currentStk[i][JOYSTICK_H] == -1 && currentStk[i][JOYSTICK_H] == -1)
             {
                 setKeys(SC_LSHIFT);
             }
@@ -632,7 +781,7 @@ void controlJoySticks()
         {
             for (int j = 0; j < JOYSTICK_AXIS; j++)
             {
-                if ((currentStk[i][H] == 0 && currentStk[i][V] == 0) && (prevStk[i][H] == -1 && prevStk[i][V] == -1))
+                if ((currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == -1 && prevStk[i][JOYSTICK_V] == -1))
                 {
                     clearKeys(SC_LSHIFT);
                     resetKeys();
@@ -658,6 +807,16 @@ void controlJoySticks()
             }
         }
     }
+}
+
+bool isUpperPressed(void)
+{
+    return isUpper;
+}
+
+bool isShiftPressed(void)
+{
+    return isShift;
 }
 
 void hid_keyscan_task(void)
@@ -773,10 +932,10 @@ void hid_keyscan_task(void)
         for (int k = 0; k < MATRIX_ROWS; k++)
         {
             if (keyState[k] != 0x0 || (keyState[k] == 0x0 && keyState[k] != prevKeyState[k]) ||
-                currentStk[0][H] != prevStk[0][H] ||
-                currentStk[0][V] != prevStk[0][V] ||
-                currentStk[1][H] != prevStk[1][H] ||
-                currentStk[1][V] != prevStk[1][V])
+                currentStk[0][JOYSTICK_H] != prevStk[0][JOYSTICK_H] ||
+                currentStk[0][JOYSTICK_V] != prevStk[0][JOYSTICK_V] ||
+                currentStk[1][JOYSTICK_H] != prevStk[1][JOYSTICK_H] ||
+                currentStk[1][JOYSTICK_V] != prevStk[1][JOYSTICK_V])
             {
                 if (!tud_hid_ready())
                     return;
