@@ -8,6 +8,9 @@
 #ifndef INC_ICLED_H_
 #define INC_ICLED_H_
 
+#include <stdint.h>
+#include <stdbool.h>
+
 #define RGB      3
 #define COL_BITS 8
 
@@ -17,15 +20,33 @@
 
 #define LED_INTENSITY_RATE 0.5
 
-#define LED_NUMS 4
+#define LED_NUMS 34
 
 #define GRADATION_RATE_STEP 0.2
 #define GRADATION_COUNT_MAX 10
 
 #define DMA_BUF_SIZE (LED_NUMS * WL_LED_BIT_LEN + 1)
 
-void setLedBuf(uint8_t index, uint8_t red, uint8_t green, uint8_t blue);
-void setAllLedBuf(uint8_t red, uint8_t green, uint8_t blue);
+typedef struct
+{
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+} RGB_Color_t;
+
+extern RGB_Color_t rgb_normal;
+extern RGB_Color_t rgb_upper;
+extern RGB_Color_t rgb_shift;
+extern RGB_Color_t rgb_blank;
+
+void setSpaceFlag(void);
+void setBackspaceFlag(void);
+void setEnterFlag(void);
+
+void setLedBuf(uint8_t index, RGB_Color_t* rgb_color);
+void setAllLedBuf(RGB_Color_t* rgb_color);
+void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color0);
+void setColumn3ColorLedBuf(uint8_t row, uint16_t column0, uint16_t column1, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color2, RGB_Color_t* rgb_color0);
 void renew(void);
 void led_control_task(void);
 
