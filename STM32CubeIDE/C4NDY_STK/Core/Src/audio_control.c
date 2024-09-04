@@ -7,7 +7,7 @@
 
 #include <math.h>
 
-#include "main.h"
+#include "adc.h"
 #include "sai.h"
 
 #include "audio_control.h"

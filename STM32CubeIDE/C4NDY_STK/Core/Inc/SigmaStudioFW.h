@@ -14,15 +14,13 @@
  * are intended for resale to audio product end users. This software
  * may not be distributed whole or in any part to third parties.
  *
- * Copyright � 2008 Analog Devices, Inc. All rights reserved.
+ * Copyright ? 2008 Analog Devices, Inc. All rights reserved.
  */
 
 #ifndef __SIGMASTUDIOFW_H__
 #define __SIGMASTUDIOFW_H__
 
-#include "main.h"
-#include "adc.h"
-#include "i2c.h"
+#include <stdint.h>
 
 /*
  * TODO: Update for your system's data type
@@ -48,30 +46,16 @@ typedef unsigned char ADI_REG_TYPE;
  * Write to multiple Device registers
  */
 // #define SIGMA_WRITE_REGISTER_BLOCK( devAddress, address, length, pData ) {/*TODO: implement macro or define as function*/}
-void SIGMA_WRITE_REGISTER_BLOCK(uint16_t devAddress, uint16_t address, uint32_t length, uint8_t* pData)
-{
-    HAL_StatusTypeDef status;
-    status = HAL_I2C_Mem_Write(&hi2c2, devAddress, address, I2C_MEMADD_SIZE_16BIT, pData, length, 10000);
-    if (status != HAL_OK)
-    {
-        SEGGER_RTT_printf(0, "[%X] i2c write error\n", address);
-    }
-}
+void SIGMA_WRITE_REGISTER_BLOCK(uint16_t devAddress, uint16_t address, uint32_t length, uint8_t* pData);
 
-void SIGMA_SAFELOAD_WRITE_DATA(uint8_t devAddress, uint16_t dataAddress, uint16_t length, uint8_t* pData)
-{
-    HAL_I2C_Mem_Write(&hi2c2, devAddress, dataAddress, I2C_MEMADD_SIZE_16BIT, pData, length, 10000);
-}
+void SIGMA_SAFELOAD_WRITE_DATA(uint8_t devAddress, uint16_t dataAddress, uint16_t length, uint8_t* pData);
 
 /*
  * TODO: CUSTOM MACRO IMPLEMENTATION
  * Writes delay (in ms)
  */
 // #define SIGMA_WRITE_DELAY( devAddress, length, pData ) {/*TODO: implement macro or define as function*/}
-void SIGMA_WRITE_DELAY(uint16_t devAddress, uint32_t length, uint8_t* pData)
-{
-    HAL_Delay(15);
-}
+void SIGMA_WRITE_DELAY(uint16_t devAddress, uint32_t length, uint8_t* pData);
 
 /*
  * Read device registers
@@ -111,4 +95,3 @@ void SIGMA_WRITE_DELAY(uint16_t devAddress, uint32_t length, uint8_t* pData)
     }
 
 #endif
-
