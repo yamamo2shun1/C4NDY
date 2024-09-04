@@ -31,7 +31,7 @@ features:
       src: /images/stk.png
       width: 560px
     title: C4NDY STK
-    details: 37-Key Ortholinear Layout, 2-JoySticks and Audio I/O(Phono/Line in & HP out).
+    details: 37-Key Ortholinear Layout, 34-RGB LEDs, 2-JoySticks and Audio I/O(Phono/Line in & HP out).
 #  - title: Feature C
 #    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
