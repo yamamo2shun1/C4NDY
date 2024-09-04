@@ -7,16 +7,17 @@ Build date = 4/5/2022 at 11:20 AM
 (Note: Estimates are based on a 48 kHz sample rate)
 
 Instructions used:
-271	(out of a possible 1024 )
+341	(out of a possible 1024 )
 Modulo Data RAM used (X Memory):
-129	(out of a possible 4096 )
+154	(out of a possible 4096 )
 Non Modulo Data RAM used (X Memory):
 0	(out of a possible 4096 )
 Parameter RAM used (Y Memory):
-48	(out of a possible 1024 )
+93	(out of a possible 1024 )
 
 Instance                      		Mips	Inst	Data	Coeff	Other
                               			(max)
+Compressor1                   		67	67	24	44
 phono eq                      		54	54	42	15
 Single 1                      		32	32	10	2
 ln ph sw                      		26	26	11	2
@@ -33,6 +34,7 @@ Input1                        		8	8	4	0
 End                           		5	5	0	0
 Mg4                           		3	3	1	1
 Mg3                           		3	3	1	1
+Mg5                           		3	3	1	1
 Mg2                           		3	3	1	1
 Mg1                           		3	3	1	1
 DC1                           		2	2	1	1
@@ -42,9 +44,9 @@ Output2                       		2	2	0	0
 
 Subroutines called:
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Total                      			271	271	129	48
+Total                      			341	341	154	93
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-(%)                          			26%	26%	3%	5%
+(%)                          			33%	33%	4%	9%
 
 Files written:  
 program_data.dat - load file for downloading code using ADI loader
