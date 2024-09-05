@@ -69,6 +69,21 @@ void setEnterFlag(void)
     stepEnter  = 0;
 }
 
+void setLedBufDirect(uint8_t index, RGB_Color_t* rgb_color)
+{
+    grb_prev[index][0] = grb_current[index][0];
+    grb_prev[index][1] = grb_current[index][1];
+    grb_prev[index][2] = grb_current[index][2];
+
+    grb_current[index][0] = (uint8_t) ((double) rgb_color->g * LED_INTENSITY_RATE);
+    grb_current[index][1] = (uint8_t) ((double) rgb_color->r * LED_INTENSITY_RATE);
+    grb_current[index][2] = (uint8_t) ((double) rgb_color->b * LED_INTENSITY_RATE);
+
+    grb[index][0] = grb_current[index][0];
+    grb[index][1] = grb_current[index][1];
+    grb[index][2] = grb_current[index][2];
+}
+
 void setLedBuf(uint8_t index, RGB_Color_t* rgb_color)
 {
     grb_prev[index][0] = grb_current[index][0];
@@ -116,11 +131,11 @@ void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color1
     {
         if ((column >> (9 - i)) & 0x01)
         {
-            setLedBuf(i + row * 10, rgb_color1);
+            setLedBufDirect(i + row * 10, rgb_color1);
         }
         else
         {
-            setLedBuf(i + row * 10, rgb_color0);
+            setLedBufDirect(i + row * 10, rgb_color0);
         }
     }
 }
@@ -131,15 +146,15 @@ void setColumn3ColorLedBuf(uint8_t row, uint16_t column0, uint16_t column1, RGB_
     {
         if ((column1 >> (9 - i)) & 0x01)
         {
-            setLedBuf(i + row * 10, rgb_color1);
+            setLedBufDirect(i + row * 10, rgb_color1);
         }
         else if ((column0 >> (9 - i)) & 0x01)
         {
-            setLedBuf(i + row * 10, rgb_color2);
+            setLedBufDirect(i + row * 10, rgb_color2);
         }
         else
         {
-            setLedBuf(i + row * 10, rgb_color0);
+            setLedBufDirect(i + row * 10, rgb_color0);
         }
     }
 }
