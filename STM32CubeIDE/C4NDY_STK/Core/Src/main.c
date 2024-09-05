@@ -63,7 +63,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+bool isBusy = false;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -109,6 +109,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
     if (htim == &htim6)
     {
+        // SEGGER_RTT_printf(0, "timer 6...\n");
+        if (!isBusy)
+        {
+            led_control_task();
+        }
     }
 }
 
@@ -435,6 +440,7 @@ int main(void)
     /* USER CODE BEGIN WHILE */
     while (1)
     {
+        isBusy = true;
         tud_task();
 
         codec_control_task();
@@ -442,6 +448,7 @@ int main(void)
         hid_keyscan_task();
 
         led_control_task();
+        isBusy = false;
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
