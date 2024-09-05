@@ -47,7 +47,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef* htim)
 
 void setSpaceFlag(void)
 {
-    SEGGER_RTT_printf(0, "space on.\n");
+    // SEGGER_RTT_printf(0, "space on.\n");
     isSpace    = true;
     countSpace = 0;
     stepSpace  = 0;
@@ -55,7 +55,7 @@ void setSpaceFlag(void)
 
 void setBackspaceFlag(void)
 {
-    SEGGER_RTT_printf(0, "BS on.\n");
+    // SEGGER_RTT_printf(0, "BS on.\n");
     isBackspace    = true;
     countBackspace = 0;
     stepBackspace  = 0;
@@ -63,7 +63,7 @@ void setBackspaceFlag(void)
 
 void setEnterFlag(void)
 {
-    SEGGER_RTT_printf(0, "enter on.\n");
+    // SEGGER_RTT_printf(0, "enter on.\n");
     isEnter    = true;
     countEnter = 0;
     stepEnter  = 0;
