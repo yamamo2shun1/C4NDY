@@ -8,6 +8,9 @@
 #ifndef INC_KEYBOARD_H_
 #define INC_KEYBOARD_H_
 
+#include <stdint.h>
+#include <stdbool.h>
+
 #define MATRIX_ROWS    4
 #define MATRIX_COLUMNS 10
 
@@ -112,8 +115,8 @@
 #define SC_LAYOUT     0xFE  // Layout Switch
 #define SC_NULL       0xFF
 
-#define H 0
-#define V 1
+#define JOYSTICK_H 0
+#define JOYSTICK_V 1
 
 #define JOYSTICK_NUMS 2
 #define JOYSTICK_AXIS 2

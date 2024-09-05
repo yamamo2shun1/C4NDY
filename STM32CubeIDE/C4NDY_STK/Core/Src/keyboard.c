@@ -5,8 +5,8 @@
  *      Author: shun
  */
 
-#include "main.h"
 #include "keyboard.h"
+
 #include "audio_control.h"
 #include "adc.h"
 #include "icled.h"
@@ -728,51 +728,51 @@ void controlJoySticks()
             if (theta >= 90 - JOYSTICK_ON_ANGLE && theta < 90 + JOYSTICK_ON_ANGLE)
             {
                 SEGGER_RTT_printf(0, "%d:up (%d)\n", i, (int) theta);
-                currentStk[i][V] = -1;
+                currentStk[i][JOYSTICK_V] = -1;
             }
             else if (theta >= 135 - JOYSTICK_ON_ANGLE && theta < 135 + JOYSTICK_ON_ANGLE)
             {
                 SEGGER_RTT_printf(0, "%d:up left (%d)\n", i, (int) theta);
-                currentStk[i][H] = -1;
-                currentStk[i][V] = -1;
+                currentStk[i][JOYSTICK_H] = -1;
+                currentStk[i][JOYSTICK_V] = -1;
             }
             else if (theta >= -90 - JOYSTICK_ON_ANGLE && theta < -90 + JOYSTICK_ON_ANGLE)
             {
                 SEGGER_RTT_printf(0, "%d:down (%d)\n", i, (int) theta);
-                currentStk[i][V] = 1;
+                currentStk[i][JOYSTICK_V] = 1;
             }
             else if (theta < -180 + JOYSTICK_ON_ANGLE || theta >= 180 - JOYSTICK_ON_ANGLE)
             {
                 SEGGER_RTT_printf(0, "%d:left (%d)\n", i, (int) theta);
-                currentStk[i][H] = -1;
+                currentStk[i][JOYSTICK_H] = -1;
             }
             else if (theta >= 0 - JOYSTICK_ON_ANGLE && theta < 0 + JOYSTICK_ON_ANGLE)
             {
                 SEGGER_RTT_printf(0, "%d:right (%d)\n", i, (int) theta);
-                currentStk[i][H] = 1;
+                currentStk[i][JOYSTICK_H] = 1;
             }
             else
             {
-                currentStk[i][H] = 0;
-                currentStk[i][V] = 0;
+                currentStk[i][JOYSTICK_H] = 0;
+                currentStk[i][JOYSTICK_V] = 0;
             }
         }
         else
         {
-            currentStk[i][H] = 0;
-            currentStk[i][V] = 0;
+            currentStk[i][JOYSTICK_H] = 0;
+            currentStk[i][JOYSTICK_V] = 0;
         }
     }
 
     for (int i = 0; i < JOYSTICK_NUMS; i++)
     {
-        if (currentStk[i][H] != 0 && currentStk[i][V] != 0 &&
-            (prevStk[i][H] == 0 || prevStk[i][V] == 0))
+        if (currentStk[i][JOYSTICK_H] != 0 && currentStk[i][JOYSTICK_V] != 0 &&
+            (prevStk[i][JOYSTICK_H] == 0 || prevStk[i][JOYSTICK_V] == 0))
         {
-            SEGGER_RTT_printf(0, "currentStk[%d][H] = %d\n", i, currentStk[i][H]);
-            SEGGER_RTT_printf(0, "currentStk[%d][V] = %d\n", i, currentStk[i][V]);
+            SEGGER_RTT_printf(0, "currentStk[%d][H] = %d\n", i, currentStk[i][JOYSTICK_H]);
+            SEGGER_RTT_printf(0, "currentStk[%d][V] = %d\n", i, currentStk[i][JOYSTICK_V]);
 
-            if (currentStk[i][H] == -1 && currentStk[i][H] == -1)
+            if (currentStk[i][JOYSTICK_H] == -1 && currentStk[i][JOYSTICK_H] == -1)
             {
                 setKeys(SC_LSHIFT);
             }
@@ -781,7 +781,7 @@ void controlJoySticks()
         {
             for (int j = 0; j < JOYSTICK_AXIS; j++)
             {
-                if ((currentStk[i][H] == 0 && currentStk[i][V] == 0) && (prevStk[i][H] == -1 && prevStk[i][V] == -1))
+                if ((currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == -1 && prevStk[i][JOYSTICK_V] == -1))
                 {
                     clearKeys(SC_LSHIFT);
                     resetKeys();
@@ -932,10 +932,10 @@ void hid_keyscan_task(void)
         for (int k = 0; k < MATRIX_ROWS; k++)
         {
             if (keyState[k] != 0x0 || (keyState[k] == 0x0 && keyState[k] != prevKeyState[k]) ||
-                currentStk[0][H] != prevStk[0][H] ||
-                currentStk[0][V] != prevStk[0][V] ||
-                currentStk[1][H] != prevStk[1][H] ||
-                currentStk[1][V] != prevStk[1][V])
+                currentStk[0][JOYSTICK_H] != prevStk[0][JOYSTICK_H] ||
+                currentStk[0][JOYSTICK_V] != prevStk[0][JOYSTICK_V] ||
+                currentStk[1][JOYSTICK_H] != prevStk[1][JOYSTICK_H] ||
+                currentStk[1][JOYSTICK_V] != prevStk[1][JOYSTICK_V])
             {
                 if (!tud_hid_ready())
                     return;

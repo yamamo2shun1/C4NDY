@@ -8,6 +8,8 @@
 #ifndef INC_AUDIO_CONTROL_H_
 #define INC_AUDIO_CONTROL_H_
 
+#include "tusb.h"
+
 #define ADAU1761_ADDR 0x70
 
 #define SIGMASTUDIOTYPE_FIXPOINT 0
@@ -43,6 +45,8 @@ void read_audio_data_from_usb(uint16_t n_bytes_received);
 void copybuf_usb2sai(void);
 void copybuf_sai2codec(void);
 
+void send_usb_gain_L(int16_t usb_db);
+void send_usb_gain_R(int16_t usb_db);
 void send_xfade(uint16_t fader_val);
 void send_master_gain(uint16_t master_val);
 void send_master_gain_db(int master_db);
