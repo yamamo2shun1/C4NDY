@@ -47,7 +47,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef* htim)
 
 void setSpaceFlag(void)
 {
-    SEGGER_RTT_printf(0, "space on.\n");
+    // SEGGER_RTT_printf(0, "space on.\n");
     isSpace    = true;
     countSpace = 0;
     stepSpace  = 0;
@@ -55,7 +55,7 @@ void setSpaceFlag(void)
 
 void setBackspaceFlag(void)
 {
-    SEGGER_RTT_printf(0, "BS on.\n");
+    // SEGGER_RTT_printf(0, "BS on.\n");
     isBackspace    = true;
     countBackspace = 0;
     stepBackspace  = 0;
@@ -63,10 +63,17 @@ void setBackspaceFlag(void)
 
 void setEnterFlag(void)
 {
-    SEGGER_RTT_printf(0, "enter on.\n");
+    // SEGGER_RTT_printf(0, "enter on.\n");
     isEnter    = true;
     countEnter = 0;
     stepEnter  = 0;
+}
+
+void setLedBufDirect(uint8_t index, RGB_Color_t* rgb_color)
+{
+    grb[index][0] = (uint8_t) ((double) rgb_color->g * LED_INTENSITY_RATE);
+    grb[index][1] = (uint8_t) ((double) rgb_color->r * LED_INTENSITY_RATE);
+    grb[index][2] = (uint8_t) ((double) rgb_color->b * LED_INTENSITY_RATE);
 }
 
 void setLedBuf(uint8_t index, RGB_Color_t* rgb_color)
@@ -116,11 +123,11 @@ void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color1
     {
         if ((column >> (9 - i)) & 0x01)
         {
-            setLedBuf(i + row * 10, rgb_color1);
+            setLedBufDirect(i + row * 10, rgb_color1);
         }
         else
         {
-            setLedBuf(i + row * 10, rgb_color0);
+            setLedBufDirect(i + row * 10, rgb_color0);
         }
     }
 }
@@ -131,15 +138,15 @@ void setColumn3ColorLedBuf(uint8_t row, uint16_t column0, uint16_t column1, RGB_
     {
         if ((column1 >> (9 - i)) & 0x01)
         {
-            setLedBuf(i + row * 10, rgb_color1);
+            setLedBufDirect(i + row * 10, rgb_color1);
         }
         else if ((column0 >> (9 - i)) & 0x01)
         {
-            setLedBuf(i + row * 10, rgb_color2);
+            setLedBufDirect(i + row * 10, rgb_color2);
         }
         else
         {
-            setLedBuf(i + row * 10, rgb_color0);
+            setLedBufDirect(i + row * 10, rgb_color0);
         }
     }
 }
@@ -217,7 +224,7 @@ void led_control_task(void)
     if (isSpace)
     {
         countSpace++;
-        if (countSpace > 20)
+        if (countSpace > ANIMATION_COUNT_MAX)
         {
             countSpace = 0;
 
@@ -410,24 +417,24 @@ void led_control_task(void)
                 }
                 if (isShiftPressed())
                 {
-                    setLedBuf(30, &rgb_shift);
-                    setLedBuf(31, &rgb_shift);
-                    setLedBuf(32, &rgb_shift);
-                    setLedBuf(33, &rgb_shift);
+                    setLedBufDirect(30, &rgb_shift);
+                    setLedBufDirect(31, &rgb_shift);
+                    setLedBufDirect(32, &rgb_shift);
+                    setLedBufDirect(33, &rgb_shift);
                 }
                 else if (isUpperPressed())
                 {
-                    setLedBuf(30, &rgb_upper);
-                    setLedBuf(31, &rgb_upper);
-                    setLedBuf(32, &rgb_upper);
-                    setLedBuf(33, &rgb_upper);
+                    setLedBufDirect(30, &rgb_upper);
+                    setLedBufDirect(31, &rgb_upper);
+                    setLedBufDirect(32, &rgb_upper);
+                    setLedBufDirect(33, &rgb_upper);
                 }
                 else
                 {
-                    setLedBuf(30, &rgb_normal);
-                    setLedBuf(31, &rgb_normal);
-                    setLedBuf(32, &rgb_normal);
-                    setLedBuf(33, &rgb_normal);
+                    setLedBufDirect(30, &rgb_normal);
+                    setLedBufDirect(31, &rgb_normal);
+                    setLedBufDirect(32, &rgb_normal);
+                    setLedBufDirect(33, &rgb_normal);
                 }
                 renew();
             }
@@ -438,7 +445,7 @@ void led_control_task(void)
     if (isBackspace)
     {
         countBackspace++;
-        if (countBackspace > 20)
+        if (countBackspace > ANIMATION_COUNT_MAX)
         {
             countBackspace = 0;
 
@@ -631,24 +638,24 @@ void led_control_task(void)
                 }
                 if (isShiftPressed())
                 {
-                    setLedBuf(30, &rgb_shift);
-                    setLedBuf(31, &rgb_shift);
-                    setLedBuf(32, &rgb_shift);
-                    setLedBuf(33, &rgb_shift);
+                    setLedBufDirect(30, &rgb_shift);
+                    setLedBufDirect(31, &rgb_shift);
+                    setLedBufDirect(32, &rgb_shift);
+                    setLedBufDirect(33, &rgb_shift);
                 }
                 else if (isUpperPressed())
                 {
-                    setLedBuf(30, &rgb_upper);
-                    setLedBuf(31, &rgb_upper);
-                    setLedBuf(32, &rgb_upper);
-                    setLedBuf(33, &rgb_upper);
+                    setLedBufDirect(30, &rgb_upper);
+                    setLedBufDirect(31, &rgb_upper);
+                    setLedBufDirect(32, &rgb_upper);
+                    setLedBufDirect(33, &rgb_upper);
                 }
                 else
                 {
-                    setLedBuf(30, &rgb_normal);
-                    setLedBuf(31, &rgb_normal);
-                    setLedBuf(32, &rgb_normal);
-                    setLedBuf(33, &rgb_normal);
+                    setLedBufDirect(30, &rgb_normal);
+                    setLedBufDirect(31, &rgb_normal);
+                    setLedBufDirect(32, &rgb_normal);
+                    setLedBufDirect(33, &rgb_normal);
                 }
                 renew();
             }
@@ -659,7 +666,7 @@ void led_control_task(void)
     if (isEnter)
     {
         countEnter++;
-        if (countEnter > 20)
+        if (countEnter > ANIMATION_COUNT_MAX)
         {
             countEnter = 0;
 
@@ -853,24 +860,24 @@ void led_control_task(void)
 
                 if (isShiftPressed())
                 {
-                    setLedBuf(30, &rgb_shift);
-                    setLedBuf(31, &rgb_shift);
-                    setLedBuf(32, &rgb_shift);
-                    setLedBuf(33, &rgb_shift);
+                    setLedBufDirect(30, &rgb_shift);
+                    setLedBufDirect(31, &rgb_shift);
+                    setLedBufDirect(32, &rgb_shift);
+                    setLedBufDirect(33, &rgb_shift);
                 }
                 else if (isUpperPressed())
                 {
-                    setLedBuf(30, &rgb_upper);
-                    setLedBuf(31, &rgb_upper);
-                    setLedBuf(32, &rgb_upper);
-                    setLedBuf(33, &rgb_upper);
+                    setLedBufDirect(30, &rgb_upper);
+                    setLedBufDirect(31, &rgb_upper);
+                    setLedBufDirect(32, &rgb_upper);
+                    setLedBufDirect(33, &rgb_upper);
                 }
                 else
                 {
-                    setLedBuf(30, &rgb_normal);
-                    setLedBuf(31, &rgb_normal);
-                    setLedBuf(32, &rgb_normal);
-                    setLedBuf(33, &rgb_normal);
+                    setLedBufDirect(30, &rgb_normal);
+                    setLedBufDirect(31, &rgb_normal);
+                    setLedBufDirect(32, &rgb_normal);
+                    setLedBufDirect(33, &rgb_normal);
                 }
                 renew();
             }
