@@ -20,7 +20,7 @@ The procedure to update the firmware using STM32CubeProg is as follows
 
 0. Download the latest ELF file from [here](https://github.com/yamamo2shun1/C4NDY/releases).
 1. launch STM32CubeProg.
-2. Rewrite "PID" to "0x0001"(KeyVLM) or "0x0002"(STK).
+2. Rewrite "PID" to "0x0001".
 3. Rewrite "VID" to "0x31BF".
 4. Click the "Port" update button.
 5. Confirm that "Port" is changed from "No DFU detected" to "USB1" and click the "Connect" button.
