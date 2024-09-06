@@ -63,7 +63,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-bool isBusy = false;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -105,17 +105,16 @@ void tud_resume_cb(void)
     // blink_interval_ms = BLINK_MOUNTED;
 }
 
+#if 0
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
     if (htim == &htim6)
     {
         // SEGGER_RTT_printf(0, "timer 6...\n");
-        if (!isBusy)
-        {
-            led_control_task();
-        }
+        led_control_task();
     }
 }
+#endif
 
 void erase_flash_data(void)
 {
@@ -434,21 +433,31 @@ int main(void)
     HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
 
     setAllLedBuf(&rgb_normal);
+
+    int state_index = 0;
     /* USER CODE END 2 */
 
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1)
     {
-        isBusy = true;
         tud_task();
 
-        codec_control_task();
-
-        hid_keyscan_task();
-
-        led_control_task();
-        isBusy = false;
+        switch (state_index)
+        {
+        case 0:
+            hid_keyscan_task();
+            state_index = 1;
+            break;
+        case 1:
+            codec_control_task();
+            state_index = 2;
+            break;
+        case 2:
+            led_control_task();
+            state_index = 0;
+            break;
+        }
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */

@@ -730,12 +730,14 @@ void controlJoySticks()
                 // SEGGER_RTT_printf(0, "%d:up (%d)\n", i, (int) theta);
                 currentStk[i][JOYSTICK_V] = -1;
             }
+#if 0
             else if (theta >= 135 - JOYSTICK_ON_ANGLE && theta < 135 + JOYSTICK_ON_ANGLE)
             {
                 // SEGGER_RTT_printf(0, "%d:up left (%d)\n", i, (int) theta);
                 currentStk[i][JOYSTICK_H] = -1;
                 currentStk[i][JOYSTICK_V] = -1;
             }
+#endif
             else if (theta >= -90 - JOYSTICK_ON_ANGLE && theta < -90 + JOYSTICK_ON_ANGLE)
             {
                 // SEGGER_RTT_printf(0, "%d:down (%d)\n", i, (int) theta);
@@ -771,11 +773,12 @@ void controlJoySticks()
         {
             // SEGGER_RTT_printf(0, "currentStk[%d][H] = %d\n", i, currentStk[i][JOYSTICK_H]);
             // SEGGER_RTT_printf(0, "currentStk[%d][V] = %d\n", i, currentStk[i][JOYSTICK_V]);
-
+#if 0
             if (currentStk[i][JOYSTICK_H] == -1 && currentStk[i][JOYSTICK_H] == -1)
             {
                 setKeys(SC_LSHIFT);
             }
+#endif
         }
         else
         {
