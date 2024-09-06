@@ -7,7 +7,7 @@
 
 #include <math.h>
 
-#include "main.h"
+#include "adc.h"
 #include "sai.h"
 
 #include "audio_control.h"
@@ -251,8 +251,8 @@ bool tud_audio_set_itf_close_EP_cb(uint8_t rhport, tusb_control_request_t const*
 {
     (void) rhport;
 
-    uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
-    uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
+    // uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
+    // uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
 
 #if 0
   if (ITF_NUM_AUDIO_STREAMING_SPK == itf && alt == 0)
@@ -265,7 +265,7 @@ bool tud_audio_set_itf_close_EP_cb(uint8_t rhport, tusb_control_request_t const*
 bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const* p_request)
 {
     (void) rhport;
-    uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
+    // uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
     uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
 
 #if 0
