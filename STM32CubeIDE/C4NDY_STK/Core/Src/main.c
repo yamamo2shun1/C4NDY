@@ -51,8 +51,6 @@
 /* USER CODE BEGIN PD */
 #define FLASH_DATA_ADDR 0x0807F800
 
-#define AUDIO_SAMPLE_RATE 48000
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
