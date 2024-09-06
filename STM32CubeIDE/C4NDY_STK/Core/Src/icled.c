@@ -195,10 +195,7 @@ void renew(void)
 
     if (isRenewed)
     {
-        if (HAL_TIM_PWM_Start_DMA(&htim8, TIM_CHANNEL_1, (uint32_t*) led_buf, DMA_BUF_SIZE) != HAL_OK)
-        {
-            Error_Handler();
-        }
+        HAL_TIM_PWM_Start_DMA(&htim8, TIM_CHANNEL_1, (uint32_t*) led_buf, DMA_BUF_SIZE);
     }
 }
 
