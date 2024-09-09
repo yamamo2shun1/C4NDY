@@ -81,10 +81,10 @@ First, install the [Go language](https://go.dev/) development environment.
 Some preparation is required to build the code because we are using [go-hid](https://github.com/sstallion/go-hid).
 
 ### for Windows
-Add "CGO_ENABLED=1" to the environment variable and install a C compiler such as [TDM-GCC](https://jmeubank.github.io/tdm-gcc/) beforehand.
+Add `CGO_ENABLED=1` to the environment variable and install a C compiler such as [TDM-GCC](https://jmeubank.github.io/tdm-gcc/) beforehand.
 
 ### for macOS/Linux
-Add "CGO_ENABLED=1" to your shell configuration file, such as .zshrc.
+Add `CGO_ENABLED=1` to your shell configuration file, such as .zshrc.
 
 ## How to build from Source Code
 ```
