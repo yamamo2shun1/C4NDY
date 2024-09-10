@@ -1,11 +1,11 @@
-# How to remap
+# キーボードのリマップ
 
-[KeyConfigurator](https://github.com/yamamo2shun1/KeyConfigurator) is a command line tool for key remapping dedicated to C4NDY KeyVLM/STK.
+C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドライン・ツール[KeyConfigurator](https://github.com/yamamo2shun1/KeyConfigurator)を使います。
 
-## Preparing
-By preparing a keymap file written in TOML and reading it, it is possible to remap without rewriting the firmware.
+## 準備
+キーマップを記述したTOMLを用意することで、ファームウェアの書き換え無しにリマップすることが可能です。
 
-- [Example for KeyVLM](https://github.com/yamamo2shun1/KeyConfigurator/blob/main/layouts_KeyVLM.toml)
+- [例：KeyVLM](https://github.com/yamamo2shun1/KeyConfigurator/blob/main/layouts_KeyVLM.toml)
 ```toml
 [layout1]
 	normal = [
@@ -26,7 +26,7 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 	]
 ```
 
-- [Example for STK](https://github.com/yamamo2shun1/KeyConfigurator/blob/main/layouts_STK.toml)
+- [例：STK](https://github.com/yamamo2shun1/KeyConfigurator/blob/main/layouts_STK.toml)
 ```toml
 [layout1]
 	normal = [
@@ -65,8 +65,8 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 	]
 ```
 
-## How to use
-Download the latest version from [here](https://github.com/yamamo2shun1/KeyConfigurator/releases) and run it from Command Prompt (Windows) or Terminal.app (macOS).
+## 使い方
+[こちら](https://github.com/yamamo2shun1/KeyConfigurator/releases)から最新版をダウンロードし、コマンドプロンプトやPowershell(Windowsの場合)、Terminal.app (macOSの場合)から利用します。
 ```shellscriput
 > keyconfig -version                 // Show the version of the tool installed
 > keyconfig -check                   // Show information on C4NDY KeyVLM/STK connected to PC/Mac
@@ -76,17 +76,18 @@ Download the latest version from [here](https://github.com/yamamo2shun1/KeyConfi
 > keyconfig -save                    // Save the keymap written by "remap" to the memory area
 ```
 
-## Preparation to build
-First, install the [Go language](https://go.dev/) development environment.  
-Some preparation is required to build the code because we are using [go-hid](https://github.com/sstallion/go-hid).
+## ツールのビルド
+[Go言語](https://go.dev/)の開発環境を各自でご用意ください。
+また、KeyConfiguratorではHIDでの通信を行うために[go-hid](https://github.com/sstallion/go-hid)を利用しており、OSごとに下記のような設定が必要になります。
 
-### for Windows
-Add `CGO_ENABLED=1` to the environment variable and install a C compiler such as [TDM-GCC](https://jmeubank.github.io/tdm-gcc/) beforehand.
+### Windowsの場合
+環境変数に`CGO_ENABLED=1`を追加し、[TDM-GCC](https://jmeubank.github.io/tdm-gcc/) などのCコンパイラをインストールしてください。
 
-### for macOS/Linux
-Add `CGO_ENABLED=1` to your shell configuration file, such as .zshrc.
+### macOS/Linuxの場合
+ご利用のシェルの設定ファイル（zshの場合は.zshrcなど）に`CGO_ENABLED=1`を加えてください。
 
-## How to build from Source Code
+## ソースコードからビルドする場合
+以下のようにして、ご利用のOS用の実行ファイルを生成してください。
 ```
 > go build -o keyconfig
 ```
