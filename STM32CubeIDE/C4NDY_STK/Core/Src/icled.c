@@ -7,12 +7,13 @@
 
 #include "icled.h"
 
+#include "sai.h"
 #include "keyboard.h"
 #include "tim.h"
 
-RGB_Color_t rgb_normal = {0xEC, 0x80, 0x8C};
-RGB_Color_t rgb_upper  = {0xEC, 0x00, 0x8C};
-RGB_Color_t rgb_shift  = {0x2C, 0x00, 0x8C};
+RGB_Color_t rgb_normal = {0x00, 0x00, 0x00};
+RGB_Color_t rgb_upper  = {0x00, 0x00, 0x00};
+RGB_Color_t rgb_shift  = {0x00, 0x00, 0x00};
 RGB_Color_t rgb_blank  = {0x00, 0x00, 0x00};
 
 uint8_t grb_prev[LED_NUMS][RGB]    = {0};
@@ -43,6 +44,42 @@ int stepEnter  = 0;
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef* htim)
 {
     HAL_TIM_PWM_Stop_DMA(htim, TIM_CHANNEL_1);
+}
+
+void setNormalColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b)
+{
+    rgb_normal.r = r;
+    rgb_normal.g = g;
+    rgb_normal.b = b;
+}
+
+void setUpperColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b)
+{
+    rgb_upper.r = r;
+    rgb_upper.g = g;
+    rgb_upper.b = b;
+}
+
+void setShiftColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b)
+{
+    rgb_shift.r = r;
+    rgb_shift.g = g;
+    rgb_shift.b = b;
+}
+
+RGB_Color_t* getNormalColor(uint8_t keymapId)
+{
+    return &rgb_normal;
+}
+
+RGB_Color_t* getUpperColor(uint8_t keymapId)
+{
+    return &rgb_upper;
+}
+
+RGB_Color_t* getShiftColor(uint8_t keymapId)
+{
+    return &rgb_shift;
 }
 
 void setSpaceFlag(void)
@@ -195,7 +232,10 @@ void renew(void)
 
     if (isRenewed)
     {
-        HAL_TIM_PWM_Start_DMA(&htim8, TIM_CHANNEL_1, (uint32_t*) led_buf, DMA_BUF_SIZE);
+        if (hsai_BlockB1.State != HAL_SAI_STATE_BUSY)
+        {
+            HAL_TIM_PWM_Start_DMA(&htim8, TIM_CHANNEL_1, (uint32_t*) led_buf, DMA_BUF_SIZE);
+        }
     }
 }
 

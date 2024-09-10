@@ -41,6 +41,13 @@ extern RGB_Color_t rgb_upper;
 extern RGB_Color_t rgb_shift;
 extern RGB_Color_t rgb_blank;
 
+void setNormalColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b);
+void setUpperColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b);
+void setShiftColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b);
+RGB_Color_t* getNormalColor(uint8_t keymapId);
+RGB_Color_t* getUpperColor(uint8_t keymapId);
+RGB_Color_t* getShiftColor(uint8_t keymapId);
+
 void setSpaceFlag(void);
 void setBackspaceFlag(void);
 void setEnterFlag(void);

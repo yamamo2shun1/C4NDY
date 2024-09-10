@@ -1,0 +1,9 @@
+iframe.youtube {
+	width: 100%;
+	height: auto;
+	aspect-ratio: 16 / 9;
+	max-width: 720px;
+	display: block;
+	margin: auto;
+	border-radius: 16px;
+}
