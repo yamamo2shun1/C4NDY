@@ -7,6 +7,7 @@
 
 #include "icled.h"
 
+#include "sai.h"
 #include "keyboard.h"
 #include "tim.h"
 
@@ -195,7 +196,10 @@ void renew(void)
 
     if (isRenewed)
     {
-        HAL_TIM_PWM_Start_DMA(&htim8, TIM_CHANNEL_1, (uint32_t*) led_buf, DMA_BUF_SIZE);
+        if (hsai_BlockB1.State != HAL_SAI_STATE_BUSY)
+        {
+            HAL_TIM_PWM_Start_DMA(&htim8, TIM_CHANNEL_1, (uint32_t*) led_buf, DMA_BUF_SIZE);
+        }
     }
 }
 
