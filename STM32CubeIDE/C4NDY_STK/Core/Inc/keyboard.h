@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define ENABLE_LEFT_UP
+
 #define MATRIX_ROWS    4
 #define MATRIX_COLUMNS 10
 
