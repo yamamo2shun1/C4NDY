@@ -112,7 +112,7 @@ main-build: C4NDY_STK.elf secondary-outputs
 
 # Tool invocations
 C4NDY_STK.elf C4NDY_STK.map: $(OBJS) $(USER_OBJS) C:\Users\shun\C4NDY\STM32CubeIDE\C4NDY_STK\STM32G491CETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "C4NDY_STK.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\shun\C4NDY\STM32CubeIDE\C4NDY_STK\STM32G491CETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="C4NDY_STK.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -Wl,--print-memory-usage -o "C4NDY_STK.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\shun\C4NDY\STM32CubeIDE\C4NDY_STK\STM32G491CETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="C4NDY_STK.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
