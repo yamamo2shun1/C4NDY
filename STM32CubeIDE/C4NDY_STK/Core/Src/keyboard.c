@@ -109,6 +109,11 @@ void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_
 }
 #endif
 
+uint8_t getKeymapID(void)
+{
+    return keymapID;
+}
+
 void setLinePhonoSW(uint8_t val)
 {
     linePhonoSW = val;
@@ -296,20 +301,27 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF2 && buffer[1] == 0x14)
     {
         SEGGER_RTT_printf(0, "read from layout1 led:\n");
-        RGB_Color_t* rgb_normal = getNormalColor(0);
-        rbuf[0]                 = rgb_normal->r;
-        rbuf[1]                 = rgb_normal->g;
-        rbuf[2]                 = rgb_normal->b;
-
-        RGB_Color_t* rgb_upper = getUpperColor(0);
-        rbuf[3]                = rgb_upper->r;
-        rbuf[4]                = rgb_upper->g;
-        rbuf[5]                = rgb_upper->b;
-
-        RGB_Color_t* rgb_shift = getShiftColor(0);
-        rbuf[6]                = rgb_shift->r;
-        rbuf[7]                = rgb_shift->g;
-        rbuf[8]                = rgb_shift->b;
+        switch (buffer[0])
+        {
+        case 0xF0:
+            RGB_Color_t* rgb_normal = getNormalColor(0);
+            rbuf[0]                 = rgb_normal->r;
+            rbuf[1]                 = rgb_normal->g;
+            rbuf[2]                 = rgb_normal->b;
+            break;
+        case 0xF1:
+            RGB_Color_t* rgb_upper = getUpperColor(0);
+            rbuf[0]                = rgb_upper->r;
+            rbuf[1]                = rgb_upper->g;
+            rbuf[2]                = rgb_upper->b;
+            break;
+        case 0xF2:
+            RGB_Color_t* rgb_shift = getShiftColor(0);
+            rbuf[0]                = rgb_shift->r;
+            rbuf[1]                = rgb_shift->g;
+            rbuf[2]                = rgb_shift->b;
+            break;
+        }
 
         tud_hid_n_report(1, 0, rbuf, 16);
     }
@@ -346,20 +358,28 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF2 && buffer[1] == 0x1C)
     {
         SEGGER_RTT_printf(0, "read from layout2 led:\n");
-        RGB_Color_t* rgb_normal = getNormalColor(1);
-        rbuf[0]                 = rgb_normal->r;
-        rbuf[1]                 = rgb_normal->g;
-        rbuf[2]                 = rgb_normal->b;
 
-        RGB_Color_t* rgb_upper = getUpperColor(1);
-        rbuf[3]                = rgb_upper->r;
-        rbuf[4]                = rgb_upper->g;
-        rbuf[5]                = rgb_upper->b;
-
-        RGB_Color_t* rgb_shift = getShiftColor(1);
-        rbuf[6]                = rgb_shift->r;
-        rbuf[7]                = rgb_shift->g;
-        rbuf[8]                = rgb_shift->b;
+        switch (buffer[0])
+        {
+        case 0xF0:
+            RGB_Color_t* rgb_normal = getNormalColor(1);
+            rbuf[0]                 = rgb_normal->r;
+            rbuf[1]                 = rgb_normal->g;
+            rbuf[2]                 = rgb_normal->b;
+            break;
+        case 0xF1:
+            RGB_Color_t* rgb_upper = getUpperColor(1);
+            rbuf[0]                = rgb_upper->r;
+            rbuf[1]                = rgb_upper->g;
+            rbuf[2]                = rgb_upper->b;
+            break;
+        case 0xF2:
+            RGB_Color_t* rgb_shift = getShiftColor(1);
+            rbuf[0]                = rgb_shift->r;
+            rbuf[1]                = rgb_shift->g;
+            rbuf[2]                = rgb_shift->b;
+            break;
+        }
 
         tud_hid_n_report(1, 0, rbuf, 16);
     }
@@ -510,11 +530,11 @@ void clearKeys(uint8_t code)
             if (((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
                 ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01))
             {
-                setAllLedBuf(&rgb_shift);
+                setAllLedBuf(getShiftColor(keymapID));
             }
             else
             {
-                setAllLedBuf(&rgb_normal);
+                setAllLedBuf(getNormalColor(keymapID));
             }
         }
     }
@@ -537,22 +557,22 @@ void clearKeys(uint8_t code)
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index, &rgb_upper);
+                                setLedBuf(index, getUpperColor(keymapID));
                             }
                             else if (getUpperKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index, &rgb_blank);
+                                setLedBuf(index, getBlankColor());
                             }
                         }
                         else if (index >= 36)
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index - 6, &rgb_upper);
+                                setLedBuf(index - 6, getUpperColor(keymapID));
                             }
                             else if (getUpperKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index - 6, &rgb_blank);
+                                setLedBuf(index - 6, getBlankColor());
                             }
                         }
                     }
@@ -560,7 +580,7 @@ void clearKeys(uint8_t code)
             }
             else
             {
-                setAllLedBuf(&rgb_normal);
+                setAllLedBuf(getNormalColor(keymapID));
             }
         }
     }
@@ -597,6 +617,73 @@ void setKeys(uint8_t code)
                 HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
             }
             isKeymapIDChanged = true;
+
+            if (isUpper)
+            {
+                for (int j = 0; j < MATRIX_ROWS; j++)
+                {
+                    for (int i = 0; i < MATRIX_COLUMNS; i++)
+                    {
+                        int index = MATRIX_COLUMNS * j + i;
+                        if (index < 30)
+                        {
+                            if ((((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
+                                 ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01)))
+                            {
+                                if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                                {
+                                    setLedBuf(index, getShiftColor(keymapID));
+                                }
+                                else
+                                {
+                                    setLedBuf(index, getBlankColor());
+                                }
+                            }
+                            else
+                            {
+                                if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                                {
+                                    setLedBuf(index, getUpperColor(keymapID));
+                                }
+                                else
+                                {
+                                    setLedBuf(index, getBlankColor());
+                                }
+                            }
+                        }
+                        else if (index >= 36)
+                        {
+                            if ((((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
+                                 ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01)))
+                            {
+                                if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                                {
+                                    setLedBuf(index - 6, getShiftColor(keymapID));
+                                }
+                                else
+                                {
+                                    setLedBuf(index - 6, getBlankColor());
+                                }
+                            }
+                            else
+                            {
+                                if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                                {
+                                    setLedBuf(index - 6, getUpperColor(keymapID));
+                                }
+                                else
+                                {
+                                    setLedBuf(index - 6, getBlankColor());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                setAllLedBuf(getNormalColor(keymapID));
+            }
         }
     }
     else if (code == SC_LNPH)
@@ -654,22 +741,22 @@ void setKeys(uint8_t code)
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index, &rgb_shift);
+                                setLedBuf(index, getShiftColor(keymapID));
                             }
                             else
                             {
-                                setLedBuf(index, &rgb_blank);
+                                setLedBuf(index, getBlankColor());
                             }
                         }
                         else
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index, &rgb_upper);
+                                setLedBuf(index, getUpperColor(keymapID));
                             }
                             else
                             {
-                                setLedBuf(index, &rgb_blank);
+                                setLedBuf(index, getBlankColor());
                             }
                         }
                     }
@@ -680,22 +767,22 @@ void setKeys(uint8_t code)
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index - 6, &rgb_shift);
+                                setLedBuf(index - 6, getShiftColor(keymapID));
                             }
                             else
                             {
-                                setLedBuf(index - 6, &rgb_blank);
+                                setLedBuf(index - 6, getBlankColor());
                             }
                         }
                         else
                         {
                             if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index - 6, &rgb_upper);
+                                setLedBuf(index - 6, getUpperColor(keymapID));
                             }
                             else
                             {
-                                setLedBuf(index - 6, &rgb_blank);
+                                setLedBuf(index - 6, getBlankColor());
                             }
                         }
                     }
@@ -721,38 +808,38 @@ void setKeys(uint8_t code)
                         {
                             if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index, &rgb_shift);
+                                setLedBuf(index, getShiftColor(keymapID));
                             }
                             else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index, &rgb_blank);
+                                setLedBuf(index, getBlankColor());
                             }
                             else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index, &rgb_shift);
+                                setLedBuf(index, getShiftColor(keymapID));
                             }
                             else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index, &rgb_blank);
+                                setLedBuf(index, getBlankColor());
                             }
                         }
                         else if (index >= 36)
                         {
                             if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index - 6, &rgb_shift);
+                                setLedBuf(index - 6, getShiftColor(keymapID));
                             }
                             else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index - 6, &rgb_blank);
+                                setLedBuf(index - 6, getBlankColor());
                             }
                             else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
                             {
-                                setLedBuf(index - 6, &rgb_shift);
+                                setLedBuf(index - 6, getShiftColor(keymapID));
                             }
                             else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
                             {
-                                setLedBuf(index - 6, &rgb_blank);
+                                setLedBuf(index - 6, getBlankColor());
                             }
                         }
                     }
