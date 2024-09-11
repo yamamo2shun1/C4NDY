@@ -140,7 +140,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             keymaps_normal[0][buffer[0] - 0xF0][j] = buffer[j + 2];
         }
     }
-    else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x04)
+    else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x09)
     {
         SEGGER_RTT_printf(0, "write to layout2:\n");
 
@@ -149,7 +149,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             keymaps_normal[1][buffer[0] - 0xF0][j] = buffer[j + 2];
         }
     }
-    else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x07)
+    else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x11)
     {
         SEGGER_RTT_printf(0, "read from layout1:\n");
         for (int j = 0; j < MATRIX_COLUMNS; j++)
@@ -159,7 +159,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
         tud_hid_n_report(1, 0, rbuf, 16);
     }
-    else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x0A)
+    else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF4 && buffer[1] == 0x19)
     {
         SEGGER_RTT_printf(0, "read from layout2:\n");
         for (int j = 0; j < MATRIX_COLUMNS; j++)
