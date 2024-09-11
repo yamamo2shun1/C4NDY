@@ -134,6 +134,7 @@
 uint8_t getKeymapID(void);
 void setLinePhonoSW(uint8_t val);
 uint8_t getLinePhonoSW(void);
+void writeAllKeyboardSettings(void);
 uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y);
 uint8_t getUpperKeyCode(uint8_t keymapId, uint8_t x, uint8_t y);
 uint8_t getStickKeyCode(uint8_t keymapId, uint8_t id, uint8_t direction);
