@@ -134,6 +134,58 @@ uint8_t getLinePhonoSW(void)
     return linePhonoSW;
 }
 
+void writeAllKeyboardSettings(void)
+{
+    HAL_FLASH_Unlock();
+
+    erase_flash_data();
+
+    write_flash_data(0, linePhonoSW);
+    write_flash_data(1, 99);
+
+    for (int i = 0; i < MATRIX_ROWS; i++)
+    {
+        for (int j = 0; j < MATRIX_COLUMNS; j++)
+        {
+            write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
+            write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
+
+            write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(0, i, j));
+            write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(1, i, j));
+        }
+    }
+
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
+            write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
+        }
+    }
+
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 0, getNormalColor(0)->r);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 1, getNormalColor(0)->g);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 2, getNormalColor(0)->b);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 3, getUpperColor(0)->r);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 4, getUpperColor(0)->g);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 5, getUpperColor(0)->b);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 6, getShiftColor(0)->r);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 7, getShiftColor(0)->g);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 8, getShiftColor(0)->b);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 9, getNormalColor(1)->r);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 10, getNormalColor(1)->g);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 11, getNormalColor(1)->b);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 12, getUpperColor(1)->r);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 13, getUpperColor(1)->g);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 14, getUpperColor(1)->b);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 15, getShiftColor(1)->r);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 16, getShiftColor(1)->g);
+    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 17, getShiftColor(1)->b);
+
+    HAL_FLASH_Lock();
+}
+
 // Invoked when received GET_REPORT control request
 // Application must fill buffer report's content and return its length.
 // Return zero will cause the stack to STALL request
@@ -388,52 +440,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         SEGGER_RTT_printf(0, "erase & write FLASH...\n");
         HAL_FLASH_Unlock();
 
-        erase_flash_data();
-
-        write_flash_data(0, linePhonoSW);
-        write_flash_data(1, 99);
-
-        for (int i = 0; i < MATRIX_ROWS; i++)
-        {
-            for (int j = 0; j < MATRIX_COLUMNS; j++)
-            {
-                write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
-                write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
-
-                write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(0, i, j));
-                write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(1, i, j));
-            }
-        }
-
-        for (int i = 0; i < 2; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
-                write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
-            }
-        }
-
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 0, getNormalColor(0)->r);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 1, getNormalColor(0)->g);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 2, getNormalColor(0)->b);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 3, getUpperColor(0)->r);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 4, getUpperColor(0)->g);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 5, getUpperColor(0)->b);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 6, getShiftColor(0)->r);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 7, getShiftColor(0)->g);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 8, getShiftColor(0)->b);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 9, getNormalColor(1)->r);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 10, getNormalColor(1)->g);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 11, getNormalColor(1)->b);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 12, getUpperColor(1)->r);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 13, getUpperColor(1)->g);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 14, getUpperColor(1)->b);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 15, getShiftColor(1)->r);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 16, getShiftColor(1)->g);
-        write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 17, getShiftColor(1)->b);
-
-        HAL_FLASH_Lock();
+        writeAllKeyboardSettings();
 
         uint8_t rbuf[16] = {0x00};
         rbuf[1]          = 0xF5;
