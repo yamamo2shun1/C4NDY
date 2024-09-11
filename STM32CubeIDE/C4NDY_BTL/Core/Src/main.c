@@ -41,7 +41,7 @@ typedef void (*pFunction)(void);
 /* USER CODE BEGIN PD */
 #define FLASH_APP_ADDR (0x08020000)
 
-#define FLASH_DATA_ADDR (0x0807F800)
+#define FLASH_DATA_ADDR (0x0807F000)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
