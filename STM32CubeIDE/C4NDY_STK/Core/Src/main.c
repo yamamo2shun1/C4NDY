@@ -119,8 +119,8 @@ void erase_flash_data(void)
     static FLASH_EraseInitTypeDef EraseInitStruct;
     uint32_t PAGEError;
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
-    EraseInitStruct.Page      = 255;
-    EraseInitStruct.NbPages   = 1;
+    EraseInitStruct.Page      = 254;
+    EraseInitStruct.NbPages   = 2;
 
     if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK)
     {
@@ -494,7 +494,7 @@ int main(void)
 
     HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
 
-    setAllLedBuf(&rgb_normal);
+    setAllLedBuf(getNormalColor(0));
 
     int state_index = 0;
     /* USER CODE END 2 */
