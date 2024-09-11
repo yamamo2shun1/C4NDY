@@ -131,6 +131,7 @@
 
 #define MAX_LONG_PRESS_COUNT 500
 
+uint8_t getKeymapID(void);
 void setLinePhonoSW(uint8_t val);
 uint8_t getLinePhonoSW(void);
 uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y);
