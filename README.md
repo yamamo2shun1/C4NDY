@@ -1,4 +1,4 @@
-# C4NDY KeyVLM
+# C4NDY KeyVLM / STK
 
 ## Documentation
 - [See the official documentation on c4ndy.made-in-yamamoto.com](https://c4ndy.made-in-yamamoto.com)
