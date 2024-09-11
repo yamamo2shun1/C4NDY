@@ -12,7 +12,8 @@ import{
                 description: "C4NDY Project Site",
                 themeConfig: {
                     // https://vitepress.dev/reference/default-theme-config
-                    nav: [
+                    nav:
+                    [
                         {text: 'Home', link: '/'},
                     ],
 
@@ -42,7 +43,8 @@ import{
                 description: "C4NDY Project Site",
                 themeConfig: {
                     // https://vitepress.dev/reference/default-theme-config
-                    nav: [
+                    nav:
+                    [
                         {text: 'Home', link: '/jp'},
                     ],
 
