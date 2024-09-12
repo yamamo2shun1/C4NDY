@@ -46,7 +46,7 @@ enum
 
 enum
 {
-    ITF_NUM_HID = 0,
+    ITF_NUM_HID_KEYBOARD = 0,
     ITF_NUM_HID_MOUSE,
     ITF_NUM_HID_GIO,
     ITF_NUM_AUDIO_CONTROL,

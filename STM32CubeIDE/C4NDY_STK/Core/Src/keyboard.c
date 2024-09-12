@@ -1208,7 +1208,7 @@ void hid_keyscan_task(void)
                 if (!tud_hid_ready())
                     return;
 
-                tud_hid_keyboard_report(REPORT_ID_KEYBOARD, keyboardHID.modifiers, keyboardHID.key);
+                tud_hid_n_keyboard_report(ITF_NUM_HID_KEYBOARD, REPORT_ID_KEYBOARD, keyboardHID.modifiers, keyboardHID.key);
                 break;
             }
             else

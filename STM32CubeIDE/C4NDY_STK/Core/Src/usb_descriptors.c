@@ -73,7 +73,7 @@ uint8_t const* tud_descriptor_device_cb(void)
 // HID Report Descriptor
 //--------------------------------------------------------------------+
 
-uint8_t const desc_hid_report[] =
+uint8_t const desc_hid_report_keyboard[] =
     {
         TUD_HID_REPORT_DESC_KEYBOARD(HID_REPORT_ID(REPORT_ID_KEYBOARD)),
 };
@@ -98,15 +98,15 @@ uint8_t const* tud_hid_descriptor_report_cb(uint8_t itf)
 	(void) instance;
 	return desc_hid_report;
 #else
-    if (itf == 0)
+    if (itf == ITF_NUM_HID_KEYBOARD)
     {
-        return desc_hid_report;
+        return desc_hid_report_keyboard;
     }
-    else if (itf == 1)
+    else if (itf == ITF_NUM_HID_MOUSE)
     {
         return desc_hid_report_mouse;
     }
-    else if (itf == 2)
+    else if (itf == ITF_NUM_HID_GIO)
     {
         return desc_hid_report_gio;
     }
@@ -133,7 +133,7 @@ uint8_t const desc_configuration[] =
         TUD_CONFIG_DESCRIPTOR(1, ITF_NUM_TOTAL, 0, CONFIG_TOTAL_LEN, 0x00, 500),
 
         // Interface number, string index, protocol, report descriptor len, EP In address, size & polling interval
-        TUD_HID_DESCRIPTOR(ITF_NUM_HID, 4, HID_ITF_PROTOCOL_NONE, sizeof(desc_hid_report), EPNUM_HID | 0x80, CFG_TUD_HID_EP_BUFSIZE, 5),
+        TUD_HID_DESCRIPTOR(ITF_NUM_HID_KEYBOARD, 4, HID_ITF_PROTOCOL_NONE, sizeof(desc_hid_report_keyboard), EPNUM_HID | 0x80, CFG_TUD_HID_EP_BUFSIZE, 5),
 
         TUD_HID_DESCRIPTOR(ITF_NUM_HID_MOUSE, 5, HID_ITF_PROTOCOL_NONE, sizeof(desc_hid_report_mouse), EPNUM_HID_MOUSE | 0x80, CFG_TUD_HID_EP_BUFSIZE, 5),
 
