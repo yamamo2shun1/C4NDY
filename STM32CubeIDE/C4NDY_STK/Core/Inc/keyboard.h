@@ -137,7 +137,7 @@
 #define MOUSE_LEFT_CLICK  2
 
 #define MAX_MOUSE_SENSITIVITY 6
-#define MIN_MOUSE_THRESHOLD   1
+#define MIN_MOUSE_THRESHOLD   0
 
 uint8_t getKeymapID(void);
 void setLinePhonoSW(uint8_t val);
