@@ -20,6 +20,15 @@ struct keyboardHID_t
     uint8_t key[6];
 } keyboardHID;
 
+struct mouseHID_t
+{
+    int8_t x;
+    int8_t y;
+    uint8_t buttons;
+    int8_t vertical;
+    int8_t horizontal;
+} mouseHID;
+
 uint16_t keyState[MATRIX_ROWS]     = {0x0};
 uint16_t prevKeyState[MATRIX_ROWS] = {0x0};
 
@@ -328,7 +337,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             rbuf[j] = keymaps_normal[0][buffer[0] - 0xF0][j];
         }
 
-        tud_hid_n_report(1, 0, rbuf, 16);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, 16);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF3 && buffer[1] == 0x12)
     {
@@ -338,7 +347,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             rbuf[j] = keymaps_upper[0][buffer[0] - 0xF0][j];
         }
 
-        tud_hid_n_report(1, 0, rbuf, 16);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, 16);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF1 && buffer[1] == 0x13)
     {
@@ -348,7 +357,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             rbuf[j] = keymaps_stk[0][buffer[0] - 0xF0][j];
         }
 
-        tud_hid_n_report(1, 0, rbuf, 16);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, 16);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF2 && buffer[1] == 0x14)
     {
@@ -375,7 +384,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             break;
         }
 
-        tud_hid_n_report(1, 0, rbuf, 16);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, 16);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF3 && buffer[1] == 0x19)
     {
@@ -385,7 +394,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             rbuf[j] = keymaps_normal[1][buffer[0] - 0xF0][j];
         }
 
-        tud_hid_n_report(1, 0, rbuf, 16);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, 16);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF3 && buffer[1] == 0x1A)
     {
@@ -395,7 +404,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             rbuf[j] = keymaps_upper[1][buffer[0] - 0xF0][j];
         }
 
-        tud_hid_n_report(1, 0, rbuf, 16);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, 16);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF1 && buffer[1] == 0x1B)
     {
@@ -405,7 +414,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             rbuf[j] = keymaps_stk[1][buffer[0] - 0xF0][j];
         }
 
-        tud_hid_n_report(1, 0, rbuf, 16);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, 16);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF2 && buffer[1] == 0x1C)
     {
@@ -433,7 +442,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             break;
         }
 
-        tud_hid_n_report(1, 0, rbuf, 16);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, 16);
     }
     else if (buffer[0] == 0xF5)
     {
@@ -445,7 +454,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         uint8_t rbuf[16] = {0x00};
         rbuf[1]          = 0xF5;
         rbuf[2]          = 0x01;
-        tud_hid_n_report(1, 0, rbuf, 16);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, 16);
     }
 
 #if 0
@@ -908,6 +917,12 @@ void controlJoySticks()
         double y = (double) (pot_value[2 * i + 2] - 2048) / 2048.0;
         double r = sqrt(pow(x, 2.0) + pow(y, 2.0));
 
+        if (i == 1)
+        {
+            mouseHID.x = (int8_t) (x * MAX_MOUSE_SENSITIVITY);
+            mouseHID.y = (int8_t) (y * -MAX_MOUSE_SENSITIVITY);
+        }
+
         if (r > JOYSTICK_ON_RADIUS)
         {
             double theta = (y >= 0.0 ? 1.0 : -1.0) * acos(x / r) / M_PI * 180.0;
@@ -915,30 +930,66 @@ void controlJoySticks()
             if (theta >= 90 - JOYSTICK_ON_ANGLE && theta < 90 + JOYSTICK_ON_ANGLE)
             {
                 // SEGGER_RTT_printf(0, "%d:up (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_V] = -1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_V] = 0;
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_V] = -1;
+                }
             }
 #ifdef ENABLE_LEFT_UP
             else if (theta >= 135 - JOYSTICK_ON_ANGLE && theta < 135 + JOYSTICK_ON_ANGLE)
             {
                 // SEGGER_RTT_printf(0, "%d:up left (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_H] = -1;
-                currentStk[i][JOYSTICK_V] = -1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 0;
+                    currentStk[i][JOYSTICK_V] = 0;
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = -1;
+                    currentStk[i][JOYSTICK_V] = -1;
+                }
             }
 #endif
             else if (theta >= -90 - JOYSTICK_ON_ANGLE && theta < -90 + JOYSTICK_ON_ANGLE)
             {
                 // SEGGER_RTT_printf(0, "%d:down (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_V] = 1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_V] = 0;
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_V] = 1;
+                }
             }
             else if (theta < -180 + JOYSTICK_ON_ANGLE || theta >= 180 - JOYSTICK_ON_ANGLE)
             {
                 // SEGGER_RTT_printf(0, "%d:left (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_H] = -1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 0;
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = -1;
+                }
             }
             else if (theta >= 0 - JOYSTICK_ON_ANGLE && theta < 0 + JOYSTICK_ON_ANGLE)
             {
                 // SEGGER_RTT_printf(0, "%d:right (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_H] = 1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 0;
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = 1;
+                }
             }
             else
             {
@@ -1136,6 +1187,20 @@ void hid_keyscan_task(void)
 
                 tud_hid_keyboard_report(REPORT_ID_KEYBOARD, keyboardHID.modifiers, keyboardHID.key);
                 break;
+            }
+            else
+            {
+#if 1
+                if (isUpper && (abs(mouseHID.x) > MIN_MOUSE_THRESHOLD || abs(mouseHID.y) > MIN_MOUSE_THRESHOLD))
+                {
+                    SEGGER_RTT_printf(0, "(x, y) = (%d, %d)\n", mouseHID.x, mouseHID.y);
+
+                    if (!tud_hid_ready())
+                        return;
+
+                    tud_hid_n_mouse_report(ITF_NUM_HID_MOUSE, REPORT_ID_MOUSE, 0, mouseHID.x, mouseHID.y, 0, 0);
+                }
+#endif
             }
         }
 
