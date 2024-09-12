@@ -43,8 +43,9 @@ uint8_t linePhonoSW       = 0;
 
 bool isMasterGainChanged = false;
 
-bool isUpper = false;
-bool isShift = false;
+bool isUpper   = false;
+bool isShift   = false;
+bool isClicked = false;
 
 uint8_t countReturnNeutral = 0;
 #define MAX_COUNT_RETURN_NEUTRAL 60
@@ -72,16 +73,16 @@ uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
 uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
     // clang-format off
 	{
-		{SC_1,    SC_2,        SC_3,      SC_4,    SC_5,      SC_6,    SC_7,     SC_8,     SC_9,    SC_0},
-		{SC_Q,    SC_W,        SC_NULL,   SC_LGUI, SC_G,      SC_NULL, SC_MINUS, SC_EQUAL, SC_LSB,  SC_APS},
-		{SC_NULL, SC_RCONTROL, SC_NULL,   SC_NULL, SC_NULL,   SC_NULL, SC_RSB,   SC_NULL,  SC_NULL, SC_YEN},
-		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL, SC_LSHIFT, SC_NULL, SC_NULL,  SC_NULL,  SC_NULL, SC_GA}
+		{SC_1,    SC_2,        SC_3,      SC_4,      SC_5,      SC_6,    SC_7,     SC_8,     SC_9,    SC_0},
+		{SC_Q,    SC_W,        SC_NULL,   SC_LGUI,   SC_G,      SC_NULL, SC_MINUS, SC_EQUAL, SC_LSB,  SC_APS},
+		{SC_NULL, SC_RCONTROL, SC_M_LBTN, SC_M_RBTN, SC_NULL,   SC_NULL, SC_RSB,   SC_NULL,  SC_NULL, SC_YEN},
+		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL,   SC_LSHIFT, SC_NULL, SC_NULL,  SC_NULL,  SC_NULL, SC_GA}
 	},
 	{
-		{SC_1,    SC_2,        SC_3,      SC_4,    SC_5,      SC_6,    SC_7,     SC_8,    SC_9,     SC_0},
-		{SC_APS,  SC_COMMA,    SC_NULL,   SC_LGUI, SC_PERIOD, SC_NULL, SC_LSB,   SC_RSB,  SC_SLASH, SC_MINUS},
-		{SC_NULL, SC_CAPSLOCK, SC_NULL,   SC_NULL, SC_NULL,   SC_NULL, SC_EQUAL, SC_NULL, SC_NULL,  SC_BSLASH},
-		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL, SC_LSHIFT, SC_NULL, SC_NULL,  SC_NULL, SC_NULL,  SC_GA}
+		{SC_1,    SC_2,        SC_3,      SC_4,      SC_5,      SC_6,    SC_7,     SC_8,    SC_9,     SC_0},
+		{SC_APS,  SC_COMMA,    SC_NULL,   SC_LGUI,   SC_PERIOD, SC_NULL, SC_LSB,   SC_RSB,  SC_SLASH, SC_MINUS},
+		{SC_NULL, SC_CAPSLOCK, SC_M_LBTN, SC_M_RBTN, SC_NULL,   SC_NULL, SC_EQUAL, SC_NULL, SC_NULL,  SC_BSLASH},
+		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL,   SC_LSHIFT, SC_NULL, SC_NULL,  SC_NULL, SC_NULL,  SC_GA}
 	}
     // clang-format on
 };
@@ -1133,7 +1134,15 @@ void hid_keyscan_task(void)
                                 keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
                                 // clearKeys(SC_LSHIFT);
                             }
-                            clearKeys(keycode);
+                            if (keycode == SC_M_LBTN || keycode == SC_M_RBTN)
+                            {
+                                mouseHID.buttons = 0;
+                                isClicked        = true;
+                            }
+                            else
+                            {
+                                clearKeys(keycode);
+                            }
                         }
                     }
                 }
@@ -1149,6 +1158,7 @@ void hid_keyscan_task(void)
                     keyState[i] |= ((uint16_t) 1 << jj);
 
                     uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
+
                     if (keycode == SC_UPPER)
                     {
                         isUpper = true;
@@ -1160,7 +1170,20 @@ void hid_keyscan_task(void)
                             keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
                             // setKeys(SC_LSHIFT);
                         }
-                        setKeys(keycode);
+                        if (keycode == SC_M_LBTN)
+                        {
+                            mouseHID.buttons = MOUSE_LEFT_CLICK;
+                            isClicked        = true;
+                        }
+                        else if (keycode == SC_M_RBTN)
+                        {
+                            mouseHID.buttons = MOUSE_RIGHT_CLICK;
+                            isClicked        = true;
+                        }
+                        else
+                        {
+                            setKeys(keycode);
+                        }
                     }
                 }
             }
@@ -1191,14 +1214,15 @@ void hid_keyscan_task(void)
             else
             {
 #if 1
-                if (isUpper && (abs(mouseHID.x) > MIN_MOUSE_THRESHOLD || abs(mouseHID.y) > MIN_MOUSE_THRESHOLD))
+                if (isUpper && (abs(mouseHID.x) > MIN_MOUSE_THRESHOLD || abs(mouseHID.y) > MIN_MOUSE_THRESHOLD || isClicked))
                 {
                     SEGGER_RTT_printf(0, "(x, y) = (%d, %d)\n", mouseHID.x, mouseHID.y);
 
                     if (!tud_hid_ready())
                         return;
 
-                    tud_hid_n_mouse_report(ITF_NUM_HID_MOUSE, REPORT_ID_MOUSE, 0, mouseHID.x, mouseHID.y, 0, 0);
+                    tud_hid_n_mouse_report(ITF_NUM_HID_MOUSE, REPORT_ID_MOUSE, mouseHID.buttons, mouseHID.x, mouseHID.y, 0, 0);
+                    isClicked = false;
                 }
 #endif
             }
