@@ -1071,7 +1071,7 @@ void hid_keyscan_task(void)
 
                         if (isUpper && keycode == SC_UPPER)
                         {
-                            isUpper = false;
+                            clearKeys(keycode);
                             resetKeys();
                         }
                         else
@@ -1107,7 +1107,7 @@ void hid_keyscan_task(void)
 
                     if (keycode == SC_UPPER)
                     {
-                        isUpper = true;
+                        setKeys(keycode);
                     }
                     else
                     {
