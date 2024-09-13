@@ -510,7 +510,7 @@ void led_control_task(void)
         {
             countBackspace = 0;
 
-            if (stepBackspace == 11)
+            if (stepBackspace == 10)
             {
                 if (isShiftPressed())
                 {
