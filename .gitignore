@@ -19,6 +19,8 @@ KiCad/KVL_direct/
 *.step
 
 ### STM32CubeIDE
+STM32CubeIDE/C4NDY_hid/
+STM32CubeIDE/C4NDY_test/
 .metadata
 .settings
 Debug
@@ -40,8 +42,8 @@ node_modules/
 *.zip
 *.bak
 
+### Images
+*.ai
 *.psd
-
 *.jpg
 
-*.ai
