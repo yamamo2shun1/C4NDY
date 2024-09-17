@@ -49,7 +49,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define FLASH_DATA_ADDR 0x0807F800
+#define FLASH_DATA_ADDR 0x0807F000
 
 /* USER CODE END PD */
 
@@ -119,8 +119,8 @@ void erase_flash_data(void)
     static FLASH_EraseInitTypeDef EraseInitStruct;
     uint32_t PAGEError;
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
-    EraseInitStruct.Page      = 255;
-    EraseInitStruct.NbPages   = 1;
+    EraseInitStruct.Page      = 254;
+    EraseInitStruct.NbPages   = 2;
 
     if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK)
     {
@@ -339,42 +339,11 @@ int main(void)
     {
         SEGGER_RTT_printf(0, "init flash data\n\r");
 
-        HAL_FLASH_Unlock();
-
-        erase_flash_data();
-
-        write_flash_data(0, 0);
-        write_flash_data(1, 99);
-
-        for (int i = 0; i < MATRIX_ROWS; i++)
-        {
-            for (int j = 0; j < MATRIX_COLUMNS; j++)
-            {
-                write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
-                write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
-
-                write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(0, i, j));
-                write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(1, i, j));
-
-                write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
-                write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
-            }
-        }
-
-        for (int i = 0; i < 2; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
-                write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
-            }
-        }
-
-        HAL_FLASH_Lock();
+        setLinePhonoSW(0);
+        writeAllKeyboardSettings();
     }
 
-    uint64_t linePhonoSW = read_flash_data(0);
-    setLinePhonoSW(linePhonoSW);
+    setLinePhonoSW(read_flash_data(0));
     SEGGER_RTT_printf(0, "Phono/Line SW = %u\n", getLinePhonoSW());
 
     uint64_t test_val = 0;
@@ -428,9 +397,54 @@ int main(void)
             SEGGER_RTT_printf(0, "]\n");
         }
     }
+
+    SEGGER_RTT_printf(0, "// LED\n");
+    SEGGER_RTT_printf(0, "[ ");
+    setNormalColor(0, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 0), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 1), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 2));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 0));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 1));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 2));
+    SEGGER_RTT_printf(0, "]\n");
+
+    SEGGER_RTT_printf(0, "[ ");
+    setUpperColor(0, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 3), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 4), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 5));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 3));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 4));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 5));
+    SEGGER_RTT_printf(0, "]\n");
+
+    SEGGER_RTT_printf(0, "[ ");
+    setShiftColor(0, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 6), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 7), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 8));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 6));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 7));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 8));
+    SEGGER_RTT_printf(0, "]\n");
+    SEGGER_RTT_printf(0, "\n");
+
+    SEGGER_RTT_printf(0, "[ ");
+    setNormalColor(1, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 9), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 10), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 11));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 9));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 10));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 11));
+    SEGGER_RTT_printf(0, "]\n");
+
+    SEGGER_RTT_printf(0, "[ ");
+    setUpperColor(1, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 12), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 13), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 14));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 12));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 13));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 14));
+    SEGGER_RTT_printf(0, "]\n");
+
+    SEGGER_RTT_printf(0, "[ ");
+    setShiftColor(1, read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 15), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 16), read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 17));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 15));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 16));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 17));
+    SEGGER_RTT_printf(0, "]\n");
+
     HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
 
-    setAllLedBuf(&rgb_normal);
+    setAllLedBuf(getNormalColor(0));
 
     int state_index = 0;
     /* USER CODE END 2 */
