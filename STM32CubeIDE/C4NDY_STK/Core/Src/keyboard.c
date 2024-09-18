@@ -515,6 +515,55 @@ void setStickKeyCode(uint8_t keymapId, uint8_t id, uint8_t direction, uint8_t co
     keymaps_stk[keymapId][id][direction] = code;
 }
 
+void switchLEDColorAccordingKeymaps(void)
+{
+    for (int j = 0; j < MATRIX_ROWS; j++)
+    {
+        for (int i = 0; i < MATRIX_COLUMNS; i++)
+        {
+            int index = MATRIX_COLUMNS * j + i;
+            if (index < 30)
+            {
+                if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
+                {
+                    setLedBuf(index, getShiftColor(keymapID));
+                }
+                else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
+                {
+                    setLedBuf(index, getBlankColor());
+                }
+                else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                {
+                    setLedBuf(index, getShiftColor(keymapID));
+                }
+                else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
+                {
+                    setLedBuf(index, getBlankColor());
+                }
+            }
+            else if (index >= 36)
+            {
+                if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
+                {
+                    setLedBuf(index - 6, getShiftColor(keymapID));
+                }
+                else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
+                {
+                    setLedBuf(index - 6, getBlankColor());
+                }
+                else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
+                {
+                    setLedBuf(index - 6, getShiftColor(keymapID));
+                }
+                else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
+                {
+                    setLedBuf(index - 6, getBlankColor());
+                }
+            }
+        }
+    }
+}
+
 void resetKeys(void)
 {
     keyboardHID.modifiers = 0;
@@ -637,65 +686,7 @@ void setKeys(uint8_t code)
 
             if (isUpper)
             {
-                for (int j = 0; j < MATRIX_ROWS; j++)
-                {
-                    for (int i = 0; i < MATRIX_COLUMNS; i++)
-                    {
-                        int index = MATRIX_COLUMNS * j + i;
-                        if (index < 30)
-                        {
-                            if ((((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
-                                 ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01)))
-                            {
-                                if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
-                                {
-                                    setLedBuf(index, getShiftColor(keymapID));
-                                }
-                                else
-                                {
-                                    setLedBuf(index, getBlankColor());
-                                }
-                            }
-                            else
-                            {
-                                if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
-                                {
-                                    setLedBuf(index, getUpperColor(keymapID));
-                                }
-                                else
-                                {
-                                    setLedBuf(index, getBlankColor());
-                                }
-                            }
-                        }
-                        else if (index >= 36)
-                        {
-                            if ((((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) ||
-                                 ((keyboardHID.modifiers >> (SC_RSHIFT - SC_LCONTROL)) & 0x01)))
-                            {
-                                if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
-                                {
-                                    setLedBuf(index - 6, getShiftColor(keymapID));
-                                }
-                                else
-                                {
-                                    setLedBuf(index - 6, getBlankColor());
-                                }
-                            }
-                            else
-                            {
-                                if (getUpperKeyCode(keymapID, j, i) != SC_NULL)
-                                {
-                                    setLedBuf(index - 6, getUpperColor(keymapID));
-                                }
-                                else
-                                {
-                                    setLedBuf(index - 6, getBlankColor());
-                                }
-                            }
-                        }
-                    }
-                }
+                switchLEDColorAccordingKeymaps();
             }
             else
             {
@@ -816,51 +807,7 @@ void setKeys(uint8_t code)
             {
                 isShift = true;
 
-                for (int j = 0; j < MATRIX_ROWS; j++)
-                {
-                    for (int i = 0; i < MATRIX_COLUMNS; i++)
-                    {
-                        int index = MATRIX_COLUMNS * j + i;
-                        if (index < 30)
-                        {
-                            if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
-                            {
-                                setLedBuf(index, getShiftColor(keymapID));
-                            }
-                            else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
-                            {
-                                setLedBuf(index, getBlankColor());
-                            }
-                            else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
-                            {
-                                setLedBuf(index, getShiftColor(keymapID));
-                            }
-                            else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
-                            {
-                                setLedBuf(index, getBlankColor());
-                            }
-                        }
-                        else if (index >= 36)
-                        {
-                            if (!isUpper && getKeyCode(keymapID, j, i) != SC_NULL)
-                            {
-                                setLedBuf(index - 6, getShiftColor(keymapID));
-                            }
-                            else if (!isUpper && getKeyCode(keymapID, j, i) == SC_NULL)
-                            {
-                                setLedBuf(index - 6, getBlankColor());
-                            }
-                            else if (isUpper && getUpperKeyCode(keymapID, j, i) != SC_NULL)
-                            {
-                                setLedBuf(index - 6, getShiftColor(keymapID));
-                            }
-                            else if (isUpper && getUpperKeyCode(keymapID, j, i) == SC_NULL)
-                            {
-                                setLedBuf(index - 6, getBlankColor());
-                            }
-                        }
-                    }
-                }
+                switchLEDColorAccordingKeymaps();
             }
         }
 
@@ -1124,15 +1071,15 @@ void hid_keyscan_task(void)
 
                         if (isUpper && keycode == SC_UPPER)
                         {
-                            isUpper = false;
+                            clearKeys(keycode);
                             resetKeys();
+                            countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                         }
                         else
                         {
                             if (isUpper)
                             {
                                 keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-                                // clearKeys(SC_LSHIFT);
                             }
                             if (keycode == SC_M_LBTN || keycode == SC_M_RBTN)
                             {
@@ -1161,14 +1108,13 @@ void hid_keyscan_task(void)
 
                     if (keycode == SC_UPPER)
                     {
-                        isUpper = true;
+                        setKeys(keycode);
                     }
                     else
                     {
                         if (isUpper)
                         {
                             keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-                            // setKeys(SC_LSHIFT);
                         }
                         if (keycode == SC_M_LBTN)
                         {

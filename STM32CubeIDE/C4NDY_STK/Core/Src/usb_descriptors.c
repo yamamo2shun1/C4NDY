@@ -119,7 +119,7 @@ uint8_t const* tud_hid_descriptor_report_cb(uint8_t itf)
 // Configuration Descriptor
 //--------------------------------------------------------------------+
 
-#define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN + TUD_HID_DESC_LEN + TUD_HID_INOUT_DESC_LEN + TUD_AUDIO_HEADPHONE_STEREO_DESC_LEN)
+#define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN * 2 + TUD_HID_INOUT_DESC_LEN + TUD_AUDIO_HEADPHONE_STEREO_DESC_LEN)
 
 #define EPNUM_HID       0x01
 #define EPNUM_HID_MOUSE 0x02
@@ -165,7 +165,7 @@ char const* string_desc_arr[] =
         "C4NDY STK", // 2: Product
         "0", // 3: Serials, should use chip ID
         "C4NDY STK(Keyboard)", // 4: HID Interface
-        "C4NDY STK(Joystick)", // 5: HID Interface
+        "C4NDY STK(Mouse)", // 5: HID Interface
         "C4NDY STK(Setting)", // 6: HID GIO Interface
         "C4NDY STK(Mixer)", // 7: UAC Interface
 };
