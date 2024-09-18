@@ -127,6 +127,16 @@ void setLedBufDirect(uint8_t index, RGB_Color_t* rgb_color)
     grb[index][2] = (uint8_t) ((double) rgb_color->b * LED_INTENSITY_RATE);
 }
 
+void setAllLedBufDirect(RGB_Color_t* rgb_color)
+{
+    for (int i = 0; i < LED_NUMS; i++)
+    {
+        grb[i][0] = (uint8_t) ((double) rgb_color->g * LED_INTENSITY_RATE);
+        grb[i][1] = (uint8_t) ((double) rgb_color->r * LED_INTENSITY_RATE);
+        grb[i][2] = (uint8_t) ((double) rgb_color->b * LED_INTENSITY_RATE);
+    }
+}
+
 void setLedBuf(uint8_t index, RGB_Color_t* rgb_color)
 {
     grb_prev[index][0] = grb_current[index][0];
@@ -283,15 +293,15 @@ void led_control_task(void)
             {
                 if (isShiftPressed())
                 {
-                    setAllLedBuf(&rgb_shift[getKeymapID()]);
+                    setAllLedBufDirect(&rgb_shift[getKeymapID()]);
                 }
                 else if (isUpperPressed())
                 {
-                    setAllLedBuf(&rgb_upper[getKeymapID()]);
+                    setAllLedBufDirect(&rgb_upper[getKeymapID()]);
                 }
                 else
                 {
-                    setAllLedBuf(&rgb_normal[getKeymapID()]);
+                    setAllLedBufDirect(&rgb_normal[getKeymapID()]);
                 }
                 renew();
                 isSpace = false;
@@ -500,19 +510,19 @@ void led_control_task(void)
         {
             countBackspace = 0;
 
-            if (stepBackspace == 11)
+            if (stepBackspace == 10)
             {
                 if (isShiftPressed())
                 {
-                    setAllLedBuf(&rgb_shift[getKeymapID()]);
+                    setAllLedBufDirect(&rgb_shift[getKeymapID()]);
                 }
                 else if (isUpperPressed())
                 {
-                    setAllLedBuf(&rgb_upper[getKeymapID()]);
+                    setAllLedBufDirect(&rgb_upper[getKeymapID()]);
                 }
                 else
                 {
-                    setAllLedBuf(&rgb_normal[getKeymapID()]);
+                    setAllLedBufDirect(&rgb_normal[getKeymapID()]);
                 }
                 renew();
                 isBackspace = false;
@@ -725,15 +735,15 @@ void led_control_task(void)
             {
                 if (isShiftPressed())
                 {
-                    setAllLedBuf(&rgb_shift[getKeymapID()]);
+                    setAllLedBufDirect(&rgb_shift[getKeymapID()]);
                 }
                 else if (isUpperPressed())
                 {
-                    setAllLedBuf(&rgb_upper[getKeymapID()]);
+                    setAllLedBufDirect(&rgb_upper[getKeymapID()]);
                 }
                 else
                 {
-                    setAllLedBuf(&rgb_normal[getKeymapID()]);
+                    setAllLedBufDirect(&rgb_normal[getKeymapID()]);
                 }
                 renew();
                 isEnter = false;

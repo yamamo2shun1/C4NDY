@@ -109,6 +109,9 @@
 #define SC_RGUI     0xE7  // Right GUI(Win/Command)
 
 // original code
+#define SC_M_LBTN     0xF0  // Mouse Left Button
+#define SC_M_RBTN     0xF1  // Mouse Right Button
+#define SC_M_WHEEL    0xF2  // Mouse Wheel
 #define SC_RESET      0xF9  // Reset
 #define SC_MGAIN_UP   0xFA  // Master Gain Up
 #define SC_MGAIN_DOWN 0xFB  // Master Gain Down
@@ -130,6 +133,13 @@
 #define JOYSTICK_ON_THRESHOLD 1200
 
 #define MAX_LONG_PRESS_COUNT 500
+
+#define MOUSE_RIGHT_CLICK 1
+#define MOUSE_LEFT_CLICK  2
+
+#define MAX_MOUSE_SENSITIVITY 6
+#define MIN_MOUSE_THRESHOLD   0
+#define MAX_WHEEL_SENSITIVITY 4
 
 uint8_t getKeymapID(void);
 void setLinePhonoSW(uint8_t val);
