@@ -1073,6 +1073,7 @@ void hid_keyscan_task(void)
                         {
                             clearKeys(keycode);
                             resetKeys();
+                            countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                         }
                         else
                         {
