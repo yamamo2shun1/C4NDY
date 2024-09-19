@@ -577,7 +577,14 @@ void resetKeys(void)
 
 void clearKeys(uint8_t code)
 {
-    if (code == SC_LAYOUT)
+    if (code == SC_RESET)
+    {
+        setBootDfuFlag(false);
+        SEGGER_RTT_printf(0, "Reboot\n");
+        HAL_Delay(100);
+        NVIC_SystemReset();
+    }
+    else if (code == SC_LAYOUT)
     {
         isKeymapIDChanged = false;
     }
