@@ -27,6 +27,7 @@ struct mouseHID_t
     uint8_t buttons;
     int8_t vertical;
     int8_t horizontal;
+    int8_t vertical_prev;
 } mouseHID;
 
 uint16_t keyState[MATRIX_ROWS]     = {0x0};
@@ -46,6 +47,7 @@ bool isMasterGainChanged = false;
 bool isUpper   = false;
 bool isShift   = false;
 bool isClicked = false;
+bool isWheel   = false;
 
 uint8_t countReturnNeutral = 0;
 #define MAX_COUNT_RETURN_NEUTRAL 60
@@ -73,16 +75,16 @@ uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
 uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
     // clang-format off
 	{
-		{SC_1,    SC_2,        SC_3,      SC_4,      SC_5,      SC_6,    SC_7,     SC_8,     SC_9,    SC_0},
-		{SC_Q,    SC_W,        SC_NULL,   SC_LGUI,   SC_G,      SC_NULL, SC_MINUS, SC_EQUAL, SC_LSB,  SC_APS},
-		{SC_NULL, SC_RCONTROL, SC_M_LBTN, SC_M_RBTN, SC_NULL,   SC_NULL, SC_RSB,   SC_NULL,  SC_NULL, SC_YEN},
-		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL,   SC_LSHIFT, SC_NULL, SC_NULL,  SC_NULL,  SC_NULL, SC_GA}
+		{SC_1,    SC_2,        SC_3,      SC_4,      SC_5,       SC_6,    SC_7,     SC_8,     SC_9,    SC_0},
+		{SC_Q,    SC_W,        SC_NULL,   SC_LGUI,   SC_G,       SC_NULL, SC_MINUS, SC_EQUAL, SC_LSB,  SC_APS},
+		{SC_NULL, SC_RCONTROL, SC_M_LBTN, SC_M_RBTN, SC_M_WHEEL, SC_NULL, SC_RSB,   SC_NULL,  SC_NULL, SC_YEN},
+		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL,   SC_LSHIFT,  SC_NULL, SC_NULL,  SC_NULL,  SC_NULL, SC_GA}
 	},
 	{
-		{SC_1,    SC_2,        SC_3,      SC_4,      SC_5,      SC_6,    SC_7,     SC_8,    SC_9,     SC_0},
-		{SC_APS,  SC_COMMA,    SC_NULL,   SC_LGUI,   SC_PERIOD, SC_NULL, SC_LSB,   SC_RSB,  SC_SLASH, SC_MINUS},
-		{SC_NULL, SC_CAPSLOCK, SC_M_LBTN, SC_M_RBTN, SC_NULL,   SC_NULL, SC_EQUAL, SC_NULL, SC_NULL,  SC_BSLASH},
-		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL,   SC_LSHIFT, SC_NULL, SC_NULL,  SC_NULL, SC_NULL,  SC_GA}
+		{SC_1,    SC_2,        SC_3,      SC_4,      SC_5,       SC_6,    SC_7,     SC_8,    SC_9,     SC_0},
+		{SC_APS,  SC_COMMA,    SC_NULL,   SC_LGUI,   SC_PERIOD,  SC_NULL, SC_LSB,   SC_RSB,  SC_SLASH, SC_MINUS},
+		{SC_NULL, SC_CAPSLOCK, SC_M_LBTN, SC_M_RBTN, SC_M_WHEEL, SC_NULL, SC_EQUAL, SC_NULL, SC_NULL,  SC_BSLASH},
+		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL,   SC_LSHIFT,  SC_NULL, SC_NULL,  SC_NULL, SC_NULL,  SC_GA}
 	}
     // clang-format on
 };
@@ -604,6 +606,14 @@ void clearKeys(uint8_t code)
             }
         }
     }
+    else if (code == SC_M_WHEEL)
+    {
+        if (isWheel)
+        {
+            SEGGER_RTT_printf(0, "wheel off.\n");
+            isWheel = false;
+        }
+    }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
     {
         keyboardHID.modifiers &= ~(1 << (code - SC_LCONTROL));
@@ -798,6 +808,14 @@ void setKeys(uint8_t code)
             }
         }
     }
+    else if (code == SC_M_WHEEL)
+    {
+        if (!isWheel)
+        {
+            SEGGER_RTT_printf(0, "wheel on.\n");
+            isWheel = true;
+        }
+    }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
     {
         if (!((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) &&
@@ -869,6 +887,8 @@ void controlJoySticks()
         {
             mouseHID.x = (int8_t) (x * MAX_MOUSE_SENSITIVITY);
             mouseHID.y = (int8_t) (y * -MAX_MOUSE_SENSITIVITY);
+
+            mouseHID.vertical = (int8_t) (y * MAX_WHEEL_SENSITIVITY);
         }
 
         if (r > JOYSTICK_ON_RADIUS)
@@ -1167,8 +1187,19 @@ void hid_keyscan_task(void)
                     if (!tud_hid_ready())
                         return;
 
-                    tud_hid_n_mouse_report(ITF_NUM_HID_MOUSE, REPORT_ID_MOUSE, mouseHID.buttons, mouseHID.x, mouseHID.y, 0, 0);
-                    isClicked = false;
+                    if (isWheel)
+                    {
+                        if (mouseHID.vertical != mouseHID.vertical_prev)
+                        {
+                            tud_hid_n_mouse_report(ITF_NUM_HID_MOUSE, REPORT_ID_MOUSE, 0, 0, 0, mouseHID.vertical, 0);
+                        }
+                        mouseHID.vertical_prev = mouseHID.vertical;
+                    }
+                    else
+                    {
+                        tud_hid_n_mouse_report(ITF_NUM_HID_MOUSE, REPORT_ID_MOUSE, mouseHID.buttons, mouseHID.x, mouseHID.y, 0, 0);
+                        isClicked = false;
+                    }
                 }
 #endif
             }
