@@ -99,7 +99,6 @@ void setBootDfuFlag(bool is_boot_dfu)
     erase_flash_data();
 
     write_flash_data(0, 0);
-    write_flash_data(1, 0);
 
     HAL_FLASH_Lock();
 }
@@ -161,7 +160,7 @@ int main(void)
         HAL_Delay(200);
     }
 
-    if (read_flash_data(1) != 0)
+    if (read_flash_data(0) != 0)
     {
         setBootDfuFlag(false);
 

@@ -8,6 +8,8 @@
 #ifndef INC_KEYBOARD_H_
 #define INC_KEYBOARD_H_
 
+#define BASIC_PARAMS_NUM 2
+
 #define MATRIX_ROWS    5
 #define MATRIX_COLUMNS 13
 

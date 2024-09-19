@@ -176,15 +176,15 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
         erase_flash_data();
 
-        write_flash_data(0, linePhonoSW);
-        write_flash_data(1, 99);
+        write_flash_data(0, 0);
+        write_flash_data(1, linePhonoSW);
 
         for (int i = 0; i < MATRIX_ROWS; i++)
         {
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
-                write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
+                write_flash_data(BASIC_PARAMS_NUM + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
+                write_flash_data(BASIC_PARAMS_NUM + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
             }
         }
 

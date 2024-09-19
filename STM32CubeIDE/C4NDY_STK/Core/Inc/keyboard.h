@@ -13,6 +13,8 @@
 
 #define ENABLE_LEFT_UP
 
+#define BASIC_PARAMS_NUM 5
+
 #define MATRIX_ROWS    4
 #define MATRIX_COLUMNS 10
 
