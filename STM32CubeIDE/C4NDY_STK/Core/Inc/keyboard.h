@@ -143,6 +143,7 @@
 #define MIN_MOUSE_THRESHOLD   0
 #define MAX_WHEEL_SENSITIVITY 4
 
+void setKeymapID(uint8_t val);
 uint8_t getKeymapID(void);
 void setLinePhonoSW(uint8_t val);
 uint8_t getLinePhonoSW(void);

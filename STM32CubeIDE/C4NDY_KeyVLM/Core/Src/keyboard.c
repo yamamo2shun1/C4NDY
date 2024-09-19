@@ -65,6 +65,24 @@ void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_
 }
 #endif
 
+void setKeymapID(uint8_t val)
+{
+    keymapID = val;
+    if (keymapID == 0)
+    {
+        HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
+    }
+    else
+    {
+        HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
+    }
+}
+
+uint8_t getKeymapID(void)
+{
+    return keymapID;
+}
+
 void setLinePhonoSW(uint8_t val)
 {
     linePhonoSW = val;
@@ -178,6 +196,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
         write_flash_data(0, 0);
         write_flash_data(1, linePhonoSW);
+        write_flash_data(2, keymapID);
 
         for (int i = 0; i < MATRIX_ROWS; i++)
         {
@@ -276,16 +295,8 @@ void setKeys(uint8_t code)
     {
         if (!isKeymapIDChanged)
         {
-            if (keymapID == 0)
-            {
-                keymapID = 1;
-                HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
-            }
-            else
-            {
-                keymapID = 0;
-                HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
-            }
+            setKeymapID(!keymapID);
+            setBootDfuFlag(false);
             isKeymapIDChanged = true;
         }
     }

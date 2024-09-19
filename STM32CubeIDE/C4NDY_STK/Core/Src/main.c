@@ -217,6 +217,7 @@ void setBootDfuFlag(bool is_boot_dfu)
         write_flash_data(0, 0);
     }
     write_flash_data(1, getLinePhonoSW());
+    write_flash_data(2, getKeymapID());
 
     SEGGER_RTT_printf(0, "reload KeyMap\n");
     for (int k = 0; k < 2; k++)
@@ -377,8 +378,25 @@ int main(void)
         writeAllKeyboardSettings();
     }
 
-    setLinePhonoSW(read_flash_data(1));
+    if (read_flash_data(1) > 1)
+    {
+        setLinePhonoSW(0);
+    }
+    else
+    {
+        setLinePhonoSW(read_flash_data(1));
+    }
     SEGGER_RTT_printf(0, "Phono/Line SW = %u\n", getLinePhonoSW());
+
+    if (read_flash_data(2) > 1)
+    {
+        setKeymapID(0);
+    }
+    else
+    {
+        setKeymapID(read_flash_data(2));
+    }
+    SEGGER_RTT_printf(0, "keymapID = %u\n", getKeymapID());
 
     SEGGER_RTT_printf(0, "// Normal");
     for (int k = 0; k < 2; k++)
@@ -472,9 +490,7 @@ int main(void)
     SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 17));
     SEGGER_RTT_printf(0, "]\n");
 
-    HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
-
-    setAllLedBuf(getNormalColor(0));
+    setAllLedBuf(getNormalColor(getKeymapID()));
 
     int state_index = 0;
     /* USER CODE END 2 */
