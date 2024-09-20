@@ -925,15 +925,31 @@ void controlJoySticks()
             else if (theta >= 135 - JOYSTICK_ON_ANGLE && theta < 135 + JOYSTICK_ON_ANGLE)
             {
                 // SEGGER_RTT_printf(0, "%d:up left (%d)\n", i, (int) theta);
-                if (isUpper && i == 1)
+                if (i == 0)
+                {
+                    currentStk[i][JOYSTICK_H] = -1;
+                    currentStk[i][JOYSTICK_V] = -1;
+                }
+                else
                 {
                     currentStk[i][JOYSTICK_H] = 0;
                     currentStk[i][JOYSTICK_V] = 0;
                 }
+            }
+#endif
+#ifdef ENABLE_RIGHT_UP
+            else if (theta >= 45 - JOYSTICK_ON_ANGLE && theta < 45 + JOYSTICK_ON_ANGLE)
+            {
+                // SEGGER_RTT_printf(0, "%d:up right (%d)\n", i, (int) theta);
+                if (i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 1;
+                    currentStk[i][JOYSTICK_V] = 1;
+                }
                 else
                 {
-                    currentStk[i][JOYSTICK_H] = -1;
-                    currentStk[i][JOYSTICK_V] = -1;
+                    currentStk[i][JOYSTICK_H] = 0;
+                    currentStk[i][JOYSTICK_V] = 0;
                 }
             }
 #endif
@@ -994,10 +1010,19 @@ void controlJoySticks()
             // SEGGER_RTT_printf(0, "currentStk[%d][H] = %d\n", i, currentStk[i][JOYSTICK_H]);
             // SEGGER_RTT_printf(0, "currentStk[%d][V] = %d\n", i, currentStk[i][JOYSTICK_V]);
 #ifdef ENABLE_LEFT_UP
-            if (currentStk[i][JOYSTICK_H] == -1 && currentStk[i][JOYSTICK_H] == -1)
+            if (i == 0 && currentStk[i][JOYSTICK_H] == -1 && currentStk[i][JOYSTICK_V] == -1)
             {
+                // SEGGER_RTT_printf(0, "UL: set upper+shift\n");
                 setKeys(SC_UPPER);
                 setKeys(SC_LSHIFT);
+            }
+#endif
+#ifdef ENABLE_RIGHT_UP
+            else if (i == 1 && currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == 1)
+            {
+                // SEGGER_RTT_printf(0, "UR: set upper+shift\n");
+                setKeys(SC_UPPER);
+                setKeys(SC_RSHIFT);
             }
 #endif
         }
@@ -1006,10 +1031,21 @@ void controlJoySticks()
             for (int j = 0; j < JOYSTICK_AXIS; j++)
             {
 #ifdef ENABLE_LEFT_UP
-                if ((currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == -1 && prevStk[i][JOYSTICK_V] == -1))
+                if (i == 0 && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == -1 && prevStk[i][JOYSTICK_V] == -1))
                 {
+                    SEGGER_RTT_printf(0, "UL: clear upper+shift\n");
                     clearKeys(SC_UPPER);
                     clearKeys(SC_LSHIFT);
+                    resetKeys();
+                    countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
+                }
+#endif
+#ifdef ENABLE_RIGHT_UP
+                else if (i == 1 && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
+                {
+                    SEGGER_RTT_printf(0, "UR: clear upper+shift\n");
+                    clearKeys(SC_UPPER);
+                    clearKeys(SC_RSHIFT);
                     resetKeys();
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
@@ -1194,7 +1230,7 @@ void hid_keyscan_task(void)
             else
             {
 #if 1
-                if (isUpper && (abs(mouseHID.x) > MIN_MOUSE_THRESHOLD || abs(mouseHID.y) > MIN_MOUSE_THRESHOLD || isClicked))
+                if (isUpper && !isShift && (abs(mouseHID.x) > MIN_MOUSE_THRESHOLD || abs(mouseHID.y) > MIN_MOUSE_THRESHOLD || isClicked))
                 {
                     SEGGER_RTT_printf(0, "(x, y) = (%d, %d)\n", mouseHID.x, mouseHID.y);
 

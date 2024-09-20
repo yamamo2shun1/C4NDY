@@ -12,6 +12,7 @@
 #include <stdbool.h>
 
 #define ENABLE_LEFT_UP
+#define ENABLE_RIGHT_UP
 
 #define BASIC_PARAMS_NUM 5
 
