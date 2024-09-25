@@ -13,6 +13,8 @@
 
 #define ENABLE_LEFT_UP
 
+#define BASIC_PARAMS_NUM 5
+
 #define MATRIX_ROWS    4
 #define MATRIX_COLUMNS 10
 
@@ -111,6 +113,7 @@
 // original code
 #define SC_M_LBTN     0xF0  // Mouse Left Button
 #define SC_M_RBTN     0xF1  // Mouse Right Button
+#define SC_M_WHEEL    0xF2  // Mouse Wheel
 #define SC_RESET      0xF9  // Reset
 #define SC_MGAIN_UP   0xFA  // Master Gain Up
 #define SC_MGAIN_DOWN 0xFB  // Master Gain Down
@@ -138,7 +141,9 @@
 
 #define MAX_MOUSE_SENSITIVITY 6
 #define MIN_MOUSE_THRESHOLD   0
+#define MAX_WHEEL_SENSITIVITY 4
 
+void setKeymapID(uint8_t val);
 uint8_t getKeymapID(void);
 void setLinePhonoSW(uint8_t val);
 uint8_t getLinePhonoSW(void);

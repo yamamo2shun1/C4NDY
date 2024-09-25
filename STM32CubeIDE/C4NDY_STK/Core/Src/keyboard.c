@@ -27,6 +27,7 @@ struct mouseHID_t
     uint8_t buttons;
     int8_t vertical;
     int8_t horizontal;
+    int8_t vertical_prev;
 } mouseHID;
 
 uint16_t keyState[MATRIX_ROWS]     = {0x0};
@@ -46,6 +47,7 @@ bool isMasterGainChanged = false;
 bool isUpper   = false;
 bool isShift   = false;
 bool isClicked = false;
+bool isWheel   = false;
 
 uint8_t countReturnNeutral = 0;
 #define MAX_COUNT_RETURN_NEUTRAL 60
@@ -73,16 +75,16 @@ uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
 uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
     // clang-format off
 	{
-		{SC_1,    SC_2,        SC_3,      SC_4,      SC_5,      SC_6,    SC_7,     SC_8,     SC_9,    SC_0},
-		{SC_Q,    SC_W,        SC_NULL,   SC_LGUI,   SC_G,      SC_NULL, SC_MINUS, SC_EQUAL, SC_LSB,  SC_APS},
-		{SC_NULL, SC_RCONTROL, SC_M_LBTN, SC_M_RBTN, SC_NULL,   SC_NULL, SC_RSB,   SC_NULL,  SC_NULL, SC_YEN},
-		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL,   SC_LSHIFT, SC_NULL, SC_NULL,  SC_NULL,  SC_NULL, SC_GA}
+		{SC_1,    SC_2,        SC_3,      SC_4,      SC_5,       SC_6,    SC_7,     SC_8,     SC_9,    SC_0},
+		{SC_Q,    SC_W,        SC_NULL,   SC_LGUI,   SC_G,       SC_NULL, SC_MINUS, SC_EQUAL, SC_LSB,  SC_APS},
+		{SC_NULL, SC_RCONTROL, SC_M_LBTN, SC_M_RBTN, SC_M_WHEEL, SC_NULL, SC_RSB,   SC_NULL,  SC_NULL, SC_YEN},
+		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL,   SC_LSHIFT,  SC_NULL, SC_NULL,  SC_NULL,  SC_NULL, SC_GA}
 	},
 	{
-		{SC_1,    SC_2,        SC_3,      SC_4,      SC_5,      SC_6,    SC_7,     SC_8,    SC_9,     SC_0},
-		{SC_APS,  SC_COMMA,    SC_NULL,   SC_LGUI,   SC_PERIOD, SC_NULL, SC_LSB,   SC_RSB,  SC_SLASH, SC_MINUS},
-		{SC_NULL, SC_CAPSLOCK, SC_M_LBTN, SC_M_RBTN, SC_NULL,   SC_NULL, SC_EQUAL, SC_NULL, SC_NULL,  SC_BSLASH},
-		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL,   SC_LSHIFT, SC_NULL, SC_NULL,  SC_NULL, SC_NULL,  SC_GA}
+		{SC_1,    SC_2,        SC_3,      SC_4,      SC_5,       SC_6,    SC_7,     SC_8,    SC_9,     SC_0},
+		{SC_APS,  SC_COMMA,    SC_NULL,   SC_LGUI,   SC_PERIOD,  SC_NULL, SC_LSB,   SC_RSB,  SC_SLASH, SC_MINUS},
+		{SC_NULL, SC_CAPSLOCK, SC_M_LBTN, SC_M_RBTN, SC_M_WHEEL, SC_NULL, SC_EQUAL, SC_NULL, SC_NULL,  SC_BSLASH},
+		{SC_NULL, SC_LNPH,     SC_LAYOUT, SC_NULL,   SC_LSHIFT,  SC_NULL, SC_NULL,  SC_NULL, SC_NULL,  SC_GA}
 	}
     // clang-format on
 };
@@ -119,6 +121,19 @@ void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_
 }
 #endif
 
+void setKeymapID(uint8_t val)
+{
+    keymapID = val;
+    if (keymapID == 0)
+    {
+        HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
+    }
+    else
+    {
+        HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
+    }
+}
+
 uint8_t getKeymapID(void)
 {
     return keymapID;
@@ -150,18 +165,19 @@ void writeAllKeyboardSettings(void)
 
     erase_flash_data();
 
-    write_flash_data(0, linePhonoSW);
-    write_flash_data(1, 99);
+    write_flash_data(0, 0);
+    write_flash_data(1, linePhonoSW);
+    write_flash_data(2, keymapID);
 
     for (int i = 0; i < MATRIX_ROWS; i++)
     {
         for (int j = 0; j < MATRIX_COLUMNS; j++)
         {
-            write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
-            write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
+            write_flash_data(BASIC_PARAMS_NUM + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
+            write_flash_data(BASIC_PARAMS_NUM + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
 
-            write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(0, i, j));
-            write_flash_data(2 + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(1, i, j));
+            write_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(0, i, j));
+            write_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getUpperKeyCode(1, i, j));
         }
     }
 
@@ -169,29 +185,29 @@ void writeAllKeyboardSettings(void)
     {
         for (int j = 0; j < 4; j++)
         {
-            write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
-            write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
+            write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, getStickKeyCode(0, i, j));
+            write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, getStickKeyCode(1, i, j));
         }
     }
 
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 0, getNormalColor(0)->r);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 1, getNormalColor(0)->g);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 2, getNormalColor(0)->b);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 3, getUpperColor(0)->r);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 4, getUpperColor(0)->g);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 5, getUpperColor(0)->b);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 6, getShiftColor(0)->r);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 7, getShiftColor(0)->g);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 8, getShiftColor(0)->b);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 9, getNormalColor(1)->r);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 10, getNormalColor(1)->g);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 11, getNormalColor(1)->b);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 12, getUpperColor(1)->r);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 13, getUpperColor(1)->g);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 14, getUpperColor(1)->b);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 15, getShiftColor(1)->r);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 16, getShiftColor(1)->g);
-    write_flash_data(2 + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 17, getShiftColor(1)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 0, getNormalColor(0)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 1, getNormalColor(0)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 2, getNormalColor(0)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 3, getUpperColor(0)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 4, getUpperColor(0)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 5, getUpperColor(0)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 6, getShiftColor(0)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 7, getShiftColor(0)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 8, getShiftColor(0)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 9, getNormalColor(1)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 10, getNormalColor(1)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 11, getNormalColor(1)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 12, getUpperColor(1)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 13, getUpperColor(1)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 14, getUpperColor(1)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 15, getShiftColor(1)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 16, getShiftColor(1)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 17, getShiftColor(1)->b);
 
     HAL_FLASH_Lock();
 }
@@ -575,7 +591,14 @@ void resetKeys(void)
 
 void clearKeys(uint8_t code)
 {
-    if (code == SC_LAYOUT)
+    if (code == SC_RESET)
+    {
+        setBootDfuFlag(false);
+        SEGGER_RTT_printf(0, "Reboot\n");
+        HAL_Delay(100);
+        NVIC_SystemReset();
+    }
+    else if (code == SC_LAYOUT)
     {
         isKeymapIDChanged = false;
     }
@@ -602,6 +625,14 @@ void clearKeys(uint8_t code)
             {
                 setAllLedBuf(getNormalColor(keymapID));
             }
+        }
+    }
+    else if (code == SC_M_WHEEL)
+    {
+        if (isWheel)
+        {
+            SEGGER_RTT_printf(0, "wheel off.\n");
+            isWheel = false;
         }
     }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
@@ -672,16 +703,9 @@ void setKeys(uint8_t code)
     {
         if (!isKeymapIDChanged)
         {
-            if (keymapID == 0)
-            {
-                keymapID = 1;
-                HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
-            }
-            else
-            {
-                keymapID = 0;
-                HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
-            }
+            setKeymapID(!keymapID);
+            writeAllKeyboardSettings();
+
             isKeymapIDChanged = true;
 
             if (isUpper)
@@ -798,6 +822,14 @@ void setKeys(uint8_t code)
             }
         }
     }
+    else if (code == SC_M_WHEEL)
+    {
+        if (!isWheel)
+        {
+            SEGGER_RTT_printf(0, "wheel on.\n");
+            isWheel = true;
+        }
+    }
     else if (code >= SC_LCONTROL && code <= SC_RGUI)
     {
         if (!((keyboardHID.modifiers >> (SC_LSHIFT - SC_LCONTROL)) & 0x01) &&
@@ -869,6 +901,8 @@ void controlJoySticks()
         {
             mouseHID.x = (int8_t) (x * MAX_MOUSE_SENSITIVITY);
             mouseHID.y = (int8_t) (y * -MAX_MOUSE_SENSITIVITY);
+
+            mouseHID.vertical = (int8_t) (y * MAX_WHEEL_SENSITIVITY);
         }
 
         if (r > JOYSTICK_ON_RADIUS)
@@ -1167,8 +1201,19 @@ void hid_keyscan_task(void)
                     if (!tud_hid_ready())
                         return;
 
-                    tud_hid_n_mouse_report(ITF_NUM_HID_MOUSE, REPORT_ID_MOUSE, mouseHID.buttons, mouseHID.x, mouseHID.y, 0, 0);
-                    isClicked = false;
+                    if (isWheel)
+                    {
+                        if (mouseHID.vertical != mouseHID.vertical_prev)
+                        {
+                            tud_hid_n_mouse_report(ITF_NUM_HID_MOUSE, REPORT_ID_MOUSE, 0, 0, 0, mouseHID.vertical, 0);
+                        }
+                        mouseHID.vertical_prev = mouseHID.vertical;
+                    }
+                    else
+                    {
+                        tud_hid_n_mouse_report(ITF_NUM_HID_MOUSE, REPORT_ID_MOUSE, mouseHID.buttons, mouseHID.x, mouseHID.y, 0, 0);
+                        isClicked = false;
+                    }
                 }
 #endif
             }

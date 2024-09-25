@@ -8,6 +8,8 @@
 #ifndef INC_KEYBOARD_H_
 #define INC_KEYBOARD_H_
 
+#define BASIC_PARAMS_NUM 5
+
 #define MATRIX_ROWS    5
 #define MATRIX_COLUMNS 13
 
@@ -114,6 +116,8 @@
 #define H 0
 #define V 1
 
+void setKeymapID(uint8_t val);
+uint8_t getKeymapID(void);
 void setLinePhonoSW(uint8_t val);
 uint8_t getLinePhonoSW(void);
 uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y);
