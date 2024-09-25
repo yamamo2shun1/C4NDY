@@ -31,18 +31,18 @@ uint8_t linePhonoSW       = 0;
 uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
     // clang-format off
     {
-        {SC_ESC,      SC_1,    SC_2,      SC_3,    SC_4,  SC_5,     SC_6,     SC_7,      SC_8,        SC_9,      SC_0,     SC_MINUS,  SC_EQUAL},
-        {SC_TAB,      SC_Q,    SC_W,      SC_E,    SC_R,  SC_T,     SC_Y,     SC_U,      SC_I,        SC_O,      SC_P,     SC_LSB,    SC_RSB  },
-        {SC_CAPSLOCK, SC_A,    SC_S,      SC_D,    SC_F,  SC_G,     SC_H,     SC_J,      SC_K,        SC_L,      SC_SC,    SC_APS,    SC_YEN  },
-        {SC_LSHIFT,   SC_Z,    SC_X,      SC_C,    SC_V,  SC_B,     SC_N,     SC_M,      SC_COMMA,    SC_PERIOD, SC_SLASH, SC_RSHIFT, SC_GA   },
-        {SC_LGUI,     SC_LNPH, SC_LAYOUT, SC_LALT, SC_BS, SC_ENTER, SC_SPACE, SC_HENKAN, SC_RCONTROL, SC_LEFT,   SC_DOWN,  SC_UP,     SC_RIGHT}
+        {KC_ESC,      KC_1,    KC_2,      KC_3,    KC_4,  KC_5,     KC_6,     KC_7,      KC_8,        KC_9,      KC_0,     KC_MINUS,  KC_EQUAL},
+        {KC_TAB,      KC_Q,    KC_W,      KC_E,    KC_R,  KC_T,     KC_Y,     KC_U,      KC_I,        KC_O,      KC_P,     KC_LSB,    KC_RSB  },
+        {KC_CAPSLOCK, KC_A,    KC_S,      KC_D,    KC_F,  KC_G,     KC_H,     KC_J,      KC_K,        KC_L,      KC_SC,    KC_APS,    KC_YEN  },
+        {KC_LSHIFT,   KC_Z,    KC_X,      KC_C,    KC_V,  KC_B,     KC_N,     KC_M,      KC_COMMA,    KC_PERIOD, KC_SLASH, KC_RSHIFT, KC_GA   },
+        {KC_LGUI,     KC_LNPH, KC_LAYOUT, KC_LALT, KC_BS, KC_ENTER, KC_SPACE, KC_HENKAN, KC_RCONTROL, KC_LEFT,   KC_DOWN,  KC_UP,     KC_RIGHT}
     },
     {
-        {SC_ESC,      SC_1,    SC_2,      SC_3,    SC_4,  SC_5,      SC_6,     SC_7,     SC_8,        SC_9,    SC_0,    SC_LSB,    SC_RSB   },
-        {SC_TAB,      SC_APS,  SC_COMMA,  SC_O,    SC_U,  SC_Y,      SC_F,     SC_G,     SC_C,        SC_R,    SC_L,    SC_SLASH,  SC_EQUAL },
-        {SC_LCONTROL, SC_P,    SC_I,      SC_E,    SC_A,  SC_PERIOD, SC_D,     SC_S,     SC_T,        SC_H,    SC_Z,    SC_MINUS,  SC_BSLASH},
-        {SC_LSHIFT,   SC_J,    SC_Q,      SC_SC,   SC_K,  SC_X,      SC_B,     SC_M,     SC_W,        SC_N,    SC_V,    SC_RSHIFT, SC_GA    },
-        {SC_LGUI,     SC_LNPH, SC_LAYOUT, SC_LALT, SC_BS, SC_DELETE, SC_ENTER, SC_SPACE, SC_CAPSLOCK, SC_LEFT, SC_DOWN, SC_UP,     SC_RIGHT }
+        {KC_ESC,      KC_1,    KC_2,      KC_3,    KC_4,  KC_5,      KC_6,     KC_7,     KC_8,        KC_9,    KC_0,    KC_LSB,    KC_RSB   },
+        {KC_TAB,      KC_APS,  KC_COMMA,  KC_O,    KC_U,  KC_Y,      KC_F,     KC_G,     KC_C,        KC_R,    KC_L,    KC_SLASH,  KC_EQUAL },
+        {KC_LCONTROL, KC_P,    KC_I,      KC_E,    KC_A,  KC_PERIOD, KC_D,     KC_S,     KC_T,        KC_H,    KC_Z,    KC_MINUS,  KC_BSLASH},
+        {KC_LSHIFT,   KC_J,    KC_Q,      KC_SC,   KC_K,  KC_X,      KC_B,     KC_M,     KC_W,        KC_N,    KC_V,    KC_RSHIFT, KC_GA    },
+        {KC_LGUI,     KC_LNPH, KC_LAYOUT, KC_LALT, KC_BS, KC_DELETE, KC_ENTER, KC_SPACE, KC_CAPSLOCK, KC_LEFT, KC_DOWN, KC_UP,     KC_RIGHT }
     }
     // clang-format on
 };
@@ -263,17 +263,17 @@ void resetKeys(void)
 
 void clearKeys(uint8_t code)
 {
-    if (code == SC_LAYOUT)
+    if (code == KC_LAYOUT)
     {
         isKeymapIDChanged = false;
     }
-    else if (code == SC_LNPH)
+    else if (code == KC_LNPH)
     {
         isLinePhonoSWChanged = false;
     }
-    else if (code >= SC_LCONTROL && code <= SC_RGUI)
+    else if (code >= KC_LCONTROL && code <= KC_RGUI)
     {
-        keyboardHID.modifiers &= ~(1 << (code - SC_LCONTROL));
+        keyboardHID.modifiers &= ~(1 << (code - KC_LCONTROL));
     }
     else
     {
@@ -291,7 +291,7 @@ void clearKeys(uint8_t code)
 
 void setKeys(uint8_t code)
 {
-    if (code == SC_LAYOUT)
+    if (code == KC_LAYOUT)
     {
         if (!isKeymapIDChanged)
         {
@@ -300,7 +300,7 @@ void setKeys(uint8_t code)
             isKeymapIDChanged = true;
         }
     }
-    else if (code == SC_LNPH)
+    else if (code == KC_LNPH)
     {
         if (!isLinePhonoSWChanged)
         {
@@ -309,9 +309,9 @@ void setKeys(uint8_t code)
             isLinePhonoSWChanged = true;
         }
     }
-    else if (code >= SC_LCONTROL && code <= SC_RGUI)
+    else if (code >= KC_LCONTROL && code <= KC_RGUI)
     {
-        keyboardHID.modifiers |= 1 << (code - SC_LCONTROL);
+        keyboardHID.modifiers |= 1 << (code - KC_LCONTROL);
     }
     else
     {
@@ -320,7 +320,7 @@ void setKeys(uint8_t code)
             if (keyboardHID.key[k] == code)
             {
                 // LGUI + ESC 長押しでDFUモーでリセット
-                if (keyboardHID.modifiers == 0x08 && keyboardHID.key[k] == SC_ESC)
+                if (keyboardHID.modifiers == 0x08 && keyboardHID.key[k] == KC_ESC)
                 {
                     longPressCounter++;
                     if (longPressCounter == 5000)
