@@ -153,7 +153,7 @@ void setBootDfuFlag(bool is_boot_dfu)
             SEGGER_RTT_printf(0, "[");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                currentKeyMap[k][i][j] = read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
+                currentKeyMap[k][i][j] = read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
                 SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
@@ -163,15 +163,16 @@ void setBootDfuFlag(bool is_boot_dfu)
 
     erase_flash_data();
 
-    write_flash_data(0, getLinePhonoSW());
     if (is_boot_dfu)
     {
-        write_flash_data(1, 1);
+        write_flash_data(0, 1);
     }
     else
     {
-        write_flash_data(1, 0);
+        write_flash_data(0, 0);
     }
+    write_flash_data(1, getLinePhonoSW());
+    write_flash_data(2, getKeymapID());
 
     SEGGER_RTT_printf(0, "reload KeyMap\n");
     for (int k = 0; k < 2; k++)
@@ -183,7 +184,7 @@ void setBootDfuFlag(bool is_boot_dfu)
             SEGGER_RTT_printf(0, "[");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                write_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentKeyMap[k][i][j]);
+                write_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentKeyMap[k][i][j]);
                 SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
@@ -260,27 +261,39 @@ int main(void)
         erase_flash_data();
 
         write_flash_data(0, 0);
-        write_flash_data(1, 99);
+        write_flash_data(1, 0);
 
         for (int i = 0; i < MATRIX_ROWS; i++)
         {
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
-                write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
+                write_flash_data(BASIC_PARAMS_NUM + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
+                write_flash_data(BASIC_PARAMS_NUM + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
             }
         }
 
         HAL_FLASH_Lock();
     }
 
-    uint64_t linePhonoSW = read_flash_data(0);
-    setLinePhonoSW(linePhonoSW);
+    if (read_flash_data(1) > 1)
+    {
+        setLinePhonoSW(0);
+    }
+    else
+    {
+        setLinePhonoSW(read_flash_data(1));
+    }
     SEGGER_RTT_printf(0, "Phono/Line SW = %u\n", getLinePhonoSW());
 
-    uint64_t test_val = 0;
-    test_val          = read_flash_data(1);
-    SEGGER_RTT_printf(0, "test_val1 = %u\n", test_val);
+    if (read_flash_data(2) > 1)
+    {
+        setKeymapID(0);
+    }
+    else
+    {
+        setKeymapID(read_flash_data(2));
+    }
+    SEGGER_RTT_printf(0, "keymapID = %u %u\n", getKeymapID(), read_flash_data(2));
 
     for (int k = 0; k < 2; k++)
     {
@@ -292,18 +305,17 @@ int main(void)
             {
                 if (k == 0)
                 {
-                    setKeyCode(0, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
+                    setKeyCode(0, i, j, read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
                 }
                 else
                 {
-                    setKeyCode(1, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
+                    setKeyCode(1, i, j, read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
                 }
-                SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
+                SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
             }
             SEGGER_RTT_printf(0, "]\n");
         }
     }
-    HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
     /* USER CODE END 2 */
 
     /* Infinite loop */
