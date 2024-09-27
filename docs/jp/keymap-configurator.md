@@ -1,11 +1,12 @@
 # キーボードのリマップ
 
-C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドライン・ツール[KeyConfigurator](https://github.com/yamamo2shun1/KeyConfigurator)を使います。
+C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドライン・ツール[Confiseur](https://github.com/yamamo2shun1/Confiseur)を使います。
 
 ## 準備
 キーマップを記述したTOMLを用意することで、ファームウェアの書き換え無しにリマップすることが可能です。
 
-- [例：KeyVLM](https://github.com/yamamo2shun1/KeyConfigurator/blob/main/layouts_KeyVLM.toml)
+- [例：KeyVLM](https://github.com/yamamo2shun1/Confiseur/blob/main/example-layout/layouts_KeyVLM.toml)
+
 ```toml
 [layout1]
 	normal = [
@@ -26,7 +27,7 @@ C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドラ�
 	]
 ```
 
-- [例：STK](https://github.com/yamamo2shun1/KeyConfigurator/blob/main/layouts_STK.toml)
+- [例：STK](https://github.com/yamamo2shun1/Confiseur/blob/main/example-layout/layouts_STK.toml)
 ```toml
 [layout1]
 	normal = [
@@ -65,9 +66,15 @@ C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドラ�
 	]
 ```
 
+## インストール方法
+`go install`でインストールすることが可能です。
+
+```shellscript
+$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@latest
+```
+
 ## 使い方
-[こちら](https://github.com/yamamo2shun1/KeyConfigurator/releases)から最新版をダウンロードし、コマンドプロンプトやPowershell(Windowsの場合)、Terminal.app (macOSの場合)から利用します。
-```shellscriput
+```Less
 -version
         Show the version of the tool installed.
         ex) keyconfig -version
@@ -112,6 +119,6 @@ C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドラ�
 
 ## ソースコードからビルドする場合
 以下のようにして、ご利用のOS用の実行ファイルを生成してください。
-```
-> go build -o keyconfig
+```shellscript
+$ go build -o confiseur
 ```
