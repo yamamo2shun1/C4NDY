@@ -112,7 +112,7 @@ $ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@latest
 
 ## ツールのビルド
 [Go言語](https://go.dev/)の開発環境を各自でご用意ください。
-また、KeyConfiguratorではHIDでの通信を行うために[go-hid](https://github.com/sstallion/go-hid)を利用しており、OSごとに下記のような設定が必要になります。
+また、ConfiseurではHIDでの通信を行うために[go-hid](https://github.com/sstallion/go-hid)を利用しており、OSごとに下記のような設定が必要になります。
 
 ### Windowsの場合
 環境変数に`CGO_ENABLED=1`を追加し、[TDM-GCC](https://jmeubank.github.io/tdm-gcc/) などのCコンパイラをインストールしてください。
