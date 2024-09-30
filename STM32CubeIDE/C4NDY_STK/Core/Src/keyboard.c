@@ -1037,7 +1037,7 @@ void controlJoySticks()
             }
 #endif
 #ifdef ENABLE_RIGHT_UP
-            else if (i == 1 && currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == 1)
+            else if (i == 1 && !isUpper && currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == 1)
             {
                 // SEGGER_RTT_printf(0, "UR: set upper+shift\n");
                 setKeys(KC_UPPER);
@@ -1060,7 +1060,7 @@ void controlJoySticks()
                 }
 #endif
 #ifdef ENABLE_RIGHT_UP
-                else if (i == 1 && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
+                else if (i == 1 && !isUpper && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
                 {
                     SEGGER_RTT_printf(0, "UR: clear upper+shift\n");
                     clearKeys(KC_UPPER);
