@@ -214,6 +214,19 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         rbuf[2]          = 0x01;
         tud_hid_n_report(1, 0, rbuf, 16);
     }
+    else if (buffer[0] == 0xF6)
+    {
+        SEGGER_RTT_printf(0, "reboot...\n");
+
+        uint8_t rbuf[16] = {0x00};
+        rbuf[1]          = 0xF6;
+        rbuf[2]          = 0x01;
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, 16);
+
+        setBootDfuFlag(false);
+        HAL_Delay(100);
+        NVIC_SystemReset();
+    }
 
 #if 0
   if (report_type == HID_REPORT_TYPE_OUTPUT)
@@ -326,7 +339,7 @@ void setKeys(uint8_t code)
                     if (longPressCounter == 5000)
                     {
                         setBootDfuFlag(true);
-                        SEGGER_RTT_printf(0, "Boot Custom DFU...\n");
+                        SEGGER_RTT_printf(0, "Reboot in custom DFU...\n");
                         HAL_Delay(100);
                         NVIC_SystemReset();
                     }
