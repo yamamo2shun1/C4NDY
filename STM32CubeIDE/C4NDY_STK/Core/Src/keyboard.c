@@ -50,7 +50,7 @@ bool isClicked = false;
 bool isWheel   = false;
 
 uint8_t countReturnNeutral = 0;
-#define MAX_COUNT_RETURN_NEUTRAL 60
+#define MAX_COUNT_RETURN_NEUTRAL 100
 
 int8_t currentStk[JOYSTICK_NUMS][JOYSTICK_AXIS] = {0};
 int8_t prevStk[JOYSTICK_NUMS][JOYSTICK_AXIS]    = {0};
@@ -634,6 +634,9 @@ void clearKeys(uint8_t code)
         if (isUpper)
         {
             isUpper = false;
+            isWheel = false;
+
+            countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 
             if (((keyboardHID.modifiers >> (KC_LSHIFT - KC_LCONTROL)) & 0x01) ||
                 ((keyboardHID.modifiers >> (KC_RSHIFT - KC_LCONTROL)) & 0x01))
