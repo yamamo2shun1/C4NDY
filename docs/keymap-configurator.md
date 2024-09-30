@@ -1,11 +1,11 @@
 # How to remap
 
-[KeyConfigurator](https://github.com/yamamo2shun1/KeyConfigurator) is a command line tool for key remapping dedicated to C4NDY KeyVLM/STK.
+[Confiseur](https://github.com/yamamo2shun1/Confiseur) is a command line tool for key remapping dedicated to C4NDY KeyVLM/STK.
 
 ## Preparing
 By preparing a keymap file written in TOML and reading it, it is possible to remap without rewriting the firmware.
 
-- [Example for KeyVLM](https://github.com/yamamo2shun1/KeyConfigurator/blob/main/layouts_KeyVLM.toml)
+- [Example for KeyVLM](https://github.com/yamamo2shun1/Confiseur/blob/main/example-layout/layouts_KeyVLM.toml)
 ```toml
 [layout1]
 	normal = [
@@ -26,24 +26,29 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 	]
 ```
 
-- [Example for STK](https://github.com/yamamo2shun1/KeyConfigurator/blob/main/layouts_STK.toml)
+- [Example for STK](https://github.com/yamamo2shun1/Confiseur/blob/main/example-layout/layouts_STK.toml)
 ```toml
 [layout1]
 	normal = [
 		["Q",    "W",     "E",     "R",    "T",       "Y",    "U",    "I",     "O",      "P"],
 		["A",    "S",     "D",     "F",    "G",       "H",    "J",    "K",     "L",      "Colon"],
 		["Z",    "X",     "C",     "V",    "B",       "N",    "M",    "Comma", "Period", "Slash"],
-		["Null", "L_Gui", "R_Alt", "Null", "L_Shift", "Null", "Left", "Down",  "Up",     "Right"]
+		["Null", "L_Gui", "R_Alt", "Null", "CapsLock", "Null", "Left", "Down",  "Up",     "Right"]
 	]
 	upper = [
-		["1",    "2",         "3",      "4",     "5",       "6",    "7",          "8",          "9",          "0"],
-		["Q",    "W",         "Null",   "L_Gui", "G",       "Null", "Minus",      "Equal",      "O_SBracket", "Apostrophe"],
-		["Null", "R_Control", "Null",   "Null",  "B",       "Null", "C_SBracket", "Null",       "Backquote",  "Yen"],
-		["Null", "LNPH",      "LAYOUT", "Null",  "L_Shift", "Null", "Null",       "MGain_Down", "MGain_Up",   "Reset"]
+		["1",    "2",         "3",      "4",      "5",       "6",    "7",          "8",          "9",          "0"],
+		["Q",    "W",         "Null",   "L_Gui",  "G",       "Null", "Minus",      "Equal",      "O_SBracket", "Apostrophe"],
+		["Null", "R_Control", "M_LBTN", "M_RBTN", "M_WHEEL", "Null", "C_SBracket", "Null",       "Backquote",  "Yen"],
+		["Null", "LNPH",      "LAYOUT", "Null",   "CapsLock",   "Null", "Null",       "MGain_Down", "MGain_Up",   "Reset"]
 	]
 	stick = [
-		["BS",  "Tab",    "Esc",   "Upper"],
-		["Del", "Henkan", "Space", "CapsLock"]
+		["BS",  "Tab",    "Space",   "Upper"],
+		["Del", "Henkan", "Esc", "R_Shift"]
+	]
+	led = [
+		[0xEC, 0x80, 0x8C],
+		[0xEC, 0x00, 0x8C],
+		[0x2C, 0x00, 0x8C]
 	]
 
 [layout2]
@@ -51,53 +56,67 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 		["Apostrophe", "Comma", "O",     "U",    "Y",       "F",    "G",    "C",    "R",  "L"],
 		["P",          "I",     "E",     "A",    "Period",  "D",    "S",    "T",    "H",  "Z"],
 		["J",          "Q",     "Colon", "K",    "X",       "B",    "M",    "W",    "N",  "V"],
-		["Null",       "L_Gui", "L_Alt", "Null", "L_Shift", "Null", "Left", "Down", "Up", "Right"]
+		["Null",       "L_Gui", "L_Alt", "Null", "Upper", "Null", "Left", "Down", "Up", "Right"]
 	]
 	upper = [
-		["1",          "2",        "3",      "4",     "5",       "6",    "7",          "8",          "9",         "0"],
-		["Apostrophe", "Comma",    "Null",   "L_Gui", "Period",  "Null", "O_SBracket", "C_SBracket", "Slash",     "Minus"],
-		["Null",       "CapsLock", "Null",   "Null",  "X",       "Null", "Equal",      "Null",       "Backquote", "Backslash"],
-		["Null",       "LNPH",     "LAYOUT", "Null",  "L_Shift", "Null", "Null",       "MGain_Down", "MGain_Up",  "Reset"]
+		["1",          "2",        "3",      "4",      "5",       "6",    "7",          "8",          "9",         "0"],
+		["Apostrophe", "Comma",    "Null",   "L_Gui",  "Period",  "Null", "O_SBracket", "C_SBracket", "Slash",     "Minus"],
+		["Null",       "CapsLock", "M_LBTN", "M_RBTN", "M_WHEEL", "Null", "Equal",      "Null",       "Backquote", "Backslash"],
+		["Null",       "LNPH",     "LAYOUT", "Null",   "Upper",   "Null", "Null",       "MGain_Down", "MGain_Up",  "Reset"]
 	]
 	stick = [
-		["BS", "Tab",    "Esc",   "Upper"],
+		["BS", "Tab",    "Esc",   "L_Shift"],
 		["Del", "Space", "Enter", "R_Control"]
+	]
+	led = [
+		[0xFF, 0x00, 0x8C],
+		[0x00, 0xFF, 0xFF],
+		[0x00, 0x00, 0xFF]
 	]
 ```
 
-## How to use
-Download the latest version from [here](https://github.com/yamamo2shun1/KeyConfigurator/releases) and run it from Command Prompt (Windows) or Terminal.app (macOS).
-```shellscriput
+## Installation
+The `go install` is available.
+```shellscript
+$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@latest
+```
+
+## Usage
+
+```Less
 -version
         Show the version of the tool installed.
-        ex) keyconfig -version
+        ex) confiseur -version
 -check
         Show information on C4NDY KeyVLM/STK connected to PC/Mac.
-        ex) keyconfig -check
+        ex) confiseur -check
 -list
         Show connected device name list.
-        ex) keyconfig -list
+        ex) confiseur -list
 -id [int]
         Select connected device ID(ID can be checked in -check/-list).
         This option is available when using the following command options.
         If ID is not specified, 0 is the default.
 -load
         Show the current key names of the keyboard.
-        ex) keyconfig -load
-            keyconfig -load -id 1
--remap
-        Apply the keymap infomation from layouts.toml by default.
-        ex) keyconfig -remap
-            keyconfig -remap -id 0
--file [string]
-        Specify .toml file to be read.
-        This option is available when using the '-remap' option.
-        ex) keyconfig -remap -file layout_STK.toml
-            keyconfig -id 0 -remap -file layout_KeyVLM.toml
+        ex) confiseur -load
+            confiseur -load -id 1
+-remap [string]
+        Apply the keyboard settings from specified toml file.
+        ex) confiseur -remap examples/layout_STK.toml
+            confiseur -remap examples/layout_KeyVLM.toml -id 0
 -save
-        Save the keymap written by "remap" to the memory area
-        ex) keyconfig -save
-            keyconfig -id 0 -save
+        Save the keymap written by "remap" to the memory area.
+        ex) confiseur -save
+            confiseur -id 0 -save
+-led [int(0x000000-0xFFFFFF)]
+        Set LED RGB value for checking color.
+        ex) confiseur -led 0xFF0000 # red
+            confiseur id 0 -led 0x00FFFF # cyan
+-restart
+        Restart the keyboard immediately.
+        ex) confiseur -restart
+            confiseur -restart -id 1
 ```
 
 ## Preparation to build
@@ -111,6 +130,6 @@ Add `CGO_ENABLED=1` to the environment variable and install a C compiler such as
 Add `CGO_ENABLED=1` to your shell configuration file, such as .zshrc.
 
 ## How to build from Source Code
-```
-> go build -o keyconfig
+```shellscript
+$ go build -o confiseur
 ```

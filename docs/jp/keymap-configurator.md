@@ -1,11 +1,12 @@
 # キーボードのリマップ
 
-C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドライン・ツール[KeyConfigurator](https://github.com/yamamo2shun1/KeyConfigurator)を使います。
+C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドライン・ツール[Confiseur](https://github.com/yamamo2shun1/Confiseur)を使います。
 
 ## 準備
 キーマップを記述したTOMLを用意することで、ファームウェアの書き換え無しにリマップすることが可能です。
 
-- [例：KeyVLM](https://github.com/yamamo2shun1/KeyConfigurator/blob/main/layouts_KeyVLM.toml)
+- [例：KeyVLM](https://github.com/yamamo2shun1/Confiseur/blob/main/example-layout/layouts_KeyVLM.toml)
+
 ```toml
 [layout1]
 	normal = [
@@ -26,7 +27,7 @@ C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドラ�
 	]
 ```
 
-- [例：STK](https://github.com/yamamo2shun1/KeyConfigurator/blob/main/layouts_STK.toml)
+- [例：STK](https://github.com/yamamo2shun1/Confiseur/blob/main/example-layout/layouts_STK.toml)
 ```toml
 [layout1]
 	normal = [
@@ -65,39 +66,48 @@ C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドラ�
 	]
 ```
 
+## インストール方法
+`go install`でインストールすることが可能です。
+
+```shellscript
+$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@latest
+```
+
 ## 使い方
-[こちら](https://github.com/yamamo2shun1/KeyConfigurator/releases)から最新版をダウンロードし、コマンドプロンプトやPowershell(Windowsの場合)、Terminal.app (macOSの場合)から利用します。
-```shellscriput
+```Less
 -version
         Show the version of the tool installed.
-        ex) keyconfig -version
+        ex) confiseur -version
 -check
         Show information on C4NDY KeyVLM/STK connected to PC/Mac.
-        ex) keyconfig -check
+        ex) confiseur -check
 -list
         Show connected device name list.
-        ex) keyconfig -list
+        ex) confiseur -list
 -id [int]
         Select connected device ID(ID can be checked in -check/-list).
         This option is available when using the following command options.
         If ID is not specified, 0 is the default.
 -load
         Show the current key names of the keyboard.
-        ex) keyconfig -load
-            keyconfig -load -id 1
--remap
-        Apply the keymap infomation from layouts.toml by default.
-        ex) keyconfig -remap
-            keyconfig -remap -id 0
--file [string]
-        Specify .toml file to be read.
-        This option is available when using the '-remap' option.
-        ex) keyconfig -remap -file layout_STK.toml
-            keyconfig -id 0 -remap -file layout_KeyVLM.toml
+        ex) confiseur -load
+            confiseur -load -id 1
+-remap [string]
+        Apply the keyboard settings from specified toml file.
+        ex) confiseur -remap examples/layout_STK.toml
+            confiseur -remap examples/layout_KeyVLM.toml -id 0
 -save
-        Save the keymap written by "remap" to the memory area
-        ex) keyconfig -save
-            keyconfig -id 0 -save
+        Save the keymap written by "remap" to the memory area.
+        ex) confiseur -save
+            confiseur -id 0 -save
+-led [int(0x000000-0xFFFFFF)]
+        Set LED RGB value for checking color.
+        ex) confiseur -led 0xFF0000 # red
+            confiseur id 0 -led 0x00FFFF # cyan
+-restart
+        Restart the keyboard immediately.
+        ex) confiseur -restart
+            confiseur -restart -id 1
 ```
 
 ## ツールのビルド
@@ -112,6 +122,6 @@ C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドラ�
 
 ## ソースコードからビルドする場合
 以下のようにして、ご利用のOS用の実行ファイルを生成してください。
-```
-> go build -o keyconfig
+```shellscript
+$ go build -o confiseur
 ```
