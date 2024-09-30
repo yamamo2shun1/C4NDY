@@ -486,6 +486,12 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         HAL_Delay(100);
         NVIC_SystemReset();
     }
+    else if (buffer[0] == 0xF7)
+    {
+        SEGGER_RTT_printf(0, "check LED color\n");
+
+        checkColor(buffer[1], buffer[2], buffer[3]);
+    }
 
 #if 0
   if (report_type == HID_REPORT_TYPE_OUTPUT)
@@ -891,7 +897,7 @@ void setKeys(uint8_t code)
                 {
                     setSpaceFlag();
                 }
-                else if (code == keymaps_stk[keymapID][1][2])  // R JoyStick -> Tilt down
+                else if (code == keymaps_stk[keymapID][0][2])  // R JoyStick -> Tilt down
                 {
                     setEnterFlag();
                 }

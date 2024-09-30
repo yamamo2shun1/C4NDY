@@ -263,6 +263,16 @@ void renew(void)
     }
 }
 
+void checkColor(uint8_t r, uint8_t g, uint8_t b)
+{
+    RGB_Color_t rgb_check = {r, g, b};
+
+    SEGGER_RTT_printf(0, "(r, g, b) = (%02X, %02X, %02X)\n", r, g, b);
+
+    setAllLedBufDirect(&rgb_check);
+    renew();
+}
+
 void led_control_task(void)
 {
     if (isGradation)
