@@ -77,34 +77,37 @@ $ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@latest
 ```Less
 -version
         Show the version of the tool installed.
-        ex) keyconfig -version
+        ex) confiseur -version
 -check
         Show information on C4NDY KeyVLM/STK connected to PC/Mac.
-        ex) keyconfig -check
+        ex) confiseur -check
 -list
         Show connected device name list.
-        ex) keyconfig -list
+        ex) confiseur -list
 -id [int]
         Select connected device ID(ID can be checked in -check/-list).
         This option is available when using the following command options.
         If ID is not specified, 0 is the default.
 -load
         Show the current key names of the keyboard.
-        ex) keyconfig -load
-            keyconfig -load -id 1
--remap
-        Apply the keymap infomation from layouts.toml by default.
-        ex) keyconfig -remap
-            keyconfig -remap -id 0
--file [string]
-        Specify .toml file to be read.
-        This option is available when using the '-remap' option.
-        ex) keyconfig -remap -file layout_STK.toml
-            keyconfig -id 0 -remap -file layout_KeyVLM.toml
+        ex) confiseur -load
+            confiseur -load -id 1
+-remap [string]
+        Apply the keyboard settings from specified toml file.
+        ex) confiseur -remap examples/layout_STK.toml
+            confiseur -remap examples/layout_KeyVLM.toml -id 0
 -save
-        Save the keymap written by "remap" to the memory area
-        ex) keyconfig -save
-            keyconfig -id 0 -save
+        Save the keymap written by "remap" to the memory area.
+        ex) confiseur -save
+            confiseur -id 0 -save
+-led [int(0x000000-0xFFFFFF)]
+        Set LED RGB value for checking color.
+        ex) confiseur -led 0xFF0000 # red
+            confiseur id 0 -led 0x00FFFF # cyan
+-restart
+        Restart the keyboard immediately.
+        ex) confiseur -restart
+            confiseur -restart -id 1
 ```
 
 ## ツールのビルド
