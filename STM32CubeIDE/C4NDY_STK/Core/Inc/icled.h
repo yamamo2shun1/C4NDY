@@ -53,6 +53,7 @@ void setAllLedBuf(RGB_Color_t* rgb_color);
 void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color0);
 void setColumn3ColorLedBuf(uint8_t row, uint16_t column0, uint16_t column1, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color2, RGB_Color_t* rgb_color0);
 void renew(void);
+void checkColor(uint8_t r, uint8_t g, uint8_t b);
 void led_control_task(void);
 
 #endif /* INC_ICLED_H_ */
