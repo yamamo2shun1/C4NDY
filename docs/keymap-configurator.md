@@ -106,9 +106,13 @@ $ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@latest
         ex) confiseur -remap examples/layout_STK.toml
             confiseur -remap examples/layout_KeyVLM.toml -id 0
 -save
-        Save the keymap written by "remap" to the memory area
+        Save the keymap written by "remap" to the memory area.
         ex) confiseur -save
             confiseur -id 0 -save
+-led [int(0x000000-0xFFFFFF)]
+        Set LED RGB value for checking color.
+        ex) confiseur -led 0xFF0000 # red
+            confiseur id 0 -led 0x00FFFF # cyan
 -restart
         Restart the keyboard immediately.
         ex) confiseur -restart
