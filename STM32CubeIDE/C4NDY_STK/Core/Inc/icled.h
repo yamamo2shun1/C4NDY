@@ -18,7 +18,7 @@
 #define WL_LED_ONE     12
 #define WL_LED_ZERO    4
 
-#define LED_INTENSITY_RATE 0.5
+#define LED_INTENSITY_RATE 1.0
 
 #define LED_NUMS 34
 
