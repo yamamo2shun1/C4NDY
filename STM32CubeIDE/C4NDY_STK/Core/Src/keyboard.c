@@ -49,6 +49,10 @@ bool isShift   = false;
 bool isClicked = false;
 bool isWheel   = false;
 
+int offset_calibrate_count[JOYSTICK_NUMS] = {0};
+double x_offset[JOYSTICK_NUMS]            = {0.0};
+double y_offset[JOYSTICK_NUMS]            = {0.0};
+
 uint8_t countReturnNeutral = 0;
 #define MAX_COUNT_RETURN_NEUTRAL 100
 
@@ -917,6 +921,29 @@ void controlJoySticks()
     {
         double x = (double) (2048 - pot_value[2 * i + 1]) / 2048.0;
         double y = (double) (pot_value[2 * i + 2] - 2048) / 2048.0;
+
+        if (offset_calibrate_count[i] == 0)
+        {
+            x_offset[i] = x;
+            y_offset[i] = y;
+            offset_calibrate_count[i]++;
+        }
+        else if (offset_calibrate_count[i] < 100)
+        {
+            x_offset[i] += x;
+            y_offset[i] += y;
+            offset_calibrate_count[i]++;
+        }
+        else if (offset_calibrate_count[i] == 100)
+        {
+            x_offset[i] /= (double) offset_calibrate_count[i];
+            y_offset[i] /= (double) offset_calibrate_count[i];
+            offset_calibrate_count[i]++;
+        }
+
+        x = x - x_offset[i];
+        y = y - y_offset[i];
+
         double r = sqrt(pow(x, 2.0) + pow(y, 2.0));
 
         if (i == 1)
@@ -1254,7 +1281,7 @@ void hid_keyscan_task(void)
 #if 1
                 if (isUpper && !isShift && (abs(mouseHID.x) > MIN_MOUSE_THRESHOLD || abs(mouseHID.y) > MIN_MOUSE_THRESHOLD || isClicked))
                 {
-                    SEGGER_RTT_printf(0, "(x, y) = (%d, %d)\n", mouseHID.x, mouseHID.y);
+                    // SEGGER_RTT_printf(0, "(x, y) = (%d, %d)\n", mouseHID.x, mouseHID.y);
 
                     if (!tud_hid_ready())
                         return;
@@ -1263,6 +1290,7 @@ void hid_keyscan_task(void)
                     {
                         if (mouseHID.vertical != mouseHID.vertical_prev)
                         {
+                            // SEGGER_RTT_printf(0, "wheel = %d\n", mouseHID.vertical);
                             tud_hid_n_mouse_report(ITF_NUM_HID_MOUSE, REPORT_ID_MOUSE, 0, 0, 0, mouseHID.vertical, 0);
                         }
                         mouseHID.vertical_prev = mouseHID.vertical;
