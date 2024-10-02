@@ -142,7 +142,7 @@
 
 #define MAX_MOUSE_SENSITIVITY 6
 #define MIN_MOUSE_THRESHOLD   0
-#define MAX_WHEEL_SENSITIVITY 4
+#define MAX_WHEEL_SENSITIVITY 2
 
 void setKeymapID(uint8_t val);
 uint8_t getKeymapID(void);

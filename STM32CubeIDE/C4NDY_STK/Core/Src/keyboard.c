@@ -49,8 +49,14 @@ bool isShift   = false;
 bool isClicked = false;
 bool isWheel   = false;
 
+bool isRightUpper = false;
+
+int offset_calibrate_count[JOYSTICK_NUMS] = {0};
+double x_offset[JOYSTICK_NUMS]            = {0.0};
+double y_offset[JOYSTICK_NUMS]            = {0.0};
+
 uint8_t countReturnNeutral = 0;
-#define MAX_COUNT_RETURN_NEUTRAL 60
+#define MAX_COUNT_RETURN_NEUTRAL 100
 
 int8_t currentStk[JOYSTICK_NUMS][JOYSTICK_AXIS] = {0};
 int8_t prevStk[JOYSTICK_NUMS][JOYSTICK_AXIS]    = {0};
@@ -634,6 +640,9 @@ void clearKeys(uint8_t code)
         if (isUpper)
         {
             isUpper = false;
+            isWheel = false;
+
+            countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 
             if (((keyboardHID.modifiers >> (KC_LSHIFT - KC_LCONTROL)) & 0x01) ||
                 ((keyboardHID.modifiers >> (KC_RSHIFT - KC_LCONTROL)) & 0x01))
@@ -914,6 +923,29 @@ void controlJoySticks()
     {
         double x = (double) (2048 - pot_value[2 * i + 1]) / 2048.0;
         double y = (double) (pot_value[2 * i + 2] - 2048) / 2048.0;
+
+        if (offset_calibrate_count[i] == 0)
+        {
+            x_offset[i] = x;
+            y_offset[i] = y;
+            offset_calibrate_count[i]++;
+        }
+        else if (offset_calibrate_count[i] < 100)
+        {
+            x_offset[i] += x;
+            y_offset[i] += y;
+            offset_calibrate_count[i]++;
+        }
+        else if (offset_calibrate_count[i] == 100)
+        {
+            x_offset[i] /= (double) offset_calibrate_count[i];
+            y_offset[i] /= (double) offset_calibrate_count[i];
+            offset_calibrate_count[i]++;
+        }
+
+        x = x - x_offset[i];
+        y = y - y_offset[i];
+
         double r = sqrt(pow(x, 2.0) + pow(y, 2.0));
 
         if (i == 1)
@@ -1037,11 +1069,13 @@ void controlJoySticks()
             }
 #endif
 #ifdef ENABLE_RIGHT_UP
-            else if (i == 1 && currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == 1)
+            else if (i == 1 && !isUpper && currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == 1)
             {
                 // SEGGER_RTT_printf(0, "UR: set upper+shift\n");
                 setKeys(KC_UPPER);
                 setKeys(KC_RSHIFT);
+
+                isRightUpper = true;
             }
 #endif
         }
@@ -1060,13 +1094,16 @@ void controlJoySticks()
                 }
 #endif
 #ifdef ENABLE_RIGHT_UP
-                else if (i == 1 && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
+                else if (i == 1 && isRightUpper && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
                 {
                     SEGGER_RTT_printf(0, "UR: clear upper+shift\n");
                     clearKeys(KC_UPPER);
                     clearKeys(KC_RSHIFT);
                     resetKeys();
+
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
+
+                    isRightUpper = false;
                 }
 #endif
                 if (currentStk[i][j] != prevStk[i][j])
@@ -1251,7 +1288,7 @@ void hid_keyscan_task(void)
 #if 1
                 if (isUpper && !isShift && (abs(mouseHID.x) > MIN_MOUSE_THRESHOLD || abs(mouseHID.y) > MIN_MOUSE_THRESHOLD || isClicked))
                 {
-                    SEGGER_RTT_printf(0, "(x, y) = (%d, %d)\n", mouseHID.x, mouseHID.y);
+                    // SEGGER_RTT_printf(0, "(x, y) = (%d, %d)\n", mouseHID.x, mouseHID.y);
 
                     if (!tud_hid_ready())
                         return;
@@ -1260,6 +1297,7 @@ void hid_keyscan_task(void)
                     {
                         if (mouseHID.vertical != mouseHID.vertical_prev)
                         {
+                            // SEGGER_RTT_printf(0, "wheel = %d\n", mouseHID.vertical);
                             tud_hid_n_mouse_report(ITF_NUM_HID_MOUSE, REPORT_ID_MOUSE, 0, 0, 0, mouseHID.vertical, 0);
                         }
                         mouseHID.vertical_prev = mouseHID.vertical;
