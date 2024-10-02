@@ -49,6 +49,8 @@ bool isShift   = false;
 bool isClicked = false;
 bool isWheel   = false;
 
+bool isRightUpper = false;
+
 int offset_calibrate_count[JOYSTICK_NUMS] = {0};
 double x_offset[JOYSTICK_NUMS]            = {0.0};
 double y_offset[JOYSTICK_NUMS]            = {0.0};
@@ -1072,6 +1074,8 @@ void controlJoySticks()
                 // SEGGER_RTT_printf(0, "UR: set upper+shift\n");
                 setKeys(KC_UPPER);
                 setKeys(KC_RSHIFT);
+
+                isRightUpper = true;
             }
 #endif
         }
@@ -1090,13 +1094,16 @@ void controlJoySticks()
                 }
 #endif
 #ifdef ENABLE_RIGHT_UP
-                else if (i == 1 && !isUpper && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
+                else if (i == 1 && isRightUpper && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
                 {
                     SEGGER_RTT_printf(0, "UR: clear upper+shift\n");
                     clearKeys(KC_UPPER);
                     clearKeys(KC_RSHIFT);
                     resetKeys();
+
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
+
+                    isRightUpper = false;
                 }
 #endif
                 if (currentStk[i][j] != prevStk[i][j])
