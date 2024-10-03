@@ -256,23 +256,7 @@ int main(void)
     {
         SEGGER_RTT_printf(0, "init flash data");
 
-        HAL_FLASH_Unlock();
-
-        erase_flash_data();
-
-        write_flash_data(0, 0);
-        write_flash_data(1, 0);
-
-        for (int i = 0; i < MATRIX_ROWS; i++)
-        {
-            for (int j = 0; j < MATRIX_COLUMNS; j++)
-            {
-                write_flash_data(BASIC_PARAMS_NUM + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
-                write_flash_data(BASIC_PARAMS_NUM + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
-            }
-        }
-
-        HAL_FLASH_Lock();
+        factoryReset();
     }
 
     if (read_flash_data(1) > 1)

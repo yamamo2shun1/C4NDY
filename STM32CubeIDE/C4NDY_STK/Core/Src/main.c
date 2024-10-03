@@ -375,7 +375,7 @@ int main(void)
     {
         SEGGER_RTT_printf(0, "init flash data\n\r");
 
-        writeAllKeyboardSettings();
+        factoryReset();
     }
 
     if (read_flash_data(1) > 1)
