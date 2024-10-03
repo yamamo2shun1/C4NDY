@@ -1312,36 +1312,36 @@ void hid_keyscan_task(void)
                     if (countReturnNeutral > 0)
                     {
                         countReturnNeutral--;
-
-                        break;
                     }
-
-                    keyState[i] &= ~((uint16_t) 1 << jj);
-
-                    if (((keyState[i] >> jj) & 0x0001) != ((prevKeyState[i] >> jj) & 0x0001))
+                    else
                     {
-                        uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
+                        keyState[i] &= ~((uint16_t) 1 << jj);
 
-                        if (isUpper && keycode == KC_UPPER)
+                        if (((keyState[i] >> jj) & 0x0001) != ((prevKeyState[i] >> jj) & 0x0001))
                         {
-                            clearKeys(keycode);
-                            resetKeys();
-                            countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
-                        }
-                        else
-                        {
-                            if (isUpper)
+                            uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
+
+                            if (isUpper && keycode == KC_UPPER)
                             {
-                                keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-                            }
-                            if (keycode == KC_M_LBTN || keycode == KC_M_RBTN)
-                            {
-                                mouseHID.buttons = 0;
-                                isClicked        = true;
+                                clearKeys(keycode);
+                                resetKeys();
+                                countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                             }
                             else
                             {
-                                clearKeys(keycode);
+                                if (isUpper)
+                                {
+                                    keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
+                                }
+                                if (keycode == KC_M_LBTN || keycode == KC_M_RBTN)
+                                {
+                                    mouseHID.buttons = 0;
+                                    isClicked        = true;
+                                }
+                                else
+                                {
+                                    clearKeys(keycode);
+                                }
                             }
                         }
                     }
@@ -1351,42 +1351,42 @@ void hid_keyscan_task(void)
                     if (countReturnNeutral > 0)
                     {
                         countReturnNeutral--;
-
-                        break;
-                    }
-
-                    keyState[i] |= ((uint16_t) 1 << jj);
-
-                    uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-
-                    if (keycode == KC_UPPER)
-                    {
-                        setKeys(keycode);
                     }
                     else
                     {
-                        if (isUpper)
+
+                        keyState[i] |= ((uint16_t) 1 << jj);
+
+                        uint8_t keycode = getKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
+
+                        if (keycode == KC_UPPER)
                         {
-                            keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
-                        }
-                        if (keycode == KC_M_LBTN)
-                        {
-                            mouseHID.buttons = MOUSE_LEFT_CLICK;
-                            isClicked        = true;
-                        }
-                        else if (keycode == KC_M_RBTN)
-                        {
-                            mouseHID.buttons = MOUSE_RIGHT_CLICK;
-                            isClicked        = true;
+                            setKeys(keycode);
                         }
                         else
                         {
-                            setKeys(keycode);
+                            if (isUpper)
+                            {
+                                keycode = getUpperKeyCode(keymapID, i, (MATRIX_COLUMNS - 1) - jj);
+                            }
+                            if (keycode == KC_M_LBTN)
+                            {
+                                mouseHID.buttons = MOUSE_LEFT_CLICK;
+                                isClicked        = true;
+                            }
+                            else if (keycode == KC_M_RBTN)
+                            {
+                                mouseHID.buttons = MOUSE_RIGHT_CLICK;
+                                isClicked        = true;
+                            }
+                            else
+                            {
+                                setKeys(keycode);
+                            }
                         }
                     }
                 }
             }
-
             HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_SET);
             HAL_GPIO_WritePin(HC165_CLK_GPIO_Port, HC165_CLK_Pin, GPIO_PIN_RESET);
         }
