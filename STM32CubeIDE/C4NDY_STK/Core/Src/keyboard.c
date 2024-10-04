@@ -1247,7 +1247,12 @@ void controlJoySticks()
                         int8_t direction = (j == 0) ? ((prevStk[i][j] + 1) / 2) : ((5 - prevStk[i][j]) / 2);
                         clearKeys(keymaps_stk[keymapID][i][direction]);
                         resetKeys();
-                        countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
+
+                        if (keymaps_stk[keymapID][i][direction] == KC_UPPER ||
+                            (keymaps_stk[keymapID][i][direction] >= KC_LCONTROL && keymaps_stk[keymapID][i][direction] <= KC_RGUI))
+                        {
+                            countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
+                        }
                     }
                 }
             }
@@ -1412,7 +1417,6 @@ void hid_keyscan_task(void)
             }
             else
             {
-#if 1
                 if (isUpper && !isShift && (abs(mouseHID.x) > MIN_MOUSE_THRESHOLD || abs(mouseHID.y) > MIN_MOUSE_THRESHOLD || isClicked))
                 {
                     // SEGGER_RTT_printf(0, "(x, y) = (%d, %d)\n", mouseHID.x, mouseHID.y);
@@ -1435,7 +1439,6 @@ void hid_keyscan_task(void)
                         isClicked = false;
                     }
                 }
-#endif
             }
         }
 
