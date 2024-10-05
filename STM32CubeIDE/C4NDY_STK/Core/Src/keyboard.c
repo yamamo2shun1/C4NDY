@@ -56,7 +56,7 @@ double x_offset[JOYSTICK_NUMS]            = {0.0};
 double y_offset[JOYSTICK_NUMS]            = {0.0};
 
 uint16_t countReturnNeutral = 0;
-#define MAX_COUNT_RETURN_NEUTRAL 1000
+#define MAX_COUNT_RETURN_NEUTRAL 600
 
 int8_t currentStk[JOYSTICK_NUMS][JOYSTICK_AXIS] = {0};
 int8_t prevStk[JOYSTICK_NUMS][JOYSTICK_AXIS]    = {0};
