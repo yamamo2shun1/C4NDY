@@ -515,6 +515,8 @@ int main(void)
             led_control_task();
             state_index = 0;
             break;
+        default:
+            state_index = 0;
         }
         /* USER CODE END WHILE */
 
