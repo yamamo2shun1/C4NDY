@@ -78,7 +78,7 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 ## Installation
 The `go install` is available.
 ```shellscript
-$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@latest
+$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.10.0
 ```
 
 ## Usage
@@ -117,6 +117,10 @@ $ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@latest
         Restart the keyboard immediately.
         ex) confiseur -restart
             confiseur -restart -id 1
+-factoryreset
+        Reset all settings to factory defaults.
+        ex) confiseur -factoryreset
+            confiseur -id 0 -factoryreset
 ```
 
 ## Preparation to build
