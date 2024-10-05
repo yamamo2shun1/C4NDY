@@ -28,14 +28,33 @@ uint8_t keymapID       = 0;
 bool isLinePhonoSWChanged = false;
 uint8_t linePhonoSW       = 0;
 
+const uint8_t keymaps_normal_default[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
+    // clang-format off
+	{
+        {KC_ESC,      KC_1,    KC_2,      KC_3,    KC_4,  KC_5,      KC_6,     KC_7,     KC_8,        KC_9,      KC_0,     KC_MINUS,  KC_EQUAL},
+        {KC_TAB,      KC_Q,    KC_W,      KC_E,    KC_R,  KC_T,      KC_Y,     KC_U,     KC_I,        KC_O,      KC_P,     KC_LSB,    KC_RSB  },
+        {KC_LCONTROL, KC_A,    KC_S,      KC_D,    KC_F,  KC_G,      KC_H,     KC_J,     KC_K,        KC_L,      KC_SC,    KC_APS,    KC_YEN  },
+        {KC_LSHIFT,   KC_Z,    KC_X,      KC_C,    KC_V,  KC_B,      KC_N,     KC_M,     KC_COMMA,    KC_PERIOD, KC_SLASH, KC_RSHIFT, KC_GA   },
+        {KC_LGUI,     KC_LNPH, KC_LAYOUT, KC_LALT, KC_BS, KC_DELETE, KC_ENTER, KC_SPACE, KC_CAPSLOCK, KC_LEFT,   KC_DOWN,  KC_UP,     KC_RIGHT}
+    },
+    {
+        {KC_ESC,      KC_1,    KC_2,      KC_3,    KC_4,  KC_5,      KC_6,     KC_7,     KC_8,        KC_9,    KC_0,    KC_LSB,    KC_RSB   },
+        {KC_TAB,      KC_APS,  KC_COMMA,  KC_O,    KC_U,  KC_Y,      KC_F,     KC_G,     KC_C,        KC_R,    KC_L,    KC_SLASH,  KC_EQUAL },
+        {KC_LCONTROL, KC_P,    KC_I,      KC_E,    KC_A,  KC_PERIOD, KC_D,     KC_S,     KC_T,        KC_H,    KC_Z,    KC_MINUS,  KC_BSLASH},
+        {KC_LSHIFT,   KC_J,    KC_Q,      KC_SC,   KC_K,  KC_X,      KC_B,     KC_M,     KC_W,        KC_N,    KC_V,    KC_RSHIFT, KC_GA    },
+        {KC_LGUI,     KC_LNPH, KC_LAYOUT, KC_LALT, KC_BS, KC_DELETE, KC_ENTER, KC_SPACE, KC_CAPSLOCK, KC_LEFT, KC_DOWN, KC_UP,     KC_RIGHT }
+    }
+    // clang-format on
+};
+
 uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
     // clang-format off
     {
-        {KC_ESC,      KC_1,    KC_2,      KC_3,    KC_4,  KC_5,     KC_6,     KC_7,      KC_8,        KC_9,      KC_0,     KC_MINUS,  KC_EQUAL},
-        {KC_TAB,      KC_Q,    KC_W,      KC_E,    KC_R,  KC_T,     KC_Y,     KC_U,      KC_I,        KC_O,      KC_P,     KC_LSB,    KC_RSB  },
-        {KC_CAPSLOCK, KC_A,    KC_S,      KC_D,    KC_F,  KC_G,     KC_H,     KC_J,      KC_K,        KC_L,      KC_SC,    KC_APS,    KC_YEN  },
-        {KC_LSHIFT,   KC_Z,    KC_X,      KC_C,    KC_V,  KC_B,     KC_N,     KC_M,      KC_COMMA,    KC_PERIOD, KC_SLASH, KC_RSHIFT, KC_GA   },
-        {KC_LGUI,     KC_LNPH, KC_LAYOUT, KC_LALT, KC_BS, KC_ENTER, KC_SPACE, KC_HENKAN, KC_RCONTROL, KC_LEFT,   KC_DOWN,  KC_UP,     KC_RIGHT}
+        {KC_ESC,      KC_1,    KC_2,      KC_3,    KC_4,  KC_5,      KC_6,     KC_7,     KC_8,        KC_9,      KC_0,     KC_MINUS,  KC_EQUAL},
+        {KC_TAB,      KC_Q,    KC_W,      KC_E,    KC_R,  KC_T,      KC_Y,     KC_U,     KC_I,        KC_O,      KC_P,     KC_LSB,    KC_RSB  },
+        {KC_LCONTROL, KC_A,    KC_S,      KC_D,    KC_F,  KC_G,      KC_H,     KC_J,     KC_K,        KC_L,      KC_SC,    KC_APS,    KC_YEN  },
+        {KC_LSHIFT,   KC_Z,    KC_X,      KC_C,    KC_V,  KC_B,      KC_N,     KC_M,     KC_COMMA,    KC_PERIOD, KC_SLASH, KC_RSHIFT, KC_GA   },
+        {KC_LGUI,     KC_LNPH, KC_LAYOUT, KC_LALT, KC_BS, KC_DELETE, KC_ENTER, KC_SPACE, KC_CAPSLOCK, KC_LEFT,   KC_DOWN,  KC_UP,     KC_RIGHT}
     },
     {
         {KC_ESC,      KC_1,    KC_2,      KC_3,    KC_4,  KC_5,      KC_6,     KC_7,     KC_8,        KC_9,    KC_0,    KC_LSB,    KC_RSB   },
@@ -103,6 +122,52 @@ uint8_t getLinePhonoSW(void)
     return linePhonoSW;
 }
 
+void factoryReset(void)
+{
+    HAL_FLASH_Unlock();
+
+    erase_flash_data();
+
+    setKeymapID(0);
+    setLinePhonoSW(0);
+    write_flash_data(0, 0);
+    write_flash_data(1, 0);
+
+    for (int i = 0; i < MATRIX_ROWS; i++)
+    {
+        for (int j = 0; j < MATRIX_COLUMNS; j++)
+        {
+            write_flash_data(BASIC_PARAMS_NUM + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_normal_default[0][i][j]);
+            write_flash_data(BASIC_PARAMS_NUM + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_normal_default[1][i][j]);
+        }
+    }
+
+    HAL_FLASH_Lock();
+}
+
+void writeAllKeyboardSettings(void)
+{
+    HAL_FLASH_Unlock();
+
+    erase_flash_data();
+
+    setKeymapID(keymapID);
+    setLinePhonoSW(linePhonoSW);
+    write_flash_data(0, 0);
+    write_flash_data(1, linePhonoSW);
+    write_flash_data(2, keymapID);
+
+    for (int i = 0; i < MATRIX_ROWS; i++)
+    {
+        for (int j = 0; j < MATRIX_COLUMNS; j++)
+        {
+            write_flash_data(BASIC_PARAMS_NUM + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
+            write_flash_data(BASIC_PARAMS_NUM + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
+        }
+    }
+
+    HAL_FLASH_Lock();
+}
 // Invoked when received GET_REPORT control request
 // Application must fill buffer report's content and return its length.
 // Return zero will cause the stack to STALL request
@@ -190,24 +255,8 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
     else if (buffer[0] == 0xF5)
     {
         SEGGER_RTT_printf(0, "erase & write FLASH...\n");
-        HAL_FLASH_Unlock();
 
-        erase_flash_data();
-
-        write_flash_data(0, 0);
-        write_flash_data(1, linePhonoSW);
-        write_flash_data(2, keymapID);
-
-        for (int i = 0; i < MATRIX_ROWS; i++)
-        {
-            for (int j = 0; j < MATRIX_COLUMNS; j++)
-            {
-                write_flash_data(BASIC_PARAMS_NUM + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
-                write_flash_data(BASIC_PARAMS_NUM + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
-            }
-        }
-
-        HAL_FLASH_Lock();
+        writeAllKeyboardSettings();
 
         uint8_t rbuf[16] = {0x00};
         rbuf[1]          = 0xF5;
@@ -226,6 +275,17 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         setBootDfuFlag(false);
         HAL_Delay(100);
         NVIC_SystemReset();
+    }
+    else if (buffer[0] == 0xF8)
+    {
+        SEGGER_RTT_printf(0, "factory reset...\n");
+
+        factoryReset();
+
+        uint8_t rbuf[16] = {0x00};
+        rbuf[1]          = 0xF8;
+        rbuf[2]          = 0x01;
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, 16);
     }
 
 #if 0
@@ -309,7 +369,8 @@ void setKeys(uint8_t code)
         if (!isKeymapIDChanged)
         {
             setKeymapID(!keymapID);
-            setBootDfuFlag(false);
+            writeAllKeyboardSettings();
+
             isKeymapIDChanged = true;
         }
     }
@@ -318,7 +379,8 @@ void setKeys(uint8_t code)
         if (!isLinePhonoSWChanged)
         {
             setLinePhonoSW(!linePhonoSW);
-            setBootDfuFlag(false);
+            writeAllKeyboardSettings();
+
             isLinePhonoSWChanged = true;
         }
     }
