@@ -144,21 +144,21 @@
 #define MIN_MOUSE_THRESHOLD   0
 #define MAX_WHEEL_SENSITIVITY 2
 
-void setKeymapID(uint8_t val);
+void setKeymapID(const uint8_t val);
 uint8_t getKeymapID(void);
-void setLinePhonoSW(uint8_t val);
+void setLinePhonoSW(const uint8_t val);
 uint8_t getLinePhonoSW(void);
 void factoryReset(void);
 void writeAllKeyboardSettings(void);
-uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y);
-uint8_t getUpperKeyCode(uint8_t keymapId, uint8_t x, uint8_t y);
-uint8_t getStickKeyCode(uint8_t keymapId, uint8_t id, uint8_t direction);
-void setKeyCode(uint8_t keymapId, uint8_t x, uint8_t y, uint8_t code);
-void setUpperKeyCode(uint8_t keymapId, uint8_t x, uint8_t y, uint8_t code);
-void setStickKeyCode(uint8_t keymapId, uint8_t id, uint8_t direction, uint8_t code);
+uint8_t getKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y);
+uint8_t getUpperKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y);
+uint8_t getStickKeyCode(const uint8_t keymapId, const uint8_t id, const uint8_t direction);
+void setKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t code);
+void setUpperKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t code);
+void setStickKeyCode(const uint8_t keymapId, const uint8_t id, const uint8_t direction, const uint8_t code);
 void resetKeys(void);
-void clearKeys(uint8_t code);
-void setKeys(uint8_t code);
+void clearKeys(const uint8_t code);
+void setKeys(const uint8_t code);
 bool isUpperPressed(void);
 bool isShiftPressed(void);
 void hid_keyscan_task(void);
