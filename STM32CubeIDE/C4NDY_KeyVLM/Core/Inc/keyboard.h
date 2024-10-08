@@ -120,6 +120,8 @@ void setKeymapID(uint8_t val);
 uint8_t getKeymapID(void);
 void setLinePhonoSW(uint8_t val);
 uint8_t getLinePhonoSW(void);
+void factoryReset(void);
+void writeAllKeyboardSettings(void);
 uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y);
 void setKeyCode(uint8_t keymapId, uint8_t x, uint8_t y, uint8_t code);
 void resetKeys(void);
