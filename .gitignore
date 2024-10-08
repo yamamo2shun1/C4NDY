@@ -47,3 +47,6 @@ node_modules/
 *.psd
 *.jpg
 
+### CLion ###
+# CMake
+cmake-build-*/
