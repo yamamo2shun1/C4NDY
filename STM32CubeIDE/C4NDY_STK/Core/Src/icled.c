@@ -55,38 +55,38 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef* htim)
     HAL_TIM_PWM_Stop_DMA(htim, TIM_CHANNEL_1);
 }
 
-void setNormalColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b)
+void setNormalColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b)
 {
     rgb_normal[keymapId].r = r;
     rgb_normal[keymapId].g = g;
     rgb_normal[keymapId].b = b;
 }
 
-void setUpperColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b)
+void setUpperColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b)
 {
     rgb_upper[keymapId].r = r;
     rgb_upper[keymapId].g = g;
     rgb_upper[keymapId].b = b;
 }
 
-void setShiftColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b)
+void setShiftColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b)
 {
     rgb_shift[keymapId].r = r;
     rgb_shift[keymapId].g = g;
     rgb_shift[keymapId].b = b;
 }
 
-RGB_Color_t* getNormalColor(uint8_t keymapId)
+RGB_Color_t* getNormalColor(const uint8_t keymapId)
 {
     return &rgb_normal[keymapId];
 }
 
-RGB_Color_t* getUpperColor(uint8_t keymapId)
+RGB_Color_t* getUpperColor(const uint8_t keymapId)
 {
     return &rgb_upper[keymapId];
 }
 
-RGB_Color_t* getShiftColor(uint8_t keymapId)
+RGB_Color_t* getShiftColor(const uint8_t keymapId)
 {
     return &rgb_shift[keymapId];
 }
@@ -120,14 +120,14 @@ void setEnterFlag(void)
     stepEnter  = 0;
 }
 
-void setLedBufDirect(uint8_t index, RGB_Color_t* rgb_color)
+void setLedBufDirect(const uint8_t index, const RGB_Color_t* rgb_color)
 {
     grb[index][0] = (uint8_t) ((double) rgb_color->g * LED_INTENSITY_RATE);
     grb[index][1] = (uint8_t) ((double) rgb_color->r * LED_INTENSITY_RATE);
     grb[index][2] = (uint8_t) ((double) rgb_color->b * LED_INTENSITY_RATE);
 }
 
-void setAllLedBufDirect(RGB_Color_t* rgb_color)
+void setAllLedBufDirect(const RGB_Color_t* rgb_color)
 {
     for (int i = 0; i < LED_NUMS; i++)
     {
@@ -137,7 +137,7 @@ void setAllLedBufDirect(RGB_Color_t* rgb_color)
     }
 }
 
-void setLedBuf(uint8_t index, RGB_Color_t* rgb_color)
+void setLedBuf(const uint8_t index, const RGB_Color_t* rgb_color)
 {
     grb_prev[index][0] = grb_current[index][0];
     grb_prev[index][1] = grb_current[index][1];
@@ -156,7 +156,7 @@ void setLedBuf(uint8_t index, RGB_Color_t* rgb_color)
     }
 }
 
-void setAllLedBuf(RGB_Color_t* rgb_color)
+void setAllLedBuf(const RGB_Color_t* rgb_color)
 {
     for (int i = 0; i < LED_NUMS; i++)
     {
@@ -178,7 +178,7 @@ void setAllLedBuf(RGB_Color_t* rgb_color)
     }
 }
 
-void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color0)
+void setColumn2ColorLedBuf(const uint8_t row, const uint16_t column, const RGB_Color_t* rgb_color1, const RGB_Color_t* rgb_color0)
 {
     for (int i = 0; i < 10; i++)
     {
@@ -193,7 +193,7 @@ void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color1
     }
 }
 
-void setColumn3ColorLedBuf(uint8_t row, uint16_t column0, uint16_t column1, RGB_Color_t* rgb_color2, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color0)
+void setColumn3ColorLedBuf(const uint8_t row, const uint16_t column0, const uint16_t column1, const RGB_Color_t* rgb_color2, const RGB_Color_t* rgb_color1, const RGB_Color_t* rgb_color0)
 {
     for (int i = 0; i < 10; i++)
     {
@@ -212,7 +212,7 @@ void setColumn3ColorLedBuf(uint8_t row, uint16_t column0, uint16_t column1, RGB_
     }
 }
 
-void gradation(uint8_t index, double rate)
+void gradation(const uint8_t index, const double rate)
 {
     for (int k = 0; k < RGB; k++)
     {
@@ -220,7 +220,7 @@ void gradation(uint8_t index, double rate)
     }
 }
 
-void gradationAll(double rate)
+void gradationAll(const double rate)
 {
     for (int i = 0; i < LED_NUMS; i++)
     {
@@ -263,7 +263,7 @@ void renew(void)
     }
 }
 
-void checkColor(uint8_t r, uint8_t g, uint8_t b)
+void checkColor(const uint8_t r, const uint8_t g, const uint8_t b)
 {
     RGB_Color_t rgb_check = {r, g, b};
 
@@ -372,6 +372,8 @@ void led_control_task(void)
                         setColumn3ColorLedBuf(1, 0b0000000010, 0b0000000001, &rgb_normal[getKeymapID()], &rgb_blank, &rgb_shift[getKeymapID()]);
                         setColumn3ColorLedBuf(2, 0b0000000010, 0b0000000001, &rgb_normal[getKeymapID()], &rgb_blank, &rgb_shift[getKeymapID()]);
                         break;
+                    default:
+                        break;
                     }
                 }
                 else if (isUpperPressed())
@@ -428,6 +430,8 @@ void led_control_task(void)
                         setColumn3ColorLedBuf(1, 0b0000000010, 0b0000000001, &rgb_shift[getKeymapID()], &rgb_blank, &rgb_upper[getKeymapID()]);
                         setColumn3ColorLedBuf(2, 0b0000000010, 0b0000000001, &rgb_shift[getKeymapID()], &rgb_blank, &rgb_upper[getKeymapID()]);
                         break;
+                    default:
+                        break;
                     }
                 }
                 else
@@ -483,6 +487,8 @@ void led_control_task(void)
                         setColumn3ColorLedBuf(0, 0b0000000010, 0b0000000001, &rgb_upper[getKeymapID()], &rgb_blank, &rgb_normal[getKeymapID()]);
                         setColumn3ColorLedBuf(1, 0b0000000010, 0b0000000001, &rgb_upper[getKeymapID()], &rgb_blank, &rgb_normal[getKeymapID()]);
                         setColumn3ColorLedBuf(2, 0b0000000010, 0b0000000001, &rgb_upper[getKeymapID()], &rgb_blank, &rgb_normal[getKeymapID()]);
+                        break;
+                    default:
                         break;
                     }
                 }
@@ -593,6 +599,8 @@ void led_control_task(void)
                         setColumn3ColorLedBuf(1, 0b0100000000, 0b1000000000, &rgb_normal[getKeymapID()], &rgb_blank, &rgb_shift[getKeymapID()]);
                         setColumn3ColorLedBuf(2, 0b0100000000, 0b1000000000, &rgb_normal[getKeymapID()], &rgb_blank, &rgb_shift[getKeymapID()]);
                         break;
+                    default:
+                        break;
                     }
                 }
                 else if (isUpperPressed())
@@ -649,6 +657,8 @@ void led_control_task(void)
                         setColumn3ColorLedBuf(1, 0b0100000000, 0b1000000000, &rgb_shift[getKeymapID()], &rgb_blank, &rgb_upper[getKeymapID()]);
                         setColumn3ColorLedBuf(2, 0b0100000000, 0b1000000000, &rgb_shift[getKeymapID()], &rgb_blank, &rgb_upper[getKeymapID()]);
                         break;
+                    default:
+                        break;
                     }
                 }
                 else
@@ -704,6 +714,8 @@ void led_control_task(void)
                         setColumn3ColorLedBuf(0, 0b0100000000, 0b1000000000, &rgb_upper[getKeymapID()], &rgb_blank, &rgb_normal[getKeymapID()]);
                         setColumn3ColorLedBuf(1, 0b0100000000, 0b1000000000, &rgb_upper[getKeymapID()], &rgb_blank, &rgb_normal[getKeymapID()]);
                         setColumn3ColorLedBuf(2, 0b0100000000, 0b1000000000, &rgb_upper[getKeymapID()], &rgb_blank, &rgb_normal[getKeymapID()]);
+                        break;
+                    default:
                         break;
                     }
                 }
@@ -814,6 +826,8 @@ void led_control_task(void)
                         setColumn3ColorLedBuf(1, 0b1000000001, 0b0000000000, &rgb_normal[getKeymapID()], &rgb_blank, &rgb_shift[getKeymapID()]);
                         setColumn3ColorLedBuf(2, 0b0100000010, 0b1000000001, &rgb_normal[getKeymapID()], &rgb_blank, &rgb_shift[getKeymapID()]);
                         break;
+                    default:
+                        break;
                     }
                 }
                 else if (isUpperPressed())
@@ -870,6 +884,8 @@ void led_control_task(void)
                         setColumn3ColorLedBuf(1, 0b1000000001, 0b0000000000, &rgb_shift[getKeymapID()], &rgb_blank, &rgb_upper[getKeymapID()]);
                         setColumn3ColorLedBuf(2, 0b0100000010, 0b1000000001, &rgb_shift[getKeymapID()], &rgb_blank, &rgb_upper[getKeymapID()]);
                         break;
+                    default:
+                        break;
                     }
                 }
                 else
@@ -925,6 +941,8 @@ void led_control_task(void)
                         setColumn3ColorLedBuf(0, 0b0000000000, 0b0000000000, &rgb_upper[getKeymapID()], &rgb_blank, &rgb_normal[getKeymapID()]);
                         setColumn3ColorLedBuf(1, 0b1000000001, 0b0000000000, &rgb_upper[getKeymapID()], &rgb_blank, &rgb_normal[getKeymapID()]);
                         setColumn3ColorLedBuf(2, 0b0100000010, 0b1000000001, &rgb_upper[getKeymapID()], &rgb_blank, &rgb_normal[getKeymapID()]);
+                        break;
+                    default:
                         break;
                     }
                 }
