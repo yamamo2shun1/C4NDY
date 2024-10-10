@@ -62,7 +62,7 @@ int8_t currentStk[JOYSTICK_NUMS][JOYSTICK_AXIS] = {0};
 int8_t prevStk[JOYSTICK_NUMS][JOYSTICK_AXIS]    = {0};
 
 const uint8_t keymaps_normal_default[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
-    // clang-format off
+  // clang-format off
     {
 	    {KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,     KC_O,      KC_P},
 		{KC_A,    KC_S,    KC_D,    KC_F,    KC_G,        KC_H,    KC_J,    KC_K,     KC_L,      KC_SC},
@@ -75,11 +75,11 @@ const uint8_t keymaps_normal_default[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
 		{KC_J,    KC_Q,     KC_SC,   KC_K,    KC_X,        KC_B,    KC_M,    KC_W,    KC_N,  KC_V},
 		{KC_NULL, KC_LGUI,  KC_LALT, KC_NULL, KC_LCONTROL, KC_NULL, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT}
 	}
-    // clang-format on
+  // clang-format on
 };
 
 const uint8_t keymaps_upper_default[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
-    // clang-format off
+  // clang-format off
 	{
 		{KC_1,    KC_2,        KC_3,      KC_4,      KC_5,        KC_6,    KC_7,    KC_8,          KC_9,        KC_0},
 		{KC_APS,  KC_GA,       KC_NULL,   KC_LGUI,   KC_NULL,     KC_NULL, KC_LSB,  KC_RSB,        KC_MINUS,    KC_EQUAL},
@@ -92,11 +92,11 @@ const uint8_t keymaps_upper_default[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
 		{KC_NULL, KC_CAPSLOCK, KC_M_LBTN, KC_M_RBTN, KC_M_WHEEL,  KC_NULL, KC_EQUAL, KC_NULL,       KC_NULL,     KC_BSLASH},
 		{KC_NULL, KC_LNPH,     KC_LAYOUT, KC_NULL,   KC_LCONTROL, KC_NULL, KC_NULL,  KC_MGAIN_DOWN, KC_MGAIN_UP, KC_RESET}
 	}
-    // clang-format on
+  // clang-format on
 };
 
 const uint8_t keymaps_stk_default[2][2][4] = {
-    // clang-format off
+  // clang-format off
     //   left,      right,    down,     up
 	{
 		{KC_BS,     KC_TAB,   KC_ENTER, KC_UPPER}, // left stick
@@ -106,7 +106,7 @@ const uint8_t keymaps_stk_default[2][2][4] = {
 		{KC_BS,     KC_TAB,   KC_ENTER, KC_UPPER}, // left stick
 		{KC_DELETE, KC_SPACE, KC_ESC,   KC_RSHIFT} // right stick
 	}
-    // clang-format on
+  // clang-format on
 };
 
 uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
@@ -144,7 +144,7 @@ uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
 };
 
 uint8_t keymaps_stk[2][2][4] = {
-    // clang-format off
+  // clang-format off
     //   left,      right,    down,     up
 	{
 		{KC_BS,     KC_TAB,   KC_ENTER, KC_UPPER}, // left stick
@@ -510,21 +510,21 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         {
         case 0xF0:
             const RGB_Color_t* rgb_normal = getNormalColor(0);
-            buffer_sb[0]                 = rgb_normal->r;
-            buffer_sb[1]                 = rgb_normal->g;
-            buffer_sb[2]                 = rgb_normal->b;
+            buffer_sb[0]                  = rgb_normal->r;
+            buffer_sb[1]                  = rgb_normal->g;
+            buffer_sb[2]                  = rgb_normal->b;
             break;
         case 0xF1:
             const RGB_Color_t* rgb_upper = getUpperColor(0);
-            buffer_sb[0]                = rgb_upper->r;
-            buffer_sb[1]                = rgb_upper->g;
-            buffer_sb[2]                = rgb_upper->b;
+            buffer_sb[0]                 = rgb_upper->r;
+            buffer_sb[1]                 = rgb_upper->g;
+            buffer_sb[2]                 = rgb_upper->b;
             break;
         case 0xF2:
             const RGB_Color_t* rgb_shift = getShiftColor(0);
-            buffer_sb[0]                = rgb_shift->r;
-            buffer_sb[1]                = rgb_shift->g;
-            buffer_sb[2]                = rgb_shift->b;
+            buffer_sb[0]                 = rgb_shift->r;
+            buffer_sb[1]                 = rgb_shift->g;
+            buffer_sb[2]                 = rgb_shift->b;
             break;
         default:
             break;
@@ -570,21 +570,21 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         {
         case 0xF0:
             const RGB_Color_t* rgb_normal = getNormalColor(1);
-            buffer_sb[0]                 = rgb_normal->r;
-            buffer_sb[1]                 = rgb_normal->g;
-            buffer_sb[2]                 = rgb_normal->b;
+            buffer_sb[0]                  = rgb_normal->r;
+            buffer_sb[1]                  = rgb_normal->g;
+            buffer_sb[2]                  = rgb_normal->b;
             break;
         case 0xF1:
             const RGB_Color_t* rgb_upper = getUpperColor(1);
-            buffer_sb[0]                = rgb_upper->r;
-            buffer_sb[1]                = rgb_upper->g;
-            buffer_sb[2]                = rgb_upper->b;
+            buffer_sb[0]                 = rgb_upper->r;
+            buffer_sb[1]                 = rgb_upper->g;
+            buffer_sb[2]                 = rgb_upper->b;
             break;
         case 0xF2:
             const RGB_Color_t* rgb_shift = getShiftColor(1);
-            buffer_sb[0]                = rgb_shift->r;
-            buffer_sb[1]                = rgb_shift->g;
-            buffer_sb[2]                = rgb_shift->b;
+            buffer_sb[0]                 = rgb_shift->r;
+            buffer_sb[1]                 = rgb_shift->g;
+            buffer_sb[2]                 = rgb_shift->b;
             break;
         default:
             break;
@@ -1117,7 +1117,7 @@ void controlJoySticks(void)
                 }
             }
 #ifdef ENABLE_LEFT_UP
-            else if (theta >= 135 - JOYSTICK_ON_ANGLE && theta < 135 + JOYSTICK_ON_ANGLE)
+            else if (theta >= 135 - JOYSTICK_ON_ANGLE2 && theta < 135 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:up left (%d)\n", i, (int) theta);
                 if (i == 0)
@@ -1133,9 +1133,25 @@ void controlJoySticks(void)
             }
 #endif
 #ifdef ENABLE_RIGHT_UP
-            else if (theta >= 45 - JOYSTICK_ON_ANGLE && theta < 45 + JOYSTICK_ON_ANGLE)
+            else if (theta >= 45 - JOYSTICK_ON_ANGLE2 && theta < 45 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:up right (%d)\n", i, (int) theta);
+                if (i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 1;
+                    currentStk[i][JOYSTICK_V] = -1;
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = 0;
+                    currentStk[i][JOYSTICK_V] = 0;
+                }
+            }
+#endif
+#ifdef ENABLE_RIGHT_DOWN
+            else if (theta >= -45 - JOYSTICK_ON_ANGLE2 && theta < -45 + JOYSTICK_ON_ANGLE2)
+            {
+                SEGGER_RTT_printf(0, "%d:down right (%d)\n", i, (int) theta);
                 if (i == 1)
                 {
                     currentStk[i][JOYSTICK_H] = 1;
@@ -1213,11 +1229,21 @@ void controlJoySticks(void)
             }
 #endif
 #ifdef ENABLE_RIGHT_UP
-            else if (i == 1 && !isUpper && currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == 1)
+            else if (i == 1 && !isUpper && currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == -1)
             {
                 // SEGGER_RTT_printf(0, "UR: set upper+shift\n");
                 setKeys(KC_UPPER);
                 setKeys(KC_RSHIFT);
+
+                isRightUpper = true;
+            }
+#endif
+#ifdef ENABLE_RIGHT_DOWN
+            else if (i == 1 && !isUpper && currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == 1)
+            {
+                // SEGGER_RTT_printf(0, "UR: set down+shift\n");
+                setKeys(KC_RSHIFT);
+                setKeys(KC_SPACE);
 
                 isRightUpper = true;
             }
@@ -1238,11 +1264,24 @@ void controlJoySticks(void)
                 }
 #endif
 #ifdef ENABLE_RIGHT_UP
-                else if (i == 1 && isRightUpper && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
+                else if (i == 1 && isRightUpper && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == -1))
                 {
                     SEGGER_RTT_printf(0, "UR: clear upper+shift\n");
                     clearKeys(KC_UPPER);
                     clearKeys(KC_RSHIFT);
+                    resetKeys();
+
+                    countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
+
+                    isRightUpper = false;
+                }
+#endif
+#ifdef ENABLE_RIGHT_DOWN
+                else if (i == 1 && isRightUpper && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
+                {
+                    SEGGER_RTT_printf(0, "UR: clear down+shift\n");
+                    clearKeys(KC_RSHIFT);
+                    clearKeys(KC_SPACE);
                     resetKeys();
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
