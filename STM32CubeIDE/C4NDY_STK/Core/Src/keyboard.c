@@ -61,36 +61,36 @@ uint16_t countReturnNeutral = 0;
 int8_t currentStk[JOYSTICK_NUMS][JOYSTICK_AXIS] = {0};
 int8_t prevStk[JOYSTICK_NUMS][JOYSTICK_AXIS]    = {0};
 
-const uint8_t keymaps_normal_default[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
+const uint8_t keymaps_normal_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
   // clang-format off
     {
-	    {KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,     KC_O,      KC_P},
-		{KC_A,    KC_S,    KC_D,    KC_F,    KC_G,        KC_H,    KC_J,    KC_K,     KC_L,      KC_SC},
-		{KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,        KC_N,    KC_M,    KC_COMMA, KC_PERIOD, KC_SLASH},
-		{KC_NULL, KC_LGUI, KC_LALT, KC_NULL, KC_LCONTROL, KC_NULL, KC_LEFT, KC_DOWN,  KC_UP,     KC_RIGHT}
+	    {{KC_Q, KC_NULL},    {KC_W, KC_NULL},    {KC_E, KC_NULL},    {KC_R, KC_NULL},    {KC_T, KC_NULL},        {KC_Y, KC_NULL},    {KC_U, KC_NULL},    {KC_I, KC_NULL},     {KC_O, KC_NULL},      {KC_P, KC_NULL}},
+		{{KC_A, KC_NULL},    {KC_S, KC_NULL},    {KC_D, KC_NULL},    {KC_F, KC_NULL},    {KC_G, KC_NULL},        {KC_H, KC_NULL},    {KC_J, KC_NULL},    {KC_K, KC_NULL},     {KC_L, KC_NULL},      {KC_SC, KC_NULL}},
+		{{KC_Z, KC_NULL},    {KC_X, KC_NULL},    {KC_C, KC_NULL},    {KC_V, KC_NULL},    {KC_B, KC_NULL},        {KC_N, KC_NULL},    {KC_M, KC_NULL},    {KC_COMMA, KC_NULL}, {KC_PERIOD, KC_NULL}, {KC_SLASH, KC_NULL}},
+		{{KC_NULL, KC_NULL}, {KC_LGUI, KC_NULL}, {KC_LALT, KC_NULL}, {KC_NULL, KC_NULL}, {KC_LCONTROL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_LEFT, KC_NULL}, {KC_DOWN, KC_NULL},  {KC_UP, KC_NULL},     {KC_RIGHT, KC_NULL}}
 	},
 	{
-		{KC_APS,  KC_COMMA, KC_O,    KC_U,    KC_Y,        KC_F,    KC_G,    KC_C,    KC_R,  KC_L},
-		{KC_P,    KC_I,     KC_E,    KC_A,    KC_PERIOD,   KC_D,    KC_S,    KC_T,    KC_H,  KC_Z},
-		{KC_J,    KC_Q,     KC_SC,   KC_K,    KC_X,        KC_B,    KC_M,    KC_W,    KC_N,  KC_V},
-		{KC_NULL, KC_LGUI,  KC_LALT, KC_NULL, KC_LCONTROL, KC_NULL, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT}
+		{{KC_APS, KC_NULL},  {KC_COMMA, KC_NULL}, {KC_O, KC_NULL},    {KC_U, KC_NULL},    {KC_Y, KC_NULL},        {KC_F, KC_NULL},    {KC_G, KC_NULL},    {KC_C, KC_NULL},    {KC_R, KC_NULL},  {KC_L, KC_NULL}},
+		{{KC_P, KC_NULL},    {KC_I, KC_NULL},     {KC_E, KC_NULL},    {KC_A, KC_NULL},    {KC_PERIOD, KC_NULL},   {KC_D, KC_NULL},    {KC_S, KC_NULL},    {KC_T, KC_NULL},    {KC_H, KC_NULL},  {KC_Z, KC_NULL}},
+		{{KC_J, KC_NULL},    {KC_Q, KC_NULL},     {KC_SC, KC_NULL},   {KC_K, KC_NULL},    {KC_X, KC_NULL},        {KC_B, KC_NULL},    {KC_M, KC_NULL},    {KC_W, KC_NULL},    {KC_N, KC_NULL},  {KC_V, KC_NULL}},
+		{{KC_NULL, KC_NULL}, {KC_LGUI, KC_NULL},  {KC_LALT, KC_NULL}, {KC_NULL, KC_NULL}, {KC_LCONTROL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_LEFT, KC_NULL}, {KC_DOWN, KC_NULL}, {KC_UP, KC_NULL}, {KC_RIGHT, KC_NULL}}
 	}
   // clang-format on
 };
 
-const uint8_t keymaps_upper_default[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
+const uint8_t keymaps_upper_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
   // clang-format off
 	{
-		{KC_1,    KC_2,        KC_3,      KC_4,      KC_5,        KC_6,    KC_7,    KC_8,          KC_9,        KC_0},
-		{KC_APS,  KC_GA,       KC_NULL,   KC_LGUI,   KC_NULL,     KC_NULL, KC_LSB,  KC_RSB,        KC_MINUS,    KC_EQUAL},
-		{KC_NULL, KC_CAPSLOCK, KC_M_LBTN, KC_M_RBTN, KC_M_WHEEL,  KC_NULL, KC_NULL, KC_COMMA,      KC_PERIOD,   KC_BSLASH},
-		{KC_NULL, KC_LNPH,     KC_LAYOUT, KC_NULL,   KC_LCONTROL, KC_NULL, KC_NULL, KC_MGAIN_DOWN, KC_MGAIN_UP, KC_RESET}
+		{{KC_1, KC_NULL},    {KC_2, KC_NULL},        {KC_3, KC_NULL},      {KC_4, KC_NULL},      {KC_5, KC_NULL},        {KC_6, KC_NULL},    {KC_7, KC_NULL},    {KC_8, KC_NULL},          {KC_9, KC_NULL},        {KC_0, KC_NULL}},
+		{{KC_APS, KC_NULL},  {KC_GA, KC_NULL},       {KC_NULL, KC_NULL},   {KC_LGUI, KC_NULL},   {KC_NULL, KC_NULL},     {KC_NULL, KC_NULL}, {KC_LSB, KC_NULL},  {KC_RSB, KC_NULL},        {KC_MINUS, KC_NULL},    {KC_EQUAL, KC_NULL}},
+		{{KC_NULL, KC_NULL}, {KC_CAPSLOCK, KC_NULL}, {KC_M_LBTN, KC_NULL}, {KC_M_RBTN, KC_NULL}, {KC_M_WHEEL, KC_NULL},  {KC_NULL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_COMMA, KC_NULL},      {KC_PERIOD, KC_NULL},   {KC_BSLASH, KC_NULL}},
+		{{KC_NULL, KC_NULL}, {KC_LNPH, KC_NULL},     {KC_LAYOUT, KC_NULL}, {KC_NULL, KC_NULL},   {KC_LCONTROL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_MGAIN_DOWN, KC_NULL}, {KC_MGAIN_UP, KC_NULL}, {KC_RESET, KC_NULL}}
 	},
 	{
-		{KC_1,    KC_2,        KC_3,      KC_4,      KC_5,        KC_6,    KC_7,     KC_8,          KC_9,        KC_0},
-		{KC_APS,  KC_COMMA,    KC_NULL,   KC_LGUI,   KC_PERIOD,   KC_NULL, KC_LSB,   KC_RSB,        KC_SLASH,    KC_MINUS},
-		{KC_NULL, KC_CAPSLOCK, KC_M_LBTN, KC_M_RBTN, KC_M_WHEEL,  KC_NULL, KC_EQUAL, KC_NULL,       KC_NULL,     KC_BSLASH},
-		{KC_NULL, KC_LNPH,     KC_LAYOUT, KC_NULL,   KC_LCONTROL, KC_NULL, KC_NULL,  KC_MGAIN_DOWN, KC_MGAIN_UP, KC_RESET}
+		{{KC_1, KC_NULL},    {KC_2, KC_NULL},        {KC_3, KC_NULL},      {KC_4, KC_NULL},      {KC_5, KC_NULL},        {KC_6, KC_NULL},    {KC_7, KC_NULL},     {KC_8, KC_NULL},          {KC_9, KC_NULL},        {KC_0, KC_NULL}},
+		{{KC_APS, KC_NULL},  {KC_COMMA, KC_NULL},    {KC_NULL, KC_NULL},   {KC_LGUI, KC_NULL},   {KC_PERIOD, KC_NULL},   {KC_NULL, KC_NULL}, {KC_LSB, KC_NULL},   {KC_RSB, KC_NULL},        {KC_SLASH, KC_NULL},    {KC_MINUS, KC_NULL}},
+		{{KC_NULL, KC_NULL}, {KC_CAPSLOCK, KC_NULL}, {KC_M_LBTN, KC_NULL}, {KC_M_RBTN, KC_NULL}, {KC_M_WHEEL, KC_NULL},  {KC_NULL, KC_NULL}, {KC_EQUAL, KC_NULL}, {KC_NULL, KC_NULL},       {KC_NULL, KC_NULL},     {KC_BSLASH, KC_NULL}},
+		{{KC_NULL, KC_NULL}, {KC_LNPH, KC_NULL},     {KC_LAYOUT, KC_NULL}, {KC_NULL, KC_NULL},   {KC_LCONTROL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_NULL, KC_NULL},  {KC_MGAIN_DOWN, KC_NULL}, {KC_MGAIN_UP, KC_NULL}, {KC_RESET, KC_NULL}}
 	}
   // clang-format on
 };
@@ -109,36 +109,36 @@ const uint8_t keymaps_stk_default[2][2][4] = {
   // clang-format on
 };
 
-uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
+uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
   // clang-format off
     {
-	    {KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,        KC_Y,    KC_U,    KC_I,     KC_O,      KC_P},
-		{KC_A,    KC_S,    KC_D,    KC_F,    KC_G,        KC_H,    KC_J,    KC_K,     KC_L,      KC_SC},
-		{KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,        KC_N,    KC_M,    KC_COMMA, KC_PERIOD, KC_SLASH},
-		{KC_NULL, KC_LGUI, KC_LALT, KC_NULL, KC_LCONTROL, KC_NULL, KC_LEFT, KC_DOWN,  KC_UP,     KC_RIGHT}
+	    {{KC_Q, KC_NULL},    {KC_W, KC_NULL},    {KC_E, KC_NULL},    {KC_R, KC_NULL},    {KC_T, KC_NULL},        {KC_Y, KC_NULL},    {KC_U, KC_NULL},    {KC_I, KC_NULL},     {KC_O, KC_NULL},      {KC_P, KC_NULL}, },
+		{{KC_A, KC_NULL},    {KC_S, KC_NULL},    {KC_D, KC_NULL},    {KC_F, KC_NULL},    {KC_G, KC_NULL},        {KC_H, KC_NULL},    {KC_J, KC_NULL},    {KC_K, KC_NULL},     {KC_L, KC_NULL},      {KC_SC, KC_NULL}, },
+		{{KC_Z, KC_NULL},    {KC_X, KC_NULL},    {KC_C, KC_NULL},    {KC_V, KC_NULL},    {KC_B, KC_NULL},        {KC_N, KC_NULL},    {KC_M, KC_NULL},    {KC_COMMA, KC_NULL}, {KC_PERIOD, KC_NULL}, {KC_SLASH, KC_NULL}, },
+		{{KC_NULL, KC_NULL}, {KC_LGUI, KC_NULL}, {KC_LALT, KC_NULL}, {KC_NULL, KC_NULL}, {KC_LCONTROL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_LEFT, KC_NULL}, {KC_DOWN, KC_NULL},  {KC_UP, KC_NULL},     {KC_RIGHT, KC_NULL}, }
 	},
 	{
-		{KC_APS,  KC_COMMA, KC_O,    KC_U,    KC_Y,        KC_F,    KC_G,    KC_C,    KC_R,  KC_L},
-		{KC_P,    KC_I,     KC_E,    KC_A,    KC_PERIOD,   KC_D,    KC_S,    KC_T,    KC_H,  KC_Z},
-		{KC_J,    KC_Q,     KC_SC,   KC_K,    KC_X,        KC_B,    KC_M,    KC_W,    KC_N,  KC_V},
-		{KC_NULL, KC_LGUI,  KC_LALT, KC_NULL, KC_LCONTROL, KC_NULL, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT}
+		{{KC_APS, KC_NULL},  {KC_COMMA, KC_NULL}, {KC_O, KC_NULL},    {KC_U, KC_NULL},    {KC_Y, KC_NULL},        {KC_F, KC_NULL},    {KC_G, KC_NULL},    {KC_C, KC_NULL},    {KC_R, KC_NULL},  {KC_L, KC_NULL}, },
+		{{KC_P, KC_NULL},    {KC_I, KC_NULL},     {KC_E, KC_NULL},    {KC_A, KC_NULL},    {KC_PERIOD, KC_NULL},   {KC_D, KC_NULL},    {KC_S, KC_NULL},    {KC_T, KC_NULL},    {KC_H, KC_NULL},  {KC_Z, KC_NULL}, },
+		{{KC_J, KC_NULL},    {KC_Q, KC_NULL},     {KC_SC, KC_NULL},   {KC_K, KC_NULL},    {KC_X, KC_NULL},        {KC_B, KC_NULL},    {KC_M, KC_NULL},    {KC_W, KC_NULL},    {KC_N, KC_NULL},  {KC_V, KC_NULL}, },
+		{{KC_NULL, KC_NULL}, {KC_LGUI, KC_NULL},  {KC_LALT, KC_NULL}, {KC_NULL, KC_NULL}, {KC_LCONTROL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_LEFT, KC_NULL}, {KC_DOWN, KC_NULL}, {KC_UP, KC_NULL}, {KC_RIGHT, KC_NULL}, }
 	}
   // clang-format on
 };
 
-uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS] = {
+uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
   // clang-format off
 	{
-		{KC_1,    KC_2,        KC_3,      KC_4,      KC_5,        KC_6,    KC_7,    KC_8,          KC_9,        KC_0},
-		{KC_APS,  KC_GA,       KC_NULL,   KC_LGUI,   KC_NULL,     KC_NULL, KC_LSB,  KC_RSB,        KC_MINUS,    KC_EQUAL},
-		{KC_NULL, KC_CAPSLOCK, KC_M_LBTN, KC_M_RBTN, KC_M_WHEEL,  KC_NULL, KC_NULL, KC_COMMA,      KC_PERIOD,   KC_BSLASH},
-		{KC_NULL, KC_LNPH,     KC_LAYOUT, KC_NULL,   KC_LCONTROL, KC_NULL, KC_NULL, KC_MGAIN_DOWN, KC_MGAIN_UP, KC_RESET}
+		{{KC_1, KC_NULL},    {KC_2, KC_NULL},        {KC_3, KC_NULL},      {KC_4, KC_NULL},      {KC_5, KC_NULL},        {KC_6, KC_NULL},    {KC_7, KC_NULL},    {KC_8, KC_NULL},          {KC_9, KC_NULL},        {KC_0, KC_NULL}},
+		{{KC_APS, KC_NULL},  {KC_GA, KC_NULL},       {KC_NULL, KC_NULL},   {KC_LGUI, KC_NULL},   {KC_NULL, KC_NULL},     {KC_NULL, KC_NULL}, {KC_LSB, KC_NULL},  {KC_RSB, KC_NULL},        {KC_MINUS, KC_NULL},    {KC_EQUAL, KC_NULL}},
+		{{KC_NULL, KC_NULL}, {KC_CAPSLOCK, KC_NULL}, {KC_M_LBTN, KC_NULL}, {KC_M_RBTN, KC_NULL}, {KC_M_WHEEL, KC_NULL},  {KC_NULL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_COMMA, KC_NULL},      {KC_PERIOD, KC_NULL},   {KC_BSLASH, KC_NULL}},
+		{{KC_NULL, KC_NULL}, {KC_LNPH, KC_NULL},     {KC_LAYOUT, KC_NULL}, {KC_NULL, KC_NULL},   {KC_LCONTROL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_MGAIN_DOWN, KC_NULL}, {KC_MGAIN_UP, KC_NULL}, {KC_RESET, KC_NULL}}
 	},
 	{
-		{KC_1,    KC_2,        KC_3,      KC_4,      KC_5,        KC_6,    KC_7,     KC_8,          KC_9,         KC_0},
-		{KC_APS,  KC_COMMA,    KC_NULL,   KC_LGUI,   KC_PERIOD,   KC_NULL, KC_LSB,   KC_RSB,        KC_SLASH,     KC_MINUS},
-		{KC_NULL, KC_CAPSLOCK, KC_M_LBTN, KC_M_RBTN, KC_M_WHEEL,  KC_NULL, KC_EQUAL, KC_NULL,       KC_NULL,      KC_BSLASH},
-		{KC_NULL, KC_LNPH,     KC_LAYOUT, KC_NULL,   KC_LCONTROL, KC_NULL, KC_NULL,  KC_MGAIN_DOWN, KC_MGAIN_UP,  KC_RESET}
+		{{KC_1, KC_NULL},    {KC_2, KC_NULL},        {KC_3, KC_NULL},      {KC_4, KC_NULL},      {KC_5, KC_NULL},        {KC_6, KC_NULL},    {KC_7, KC_NULL},     {KC_8, KC_NULL},          {KC_9, KC_NULL},         {KC_0, KC_NULL}},
+		{{KC_APS, KC_NULL},  {KC_COMMA, KC_NULL},    {KC_NULL, KC_NULL},   {KC_LGUI, KC_NULL},   {KC_PERIOD, KC_NULL},   {KC_NULL, KC_NULL}, {KC_LSB, KC_NULL},   {KC_RSB, KC_NULL},        {KC_SLASH, KC_NULL},     {KC_MINUS, KC_NULL}},
+		{{KC_NULL, KC_NULL}, {KC_CAPSLOCK, KC_NULL}, {KC_M_LBTN, KC_NULL}, {KC_M_RBTN, KC_NULL}, {KC_M_WHEEL, KC_NULL},  {KC_NULL, KC_NULL}, {KC_EQUAL, KC_NULL}, {KC_NULL, KC_NULL},       {KC_NULL, KC_NULL},      {KC_BSLASH, KC_NULL}},
+		{{KC_NULL, KC_NULL}, {KC_LNPH, KC_NULL},     {KC_LAYOUT, KC_NULL}, {KC_NULL, KC_NULL},   {KC_LCONTROL, KC_NULL}, {KC_NULL, KC_NULL}, {KC_NULL, KC_NULL},  {KC_MGAIN_DOWN, KC_NULL}, {KC_MGAIN_UP, KC_NULL},  {KC_RESET, KC_NULL}}
 	}
   // clang-format on
 };
@@ -229,15 +229,15 @@ void factoryReset(void)
     {
         for (int j = 0; j < MATRIX_COLUMNS; j++)
         {
-            setKeyCode(0, i, j, keymaps_normal_default[0][i][j]);
-            setKeyCode(1, i, j, keymaps_normal_default[1][i][j]);
-            write_flash_data(BASIC_PARAMS_NUM + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_normal_default[0][i][j]);
-            write_flash_data(BASIC_PARAMS_NUM + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_normal_default[1][i][j]);
+            setKeyCode(0, i, j, keymaps_normal_default[0][i][j][0]);
+            setKeyCode(1, i, j, keymaps_normal_default[1][i][j][0]);
+            write_flash_data(BASIC_PARAMS_NUM + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_normal_default[0][i][j][0]);
+            write_flash_data(BASIC_PARAMS_NUM + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_normal_default[1][i][j][0]);
 
-            setUpperKeyCode(0, i, j, keymaps_upper_default[0][i][j]);
-            setUpperKeyCode(1, i, j, keymaps_upper_default[1][i][j]);
-            write_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_upper_default[0][i][j]);
-            write_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_upper_default[1][i][j]);
+            setUpperKeyCode(0, i, j, keymaps_upper_default[0][i][j][0]);
+            setUpperKeyCode(1, i, j, keymaps_upper_default[1][i][j][0]);
+            write_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_upper_default[0][i][j][0]);
+            write_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_upper_default[1][i][j][0]);
         }
     }
 
@@ -370,7 +370,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         SEGGER_RTT_printf(0, "read:\n");
         for (int j = 0; j < MATRIX_COLUMNS; j++)
         {
-            buffer_sb[j] = keymaps_normal[keymapID][buffer[0] - 0xF0][j];
+            buffer_sb[j] = keymaps_normal[keymapID][buffer[0] - 0xF0][j][0];
         }
 
 #if 0
@@ -387,7 +387,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
         for (int j = 0; j < MATRIX_COLUMNS; j++)
         {
-            keymaps_normal[0][buffer[0] - 0xF0][j] = buffer[j + 2];
+            keymaps_normal[0][buffer[0] - 0xF0][j][0] = buffer[j + 2];
         }
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF3 && buffer[1] == 0x02)
@@ -396,7 +396,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
         for (int j = 0; j < MATRIX_COLUMNS; j++)
         {
-            keymaps_upper[0][buffer[0] - 0xF0][j] = buffer[j + 2];
+            keymaps_upper[0][buffer[0] - 0xF0][j][0] = buffer[j + 2];
         }
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF1 && buffer[1] == 0x03)
@@ -433,7 +433,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
         for (int j = 0; j < MATRIX_COLUMNS; j++)
         {
-            keymaps_normal[1][buffer[0] - 0xF0][j] = buffer[j + 2];
+            keymaps_normal[1][buffer[0] - 0xF0][j][0] = buffer[j + 2];
         }
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF3 && buffer[1] == 0x0A)
@@ -442,7 +442,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
         for (int j = 0; j < MATRIX_COLUMNS; j++)
         {
-            keymaps_upper[1][buffer[0] - 0xF0][j] = buffer[j + 2];
+            keymaps_upper[1][buffer[0] - 0xF0][j][0] = buffer[j + 2];
         }
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF1 && buffer[1] == 0x0B)
@@ -478,7 +478,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         SEGGER_RTT_printf(0, "read from layout1:\n");
         for (int j = 0; j < MATRIX_COLUMNS; j++)
         {
-            buffer_sb[j] = keymaps_normal[0][buffer[0] - 0xF0][j];
+            buffer_sb[j] = keymaps_normal[0][buffer[0] - 0xF0][j][0];
         }
 
         tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 16);
@@ -488,7 +488,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         SEGGER_RTT_printf(0, "read from layout1 upper:\n");
         for (int j = 0; j < MATRIX_COLUMNS; j++)
         {
-            buffer_sb[j] = keymaps_upper[0][buffer[0] - 0xF0][j];
+            buffer_sb[j] = keymaps_upper[0][buffer[0] - 0xF0][j][0];
         }
 
         tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 16);
@@ -537,7 +537,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         SEGGER_RTT_printf(0, "read from layout2:\n");
         for (int j = 0; j < MATRIX_COLUMNS; j++)
         {
-            buffer_sb[j] = keymaps_normal[1][buffer[0] - 0xF0][j];
+            buffer_sb[j] = keymaps_normal[1][buffer[0] - 0xF0][j][0];
         }
 
         tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 16);
@@ -547,7 +547,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         SEGGER_RTT_printf(0, "read from layout2 upper:\n");
         for (int j = 0; j < MATRIX_COLUMNS; j++)
         {
-            buffer_sb[j] = keymaps_upper[1][buffer[0] - 0xF0][j];
+            buffer_sb[j] = keymaps_upper[1][buffer[0] - 0xF0][j][0];
         }
 
         tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 16);
@@ -659,12 +659,12 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
 uint8_t getKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y)
 {
-    return keymaps_normal[keymapId][x][y];
+    return keymaps_normal[keymapId][x][y][0];
 }
 
 uint8_t getUpperKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y)
 {
-    return keymaps_upper[keymapId][x][y];
+    return keymaps_upper[keymapId][x][y][0];
 }
 
 uint8_t getStickKeyCode(const uint8_t keymapId, const uint8_t id, const uint8_t direction)
@@ -674,12 +674,12 @@ uint8_t getStickKeyCode(const uint8_t keymapId, const uint8_t id, const uint8_t 
 
 void setKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t code)
 {
-    keymaps_normal[keymapId][x][y] = code;
+    keymaps_normal[keymapId][x][y][0] = code;
 }
 
 void setUpperKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t code)
 {
-    keymaps_upper[keymapId][x][y] = code;
+    keymaps_upper[keymapId][x][y][0] = code;
 }
 
 void setStickKeyCode(const uint8_t keymapId, const uint8_t id, const uint8_t direction, const uint8_t code)
@@ -1104,7 +1104,7 @@ void controlJoySticks(void)
         {
             double theta = (y >= 0.0 ? 1.0 : -1.0) * acos(x / r) / M_PI * 180.0;
 
-            if (theta >= 90 - JOYSTICK_ON_ANGLE && theta < 90 + JOYSTICK_ON_ANGLE)
+            if (theta >= 90 - JOYSTICK_ON_ANGLE2 && theta < 90 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:up (%d)\n", i, (int) theta);
                 if (isUpper && i == 1)
