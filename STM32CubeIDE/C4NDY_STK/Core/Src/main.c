@@ -378,73 +378,7 @@ int main(void)
         factoryReset();
     }
 
-    if (read_flash_data(1) > 1)
-    {
-        setLinePhonoSW(0);
-    }
-    else
-    {
-        setLinePhonoSW(read_flash_data(1));
-    }
-    SEGGER_RTT_printf(0, "Phono/Line SW = %u\n", getLinePhonoSW());
-
-    if (read_flash_data(2) > 1)
-    {
-        setKeymapID(0);
-    }
-    else
-    {
-        setKeymapID(read_flash_data(2));
-    }
-    SEGGER_RTT_printf(0, "keymapID = %u\n", getKeymapID());
-
-    SEGGER_RTT_printf(0, "// Normal");
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "\n");
-        for (int i = 0; i < MATRIX_ROWS; i++)
-        {
-            SEGGER_RTT_printf(0, "[ ");
-            for (int j = 0; j < MATRIX_COLUMNS; j++)
-            {
-                setKeyCode(k, i, j, read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-    }
-
-    SEGGER_RTT_printf(0, "// Upper");
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "\n");
-        for (int i = 0; i < MATRIX_ROWS; i++)
-        {
-            SEGGER_RTT_printf(0, "[ ");
-            for (int j = 0; j < MATRIX_COLUMNS; j++)
-            {
-                setUpperKeyCode(k, i, j, read_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-    }
-
-    SEGGER_RTT_printf(0, "// Stick");
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "\n");
-        for (int i = 0; i < 2; i++)
-        {
-            SEGGER_RTT_printf(0, "[ ");
-            for (int j = 0; j < 4; j++)
-            {
-                setStickKeyCode(k, i, j, read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
-                SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-    }
+    loadKeyboardSettingsFromFlash();
 
     SEGGER_RTT_printf(0, "// LED\n");
     SEGGER_RTT_printf(0, "[ ");

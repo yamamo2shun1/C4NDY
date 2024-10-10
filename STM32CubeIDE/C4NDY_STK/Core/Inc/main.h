@@ -58,6 +58,7 @@ extern "C"
     /* USER CODE BEGIN EFP */
     void erase_flash_data(void);
     void write_flash_data(uint8_t index, uint8_t val);
+    uint64_t read_flash_data(uint8_t index);
     void setBootDfuFlag(bool is_boot_dfu);
 /* USER CODE END EFP */
 
