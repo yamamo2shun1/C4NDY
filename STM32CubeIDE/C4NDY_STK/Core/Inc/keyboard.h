@@ -103,8 +103,6 @@
 #define KC_YEN      0x89  // ￥|
 #define KC_HENKAN   0x8A  // 変換
 #define KC_MUHENKAN 0x8B  // 無変換
-
-// modifier keys
 #define KC_LCONTROL 0xE0  // Left Control
 #define KC_LSHIFT   0xE1  // Left Shift
 #define KC_LALT     0xE2  // Left Alt
@@ -125,6 +123,17 @@
 #define KC_LNPH       0xFD  // Line Phono Swtich
 #define KC_LAYOUT     0xFE  // Layout Switch
 #define KC_NULL       0xFF
+
+// modifier keys
+#define M_NO 0x00  // No modifiers
+#define M_LC 0x01  // Left Control
+#define M_LS 0x02  // Left Shift
+#define M_LA 0x04  // Left Alt
+#define M_LG 0x08  // Left GUI(Win/Command)
+#define M_RC 0x10  // Right Control
+#define M_RS 0x20  // Right Shift
+#define M_RA 0x40  // Right Alt
+#define M_RG 0x80  // Right GUI(Win/Command)
 
 #define JOYSTICK_H 0
 #define JOYSTICK_V 1
@@ -161,8 +170,8 @@ void setKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const 
 void setUpperKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t code);
 void setStickKeyCode(const uint8_t keymapId, const uint8_t id, const uint8_t direction, const uint8_t code);
 void resetKeys(void);
-void clearKeys(const uint8_t code);
-void setKeys(const uint8_t code);
+void clearKeys(const uint8_t code, const uint8_t modifiers);
+void setKeys(const uint8_t code, const uint8_t modifiers);
 bool isUpperPressed(void);
 bool isShiftPressed(void);
 void hid_keyscan_task(void);

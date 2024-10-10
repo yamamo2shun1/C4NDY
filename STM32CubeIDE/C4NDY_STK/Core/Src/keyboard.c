@@ -757,7 +757,7 @@ void resetKeys(void)
     }
 }
 
-void clearKeys(const uint8_t code)
+void clearKeys(const uint8_t code, const uint8_t modifiers)
 {
     if (code == KC_RESET)
     {
@@ -866,7 +866,7 @@ void clearKeys(const uint8_t code)
     longPressCounter = 0;
 }
 
-void setKeys(const uint8_t code)
+void setKeys(const uint8_t code, const uint8_t modifiers)
 {
     static int master_gain = 0;
 
@@ -1224,16 +1224,16 @@ void controlJoySticks(void)
             if (i == 0 && currentStk[i][JOYSTICK_H] == -1 && currentStk[i][JOYSTICK_V] == -1)
             {
                 // SEGGER_RTT_printf(0, "UL: set upper+shift\n");
-                setKeys(KC_UPPER);
-                setKeys(KC_LSHIFT);
+                setKeys(KC_UPPER, M_NO);
+                setKeys(KC_LSHIFT, M_NO);
             }
 #endif
 #ifdef ENABLE_RIGHT_UP
             else if (i == 1 && !isUpper && currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == -1)
             {
                 // SEGGER_RTT_printf(0, "UR: set upper+shift\n");
-                setKeys(KC_UPPER);
-                setKeys(KC_RSHIFT);
+                setKeys(KC_UPPER, M_NO);
+                setKeys(KC_RSHIFT, M_NO);
 
                 isRightUpper = true;
             }
@@ -1242,8 +1242,8 @@ void controlJoySticks(void)
             else if (i == 1 && !isUpper && currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == 1)
             {
                 // SEGGER_RTT_printf(0, "UR: set down+shift\n");
-                setKeys(KC_RSHIFT);
-                setKeys(KC_SPACE);
+                setKeys(KC_RSHIFT, M_NO);
+                setKeys(KC_SPACE, M_NO);
 
                 isRightUpper = true;
             }
@@ -1257,8 +1257,8 @@ void controlJoySticks(void)
                 if (i == 0 && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == -1 && prevStk[i][JOYSTICK_V] == -1))
                 {
                     SEGGER_RTT_printf(0, "UL: clear upper+shift\n");
-                    clearKeys(KC_UPPER);
-                    clearKeys(KC_LSHIFT);
+                    clearKeys(KC_UPPER, M_NO);
+                    clearKeys(KC_LSHIFT, M_NO);
                     resetKeys();
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
@@ -1267,8 +1267,8 @@ void controlJoySticks(void)
                 else if (i == 1 && isRightUpper && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == -1))
                 {
                     SEGGER_RTT_printf(0, "UR: clear upper+shift\n");
-                    clearKeys(KC_UPPER);
-                    clearKeys(KC_RSHIFT);
+                    clearKeys(KC_UPPER, M_NO);
+                    clearKeys(KC_RSHIFT, M_NO);
                     resetKeys();
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
@@ -1280,8 +1280,8 @@ void controlJoySticks(void)
                 else if (i == 1 && isRightUpper && (currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
                 {
                     SEGGER_RTT_printf(0, "UR: clear down+shift\n");
-                    clearKeys(KC_RSHIFT);
-                    clearKeys(KC_SPACE);
+                    clearKeys(KC_RSHIFT, M_NO);
+                    clearKeys(KC_SPACE, M_NO);
                     resetKeys();
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
@@ -1296,12 +1296,12 @@ void controlJoySticks(void)
                     if (currentStk[i][j] == -1 || currentStk[i][j] == 1)
                     {
                         const int direction = (j == 0) ? ((currentStk[i][j] + 1) / 2) : ((5 - currentStk[i][j]) / 2);
-                        setKeys(keymaps_stk[keymapID][i][direction]);
+                        setKeys(keymaps_stk[keymapID][i][direction], M_NO);
                     }
                     else if (prevStk[i][j] == -1 || prevStk[i][j] == 1)
                     {
                         const int direction = (j == 0) ? ((prevStk[i][j] + 1) / 2) : ((5 - prevStk[i][j]) / 2);
-                        clearKeys(keymaps_stk[keymapID][i][direction]);
+                        clearKeys(keymaps_stk[keymapID][i][direction], M_NO);
                         resetKeys();
 
                         if (keymaps_stk[keymapID][i][direction] == KC_UPPER ||
@@ -1384,7 +1384,7 @@ void hid_keyscan_task(void)
 
                             if (isUpper && keycode == KC_UPPER)
                             {
-                                clearKeys(keycode);
+                                clearKeys(keycode, M_NO);
                                 resetKeys();
                                 countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                             }
@@ -1401,7 +1401,7 @@ void hid_keyscan_task(void)
                                 }
                                 else
                                 {
-                                    clearKeys(keycode);
+                                    clearKeys(keycode, M_NO);
                                 }
                             }
                         }
@@ -1422,7 +1422,7 @@ void hid_keyscan_task(void)
 
                         if (keycode == KC_UPPER)
                         {
-                            setKeys(keycode);
+                            setKeys(keycode, M_NO);
                         }
                         else
                         {
@@ -1442,7 +1442,7 @@ void hid_keyscan_task(void)
                             }
                             else
                             {
-                                setKeys(keycode);
+                                setKeys(keycode, M_NO);
                             }
                         }
                     }
