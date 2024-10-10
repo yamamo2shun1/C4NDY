@@ -103,6 +103,8 @@
 #define KC_YEN      0x89  // ￥|
 #define KC_HENKAN   0x8A  // 変換
 #define KC_MUHENKAN 0x8B  // 無変換
+
+// modifier keys
 #define KC_LCONTROL 0xE0  // Left Control
 #define KC_LSHIFT   0xE1  // Left Shift
 #define KC_LALT     0xE2  // Left Alt
