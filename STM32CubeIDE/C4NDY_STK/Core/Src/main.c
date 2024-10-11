@@ -128,7 +128,7 @@ void erase_flash_data(void)
     }
 }
 
-void write_flash_data(uint8_t index, uint8_t val)
+void write_flash_data(uint16_t index, uint8_t val)
 {
     if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, FLASH_DATA_ADDR + 8 * index, val) != HAL_OK)
     {
@@ -136,7 +136,7 @@ void write_flash_data(uint8_t index, uint8_t val)
     }
 }
 
-uint64_t read_flash_data(uint8_t index)
+uint64_t read_flash_data(uint16_t index)
 {
     return *(uint64_t*) (FLASH_DATA_ADDR + 8 * index);
 }
@@ -146,9 +146,10 @@ void setBootDfuFlag(bool is_boot_dfu)
     SEGGER_RTT_printf(0, "erase & write FLASH...\n");
     HAL_FLASH_Unlock();
 
-    uint64_t currentKeyMap[2][MATRIX_ROWS][MATRIX_COLUMNS] = {0x0};
+    uint64_t currentKeyMap[2][MATRIX_ROWS][MATRIX_COLUMNS]    = {0x0};
+    uint64_t currentModifiers[2][MATRIX_ROWS][MATRIX_COLUMNS] = {0x0};
 
-    SEGGER_RTT_printf(0, "current KeyMap\n");
+    SEGGER_RTT_printf(0, "current KeyMap/Modifiers\n");
     for (int k = 0; k < 2; k++)
     {
         SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
@@ -158,17 +159,19 @@ void setBootDfuFlag(bool is_boot_dfu)
             SEGGER_RTT_printf(0, "[");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                currentKeyMap[k][i][j] = read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
-                SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
+                currentKeyMap[k][i][j]    = read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
+                currentModifiers[k][i][j] = read_flash_data(BASIC_PARAMS_NUM + (k + 2) * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
+                SEGGER_RTT_printf(0, "{%02X, %02X} ", currentKeyMap[k][i][j], currentModifiers[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
         }
         SEGGER_RTT_printf(0, "]\n\n");
     }
 
-    uint64_t currentUpperKeyMap[2][MATRIX_ROWS][MATRIX_COLUMNS] = {0x0};
+    uint64_t currentUpperKeyMap[2][MATRIX_ROWS][MATRIX_COLUMNS]    = {0x0};
+    uint64_t currentUpperModifiers[2][MATRIX_ROWS][MATRIX_COLUMNS] = {0x0};
 
-    SEGGER_RTT_printf(0, "current Upper KeyMap\n");
+    SEGGER_RTT_printf(0, "current Upper KeyMap/Modifiers\n");
     for (int k = 0; k < 2; k++)
     {
         SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
@@ -178,17 +181,19 @@ void setBootDfuFlag(bool is_boot_dfu)
             SEGGER_RTT_printf(0, "[");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                currentUpperKeyMap[k][i][j] = read_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
-                SEGGER_RTT_printf(0, "%02X ", currentUpperKeyMap[k][i][j]);
+                currentUpperKeyMap[k][i][j]    = read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
+                currentUpperModifiers[k][i][j] = read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (k + 2) * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
+                SEGGER_RTT_printf(0, "{%02X, %02X} ", currentUpperKeyMap[k][i][j], currentUpperModifiers[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
         }
         SEGGER_RTT_printf(0, "]\n\n");
     }
 
-    uint64_t currentStickKeyMap[2][2][4] = {0x0};
+    uint64_t currentStickKeyMap[2][2][4]    = {0x0};
+    uint64_t currentStickModifiers[2][2][4] = {0x0};
 
-    SEGGER_RTT_printf(0, "current Stick KeyMap\n");
+    SEGGER_RTT_printf(0, "current Stick KeyMap/Modifiers\n");
     for (int k = 0; k < 2; k++)
     {
         SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
@@ -198,8 +203,9 @@ void setBootDfuFlag(bool is_boot_dfu)
             SEGGER_RTT_printf(0, "[");
             for (int j = 0; j < 4; j++)
             {
-                currentStickKeyMap[k][i][j] = read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j);
-                SEGGER_RTT_printf(0, "%02X ", currentStickKeyMap[k][i][j]);
+                currentStickKeyMap[k][i][j]    = read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j);
+                currentStickModifiers[k][i][j] = read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (k + 2) * (2 * 4) + i * 4 + j);
+                SEGGER_RTT_printf(0, "{%02X, %02X} ", currentStickKeyMap[k][i][j], currentModifiers[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
         }
@@ -219,7 +225,7 @@ void setBootDfuFlag(bool is_boot_dfu)
     write_flash_data(1, getLinePhonoSW());
     write_flash_data(2, getKeymapID());
 
-    SEGGER_RTT_printf(0, "reload KeyMap\n");
+    SEGGER_RTT_printf(0, "reload KeyMap/Modifiers\n");
     for (int k = 0; k < 2; k++)
     {
         SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
@@ -230,14 +236,15 @@ void setBootDfuFlag(bool is_boot_dfu)
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
                 write_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentKeyMap[k][i][j]);
-                SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
+                write_flash_data(BASIC_PARAMS_NUM + (k + 2) * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentModifiers[k][i][j]);
+                SEGGER_RTT_printf(0, "{%02X, %02X} ", currentKeyMap[k][i][j], currentModifiers[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
         }
         SEGGER_RTT_printf(0, "]\n\n");
     }
 
-    SEGGER_RTT_printf(0, "reload Upper KeyMap\n");
+    SEGGER_RTT_printf(0, "reload Upper KeyMap/Modifiers\n");
     for (int k = 0; k < 2; k++)
     {
         SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
@@ -247,15 +254,16 @@ void setBootDfuFlag(bool is_boot_dfu)
             SEGGER_RTT_printf(0, "[");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                write_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentUpperKeyMap[k][i][j]);
-                SEGGER_RTT_printf(0, "%02X ", currentUpperKeyMap[k][i][j]);
+                write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentUpperKeyMap[k][i][j]);
+                write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (k + 2) * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentUpperModifiers[k][i][j]);
+                SEGGER_RTT_printf(0, "{%02X, %02X} ", currentUpperKeyMap[k][i][j], currentModifiers[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
         }
         SEGGER_RTT_printf(0, "]\n\n");
     }
 
-    SEGGER_RTT_printf(0, "reload Stick KeyMap\n");
+    SEGGER_RTT_printf(0, "reload Stick KeyMap/Modifiers\n");
     for (int k = 0; k < 2; k++)
     {
         SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
@@ -265,8 +273,9 @@ void setBootDfuFlag(bool is_boot_dfu)
             SEGGER_RTT_printf(0, "[");
             for (int j = 0; j < 4; j++)
             {
-                write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j, currentStickKeyMap[k][i][j]);
-                SEGGER_RTT_printf(0, "%02X ", currentStickKeyMap[k][i][j]);
+                write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j, currentStickKeyMap[k][i][j]);
+                write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (k + 2) * (2 * 4) + i * 4 + j, currentStickModifiers[k][i][j]);
+                SEGGER_RTT_printf(0, "{%02X, %02X} ", currentStickKeyMap[k][i][j], currentModifiers[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
         }
@@ -281,15 +290,15 @@ void setBootDfuFlag(bool is_boot_dfu)
     SEGGER_RTT_printf(0, "  [%02X, %02X, %02X]\n", getShiftColor(0)->r, getShiftColor(0)->g, getShiftColor(0)->b);
     SEGGER_RTT_printf(0, "]\n\n");
 
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 0, getNormalColor(0)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 1, getNormalColor(0)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 2, getNormalColor(0)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 3, getUpperColor(0)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 4, getUpperColor(0)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 5, getUpperColor(0)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 6, getShiftColor(0)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 7, getShiftColor(0)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 8, getShiftColor(0)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 0, getNormalColor(0)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 1, getNormalColor(0)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 2, getNormalColor(0)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 3, getUpperColor(0)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 4, getUpperColor(0)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 5, getUpperColor(0)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 6, getShiftColor(0)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 7, getShiftColor(0)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 8, getShiftColor(0)->b);
 
     SEGGER_RTT_printf(0, "Layout:2\n");
     SEGGER_RTT_printf(0, "[\n");
@@ -298,15 +307,15 @@ void setBootDfuFlag(bool is_boot_dfu)
     SEGGER_RTT_printf(0, "  [%02X, %02X, %02X]\n", getShiftColor(1)->r, getShiftColor(1)->g, getShiftColor(1)->b);
     SEGGER_RTT_printf(0, "]\n\n");
 
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 9, getNormalColor(1)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 10, getNormalColor(1)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 11, getNormalColor(1)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 12, getUpperColor(1)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 13, getUpperColor(1)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 14, getUpperColor(1)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 15, getShiftColor(1)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 16, getShiftColor(1)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 17, getShiftColor(1)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 9, getNormalColor(1)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 10, getNormalColor(1)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 11, getNormalColor(1)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 12, getUpperColor(1)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 13, getUpperColor(1)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 14, getUpperColor(1)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 15, getShiftColor(1)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 16, getShiftColor(1)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 17, getShiftColor(1)->b);
 
     HAL_FLASH_Lock();
 }
@@ -382,46 +391,46 @@ int main(void)
 
     SEGGER_RTT_printf(0, "// LED\n");
     SEGGER_RTT_printf(0, "[ ");
-    setNormalColor(0, read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 0), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 1), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 2));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 0));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 1));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 2));
+    setNormalColor(0, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 0), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 1), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 2));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 0));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 1));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 2));
     SEGGER_RTT_printf(0, "]\n");
 
     SEGGER_RTT_printf(0, "[ ");
-    setUpperColor(0, read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 3), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 4), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 5));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 3));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 4));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 5));
+    setUpperColor(0, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 3), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 4), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 5));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 3));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 4));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 5));
     SEGGER_RTT_printf(0, "]\n");
 
     SEGGER_RTT_printf(0, "[ ");
-    setShiftColor(0, read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 6), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 7), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 8));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 6));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 7));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 8));
+    setShiftColor(0, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 6), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 7), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 8));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 6));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 7));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 8));
     SEGGER_RTT_printf(0, "]\n");
     SEGGER_RTT_printf(0, "\n");
 
     SEGGER_RTT_printf(0, "[ ");
-    setNormalColor(1, read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 9), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 10), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 11));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 9));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 10));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 11));
+    setNormalColor(1, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 9), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 10), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 11));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 9));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 10));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 11));
     SEGGER_RTT_printf(0, "]\n");
 
     SEGGER_RTT_printf(0, "[ ");
-    setUpperColor(1, read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 12), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 13), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 14));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 12));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 13));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 14));
+    setUpperColor(1, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 12), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 13), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 14));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 12));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 13));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 14));
     SEGGER_RTT_printf(0, "]\n");
 
     SEGGER_RTT_printf(0, "[ ");
-    setShiftColor(1, read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 15), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 16), read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 17));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 15));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 16));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (2 * 2 * 4) + 17));
+    setShiftColor(1, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 15), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 16), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 17));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 15));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 16));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 17));
     SEGGER_RTT_printf(0, "]\n");
 
     setAllLedBuf(getNormalColor(getKeymapID()));
