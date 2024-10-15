@@ -62,7 +62,7 @@ int8_t currentStk[JOYSTICK_NUMS][JOYSTICK_AXIS] = {0};
 int8_t prevStk[JOYSTICK_NUMS][JOYSTICK_AXIS]    = {0};
 
 const uint8_t keymaps_normal_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
-  // clang-format off
+    // clang-format off
     {
 	    {{KC_Q, M_NO},    {KC_W, M_NO},    {KC_E, M_NO},    {KC_R, M_NO},    {KC_T, M_NO},        {KC_Y, M_NO},    {KC_U, M_NO},    {KC_I, M_NO},     {KC_O, M_NO},      {KC_P, M_NO}},
 		{{KC_A, M_NO},    {KC_S, M_NO},    {KC_D, M_NO},    {KC_F, M_NO},    {KC_G, M_NO},        {KC_H, M_NO},    {KC_J, M_NO},    {KC_K, M_NO},     {KC_L, M_NO},      {KC_SC, M_NO}},
@@ -75,11 +75,11 @@ const uint8_t keymaps_normal_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
 		{{KC_J, M_NO},    {KC_Q, M_NO},     {KC_SC, M_NO},   {KC_K, M_NO},    {KC_X, M_NO},        {KC_B, M_NO},    {KC_M, M_NO},    {KC_W, M_NO},    {KC_N, M_NO},  {KC_V, M_NO}},
 		{{KC_NULL, M_NO}, {KC_LGUI, M_NO},  {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO}, {KC_UP, M_NO}, {KC_RIGHT, M_NO}}
 	}
-  // clang-format on
+    // clang-format on
 };
 
 const uint8_t keymaps_upper_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
-  // clang-format off
+    // clang-format off
 	{
 		{{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},    {KC_8, M_NO},          {KC_9, M_NO},        {KC_0, M_NO}},
 		{{KC_APS, M_NO},  {KC_GA, M_NO},       {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_NULL, M_NO},     {KC_NULL, M_NO}, {KC_LSB, M_NO},  {KC_RSB, M_NO},        {KC_MINUS, M_NO},    {KC_EQUAL, M_NO}},
@@ -92,11 +92,11 @@ const uint8_t keymaps_upper_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
 		{{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_EQUAL, M_NO}, {KC_NULL, M_NO},       {KC_NULL, M_NO},     {KC_BSLASH, M_NO}},
 		{{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO},  {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO}, {KC_RESET, M_NO}}
 	}
-  // clang-format on
+    // clang-format on
 };
 
 const uint8_t keymaps_stk_default[2][2][4][2] = {
-  // clang-format off
+    // clang-format off
     //   left,      right,    down,     up
 	{
 		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
@@ -106,11 +106,11 @@ const uint8_t keymaps_stk_default[2][2][4][2] = {
 		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
 		{{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
 	}
-  // clang-format on
+    // clang-format on
 };
 
 uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
-  // clang-format off
+    // clang-format off
     {
 	    {{KC_Q, M_NO},    {KC_W, M_NO},    {KC_E, M_NO},    {KC_R, M_NO},    {KC_T, M_NO},        {KC_Y, M_NO},    {KC_U, M_NO},    {KC_I, M_NO},     {KC_O, M_NO},      {KC_P, M_NO}},
 		{{KC_A, M_NO},    {KC_S, M_NO},    {KC_D, M_NO},    {KC_F, M_NO},    {KC_G, M_NO},        {KC_H, M_NO},    {KC_J, M_NO},    {KC_K, M_NO},     {KC_L, M_NO},      {KC_SC, M_NO}},
@@ -123,11 +123,11 @@ uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
 		{{KC_J, M_NO},    {KC_Q, M_NO},     {KC_SC, M_NO},   {KC_K, M_NO},    {KC_X, M_NO},        {KC_B, M_NO},    {KC_M, M_NO},    {KC_W, M_NO},    {KC_N, M_NO},  {KC_V, M_NO}},
 		{{KC_NULL, M_NO}, {KC_LGUI, M_NO},  {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO}, {KC_UP, M_NO}, {KC_RIGHT, M_NO}}
 	}
-  // clang-format on
+    // clang-format on
 };
 
 uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
-  // clang-format off
+    // clang-format off
 	{
 		{{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},    {KC_8, M_NO},          {KC_9, M_NO},        {KC_0, M_NO}},
 		{{KC_APS, M_NO},  {KC_GA, M_NO},       {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_NULL, M_NO},     {KC_NULL, M_NO}, {KC_LSB, M_NO},  {KC_RSB, M_NO},        {KC_MINUS, M_NO},    {KC_EQUAL, M_NO}},
@@ -140,11 +140,11 @@ uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
 		{{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_EQUAL, M_NO}, {KC_NULL, M_NO},       {KC_NULL, M_NO},      {KC_BSLASH, M_NO}},
 		{{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO},  {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO},  {KC_RESET, M_NO}}
 	}
-  // clang-format on
+    // clang-format on
 };
 
 uint8_t keymaps_stk[2][2][4][2] = {
-  // clang-format off
+    // clang-format off
     //   left,      right,    down,     up
 	{
 		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
@@ -154,7 +154,7 @@ uint8_t keymaps_stk[2][2][4][2] = {
 		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
 		{{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
 	}
-  // clang-format on
+    // clang-format on
 };
 
 // Invoked when sent REPORT successfully to host
@@ -234,10 +234,20 @@ void factoryReset(void)
             write_flash_data(BASIC_PARAMS_NUM + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_normal_default[0][i][j][0]);
             write_flash_data(BASIC_PARAMS_NUM + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_normal_default[1][i][j][0]);
 
+            setNormalModifiers(0, i, j, keymaps_normal_default[0][i][j][1]);
+            setNormalModifiers(1, i, j, keymaps_normal_default[1][i][j][1]);
+            write_flash_data(BASIC_PARAMS_NUM + 2 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_normal_default[0][i][j][1]);
+            write_flash_data(BASIC_PARAMS_NUM + 3 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_normal_default[1][i][j][1]);
+
             setUpperKeyCode(0, i, j, keymaps_upper_default[0][i][j][0]);
             setUpperKeyCode(1, i, j, keymaps_upper_default[1][i][j][0]);
-            write_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_upper_default[0][i][j][0]);
-            write_flash_data(BASIC_PARAMS_NUM + (2 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_upper_default[1][i][j][0]);
+            write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_upper_default[0][i][j][0]);
+            write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_upper_default[1][i][j][0]);
+
+            setUpperModifiers(0, i, j, keymaps_upper_default[0][i][j][1]);
+            setUpperModifiers(1, i, j, keymaps_upper_default[1][i][j][1]);
+            write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 2 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_upper_default[0][i][j][1]);
+            write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 3 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, keymaps_upper_default[1][i][j][1]);
         }
     }
 
@@ -247,8 +257,13 @@ void factoryReset(void)
         {
             setStickKeyCode(0, i, j, keymaps_stk_default[0][i][j][0]);
             setStickKeyCode(1, i, j, keymaps_stk_default[1][i][j][0]);
-            write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, keymaps_stk_default[0][i][j][0]);
-            write_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, keymaps_stk_default[1][i][j][0]);
+            write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + 0 * (2 * 4) + i * 4 + j, keymaps_stk_default[0][i][j][0]);
+            write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + 1 * (2 * 4) + i * 4 + j, keymaps_stk_default[1][i][j][0]);
+
+            setStickModifiers(0, i, j, keymaps_stk_default[0][i][j][1]);
+            setStickModifiers(1, i, j, keymaps_stk_default[1][i][j][1]);
+            write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + 2 * (2 * 4) + i * 4 + j, keymaps_stk_default[0][i][j][0]);
+            write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + 3 * (2 * 4) + i * 4 + j, keymaps_stk_default[1][i][j][0]);
         }
     }
 
@@ -447,7 +462,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
     }
     SEGGER_RTT_printf(0, "bufsize = %d\n", bufsize);
 
-    uint8_t buffer_sb[32] = {0x00};
+    uint8_t buffer_sb[CFG_TUD_HID_EP_BUFSIZE] = {0x00};
     if (buffer[0] >= 0xF0 && buffer[0] <= 0xF3 && buffer[1] == 0x00)
     {
         SEGGER_RTT_printf(0, "read:\n");
@@ -458,12 +473,12 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         }
 
 #if 0
-	  for (int i = 0; i < 32; i++)
+	  for (int i = 0; i < CFG_TUD_HID_EP_BUFSIZE; i++)
 	  {
 		  SEGGER_RTT_printf(0, "buffer_sb[%d] = %d\n", i, buffer_sb[i]);
 	  }
 #endif
-        tud_hid_n_report(1, 0, buffer_sb, 32);
+        tud_hid_n_report(1, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF3 && buffer[1] == 0x01)
     {
@@ -572,7 +587,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             buffer_sb[2 * j + 1] = keymaps_normal[0][buffer[0] - 0xF0][j][1];
         }
 
-        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 32);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF3 && buffer[1] == 0x12)
     {
@@ -583,7 +598,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             buffer_sb[2 * j + 1] = keymaps_upper[0][buffer[0] - 0xF0][j][1];
         }
 
-        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 32);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF1 && buffer[1] == 0x13)
     {
@@ -594,7 +609,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             buffer_sb[2 * j + 1] = keymaps_stk[0][buffer[0] - 0xF0][j][1];
         }
 
-        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 32);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF2 && buffer[1] == 0x14)
     {
@@ -623,7 +638,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             break;
         }
 
-        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 32);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF3 && buffer[1] == 0x19)
     {
@@ -634,7 +649,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             buffer_sb[2 * j + 1] = keymaps_normal[1][buffer[0] - 0xF0][j][1];
         }
 
-        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 32);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF3 && buffer[1] == 0x1A)
     {
@@ -645,7 +660,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             buffer_sb[2 * j + 1] = keymaps_upper[1][buffer[0] - 0xF0][j][1];
         }
 
-        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 32);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF1 && buffer[1] == 0x1B)
     {
@@ -656,7 +671,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             buffer_sb[2 * j + 1] = keymaps_stk[1][buffer[0] - 0xF0][j][1];
         }
 
-        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 32);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF2 && buffer[1] == 0x1C)
     {
@@ -686,7 +701,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             break;
         }
 
-        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 32);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
     else if (buffer[0] == 0xF5)
     {
@@ -696,7 +711,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
         buffer_sb[1] = 0xF5;
         buffer_sb[2] = 0x01;
-        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 32);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
     else if (buffer[0] == 0xF6)
     {
@@ -704,7 +719,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
         buffer_sb[1] = 0xF6;
         buffer_sb[2] = 0x01;
-        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 32);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
 
         setBootDfuFlag(false);
         HAL_Delay(100);
@@ -724,7 +739,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
         buffer_sb[1] = 0xF8;
         buffer_sb[2] = 0x01;
-        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, 32);
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
 #if 0
   if (report_type == HID_REPORT_TYPE_OUTPUT)
@@ -1214,7 +1229,9 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
             else if (keyboardHID.key[k] == 0x00)
             {
                 if (code != KC_NULL)
+                {
                     keyboardHID.key[k] = code;
+                }
 
                 if (code == keymaps_stk[keymapID][0][0][0])  // L JoyStick -> Tilt left
                 {
