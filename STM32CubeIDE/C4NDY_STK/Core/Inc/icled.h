@@ -36,24 +36,24 @@ typedef struct
     uint8_t b;
 } RGB_Color_t;
 
-void setNormalColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b);
-void setUpperColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b);
-void setShiftColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b);
-RGB_Color_t* getNormalColor(uint8_t keymapId);
-RGB_Color_t* getUpperColor(uint8_t keymapId);
-RGB_Color_t* getShiftColor(uint8_t keymapId);
+void setNormalColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
+void setUpperColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
+void setShiftColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
+RGB_Color_t* getNormalColor(const uint8_t keymapId);
+RGB_Color_t* getUpperColor(const uint8_t keymapId);
+RGB_Color_t* getShiftColor(const uint8_t keymapId);
 RGB_Color_t* getBlankColor(void);
 
 void setSpaceFlag(void);
 void setBackspaceFlag(void);
 void setEnterFlag(void);
 
-void setLedBuf(uint8_t index, RGB_Color_t* rgb_color);
-void setAllLedBuf(RGB_Color_t* rgb_color);
-void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color0);
-void setColumn3ColorLedBuf(uint8_t row, uint16_t column0, uint16_t column1, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color2, RGB_Color_t* rgb_color0);
+void setLedBuf(const uint8_t index, const RGB_Color_t* rgb_color);
+void setAllLedBuf(const RGB_Color_t* rgb_color);
+void setColumn2ColorLedBuf(const uint8_t row, const uint16_t column, const RGB_Color_t* rgb_color1, const RGB_Color_t* rgb_color0);
+void setColumn3ColorLedBuf(const uint8_t row, const uint16_t column0, const uint16_t column1, const RGB_Color_t* rgb_color1, const RGB_Color_t* rgb_color2, const RGB_Color_t* rgb_color0);
 void renew(void);
-void checkColor(uint8_t r, uint8_t g, uint8_t b);
+void checkColor(const uint8_t r, const uint8_t g, const uint8_t b);
 void led_control_task(void);
 
 #endif /* INC_ICLED_H_ */
