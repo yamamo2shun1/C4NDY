@@ -113,20 +113,34 @@
 #define KC_LAYOUT     0xFE  // Layout Switch
 #define KC_NULL       0xFF
 
+// modifier keys
+#define M_NO 0x00  // No modifiers
+#define M_LC 0x01  // Left Control
+#define M_LS 0x02  // Left Shift
+#define M_LA 0x04  // Left Alt
+#define M_LG 0x08  // Left GUI(Win/Command)
+#define M_RC 0x10  // Right Control
+#define M_RS 0x20  // Right Shift
+#define M_RA 0x40  // Right Alt
+#define M_RG 0x80  // Right GUI(Win/Command)
+
 #define H 0
 #define V 1
 
-void setKeymapID(uint8_t val);
+void setKeymapID(const uint8_t val);
 uint8_t getKeymapID(void);
-void setLinePhonoSW(uint8_t val);
+void setLinePhonoSW(const uint8_t val);
 uint8_t getLinePhonoSW(void);
 void factoryReset(void);
 void writeAllKeyboardSettings(void);
-uint8_t getKeyCode(uint8_t keymapId, uint8_t x, uint8_t y);
-void setKeyCode(uint8_t keymapId, uint8_t x, uint8_t y, uint8_t code);
+void loadKeyboardSettingsFromFlash(void);
+uint8_t getKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y);
+void setKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t code);
+uint8_t getModifiers(const uint8_t keymapId, const uint8_t x, const uint8_t y);
+void setModifiers(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t modifiers);
 void resetKeys(void);
-void clearKeys(uint8_t code);
-void setKeys(uint8_t code);
+void clearKeys(const uint8_t code, const uint8_t modifiers);
+void setKeys(const uint8_t code, const uint8_t modifiers);
 void hid_keyscan_task(void);
 
 #endif /* INC_KEYBOARD_H_ */
