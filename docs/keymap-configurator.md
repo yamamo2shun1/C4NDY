@@ -138,5 +138,7 @@ Add `CGO_ENABLED=1` to your shell configuration file, such as .zshrc.
 
 ## How to build from Source Code
 ```shellscript
+$ git clone https://github.com/yamamo2shun1/Confiseur
+$ cd Confiseur/cmd/confiseur
 $ go build -o confiseur
 ```
