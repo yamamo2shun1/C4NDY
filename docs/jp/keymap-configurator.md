@@ -139,5 +139,7 @@ $ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.11.0
 ## ソースコードからビルドする場合
 以下のようにして、ご利用のOS用の実行ファイルを生成してください。
 ```shellscript
+$ git clone https://github.com/yamamo2shun1/Confiseur
+$ cd Confiseur/cmd/confiseur
 $ go build -o confiseur
 ```
