@@ -58,10 +58,10 @@ uint16_t master_gain_buffer[16] = {0};
 uint16_t master_gain            = 0;
 uint16_t master_gain_prev       = 255;
 
-uint32_t sai_buf_index                = 0;
-uint32_t sai_transmit_index           = 0;
-int32_t sai_buf[SAI_RNG_BUF_SIZE * 2] = {0};
-bool is_dma_pause                     = false;
+uint32_t sai_buf_index            = 0;
+uint32_t sai_transmit_index       = 0;
+int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
+bool is_dma_pause                 = false;
 
 // Speaker data size received in the last frame
 int spk_data_size = 0;
@@ -354,21 +354,20 @@ void copybuf_usb2sai(void)
 {
     for (int i = 0; i < spk_data_size / 4; i++)
     {
-        sai_buf[sai_buf_index % SAI_RNG_BUF_SIZE] = spk_buf[i];
-        sai_buf_index++;
+        sai_buf[sai_buf_index] = spk_buf[i];
+        sai_buf_index          = (sai_buf_index + 1) % SAI_RNG_BUF_SIZE;
     }
 }
 
 void copybuf_sai2codec(void)
 {
-    if (sai_buf_index >= (sai_transmit_index + SAI_BUF_SIZE))
+    if (sai_buf_index >= (sai_transmit_index + SAI_BUF_SIZE) ||
+        ((sai_transmit_index + SAI_BUF_SIZE > sai_buf_index) && ((sai_buf_index + SAI_RNG_BUF_SIZE) >= (sai_transmit_index + SAI_BUF_SIZE))))
     {
         for (int i = 0; i < SAI_BUF_SIZE; i++)
         {
-            // hpout_buf[i] = sai_buf[sai_transmit_index % SAI_RNG_BUF_SIZE];
-            const int32_t x    = sai_buf[sai_transmit_index % SAI_RNG_BUF_SIZE];
-            hpout_buf[i] = (0x0000FFFF & x >> 16) | x << 16;
-            sai_transmit_index++;
+            hpout_buf[i]       = sai_buf[sai_transmit_index] >> 16 | sai_buf[sai_transmit_index] << 16;
+            sai_transmit_index = (sai_transmit_index + 1) % SAI_RNG_BUF_SIZE;
         }
     }
 }
