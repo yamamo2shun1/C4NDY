@@ -353,23 +353,23 @@ void read_audio_data_from_usb(uint16_t n_bytes_received)
 
 void copybuf_usb2sai(void)
 {
-    for (int i = 0; i < spk_data_size / 4; i++)
+    const int len = spk_data_size >> 2;
+    for (int i = 0; i < len; i++)
     {
-        sai_buf[sai_buf_index] = spk_buf[i];
-        sai_buf_index          = (sai_buf_index + 1) % SAI_RNG_BUF_SIZE;
+        const int32_t val      = spk_buf[i];
+        sai_buf[sai_buf_index] = val << 16 | val >> 16;
+        sai_buf_index          = (sai_buf_index + 1) & (SAI_RNG_BUF_SIZE - 1);
     }
 }
 
 void copybuf_sai2codec(void)
 {
-    if (sai_buf_index >= (sai_transmit_index + SAI_BUF_SIZE) ||
-        ((sai_transmit_index + SAI_BUF_SIZE > sai_buf_index) && ((sai_buf_index + SAI_RNG_BUF_SIZE) >= (sai_transmit_index + SAI_BUF_SIZE))))
+    const uint32_t st_index = sai_transmit_index + SAI_BUF_SIZE;
+    if (sai_buf_index >= st_index ||
+        ((st_index > sai_buf_index) && (sai_buf_index + SAI_RNG_BUF_SIZE) >= st_index))
     {
-        for (int i = 0; i < SAI_BUF_SIZE; i++)
-        {
-            hpout_buf[i]       = sai_buf[sai_transmit_index] >> 16 | sai_buf[sai_transmit_index] << 16;
-            sai_transmit_index = (sai_transmit_index + 1) % SAI_RNG_BUF_SIZE;
-        }
+        memcpy(hpout_buf, sai_buf + sai_transmit_index, sizeof(hpout_buf));
+        sai_transmit_index = (sai_transmit_index + SAI_BUF_SIZE) & (SAI_RNG_BUF_SIZE - 1);
     }
 }
 

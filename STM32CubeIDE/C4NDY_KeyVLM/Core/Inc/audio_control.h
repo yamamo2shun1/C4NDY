@@ -22,8 +22,8 @@
 #define SIGMA_SAFELOAD_TARGET_ADDRESS  0x0006
 #define SIGMA_SAFELOAD_TRIGGER         0x0007
 
-#define SAI_RNG_BUF_SIZE 20480
-#define SAI_BUF_SIZE     2048
+#define SAI_RNG_BUF_SIZE 16384
+#define SAI_BUF_SIZE     1024
 
 // Speaker data size received in the last frame
 extern int spk_data_size;
