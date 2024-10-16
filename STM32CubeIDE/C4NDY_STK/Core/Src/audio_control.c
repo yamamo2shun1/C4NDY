@@ -58,10 +58,10 @@ uint16_t master_gain_buffer[16] = {0};
 uint16_t master_gain            = 0;
 uint16_t master_gain_prev       = 255;
 
-uint32_t sai_buf_index                = 0;
-uint32_t sai_transmit_index           = 0;
-int32_t sai_buf[SAI_RNG_BUF_SIZE * 2] = {0};
-bool is_dma_pause                     = false;
+uint32_t sai_buf_index            = 0;
+uint32_t sai_transmit_index       = 0;
+int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
+bool is_dma_pause                 = false;
 
 // Speaker data size received in the last frame
 int spk_data_size = 0;
@@ -344,7 +344,7 @@ void clear_usb_audio_buf(void)
     spk_data_size = 0;
 }
 
-void read_audio_data_from_usb(uint16_t n_bytes_received)
+void read_audio_data_from_usb(const uint16_t n_bytes_received)
 {
     spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
     copybuf_usb2sai();
@@ -354,26 +354,25 @@ void copybuf_usb2sai(void)
 {
     for (int i = 0; i < spk_data_size / 4; i++)
     {
-        sai_buf[sai_buf_index % SAI_RNG_BUF_SIZE] = spk_buf[i];
-        sai_buf_index++;
+        sai_buf[sai_buf_index] = spk_buf[i];
+        sai_buf_index          = (sai_buf_index + 1) % SAI_RNG_BUF_SIZE;
     }
 }
 
 void copybuf_sai2codec(void)
 {
-    if (sai_buf_index >= (sai_transmit_index + SAI_BUF_SIZE))
+    if (sai_buf_index >= (sai_transmit_index + SAI_BUF_SIZE) ||
+        ((sai_transmit_index + SAI_BUF_SIZE > sai_buf_index) && ((sai_buf_index + SAI_RNG_BUF_SIZE) >= (sai_transmit_index + SAI_BUF_SIZE))))
     {
         for (int i = 0; i < SAI_BUF_SIZE; i++)
         {
-            // hpout_buf[i] = sai_buf[sai_transmit_index % SAI_RNG_BUF_SIZE];
-            int32_t x    = sai_buf[sai_transmit_index % SAI_RNG_BUF_SIZE];
-            hpout_buf[i] = (0x0000FFFF & x >> 16) | x << 16;
-            sai_transmit_index++;
+            hpout_buf[i]       = sai_buf[sai_transmit_index] >> 16 | sai_buf[sai_transmit_index] << 16;
+            sai_transmit_index = (sai_transmit_index + 1) % SAI_RNG_BUF_SIZE;
         }
     }
 }
 
-void send_usb_gain_L(int16_t usb_db)
+void send_usb_gain_L(const int16_t usb_db)
 {
     double usb_rate = pow(10.0, (double) usb_db / 20.0);
 
@@ -393,7 +392,7 @@ void send_usb_gain_L(int16_t usb_db)
     SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address_count);
 }
 
-void send_usb_gain_R(int16_t usb_db)
+void send_usb_gain_R(const int16_t usb_db)
 {
     double usb_rate = pow(10.0, (double) usb_db / 20.0);
 
@@ -413,7 +412,7 @@ void send_usb_gain_R(int16_t usb_db)
     SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address_count);
 }
 
-void send_xfade(uint16_t fader_val)
+void send_xfade(const uint16_t fader_val)
 {
     double xf_rate = (double) fader_val / 1023.0;
 
@@ -434,7 +433,7 @@ void send_xfade(uint16_t fader_val)
     SIGMA_WRITE_REGISTER_BLOCK(DEVICE_ADDR_IC_1, MOD_DC2_DCINPALG2_ADDR, 4, dc2_array);
 }
 
-void send_master_gain(uint16_t master_val)
+void send_master_gain(const uint16_t master_val)
 {
     double c_curve_val = 1038.0 * tanh((double) master_val / 448.0);
     double master_db   = (135.0 / 1023.0) * c_curve_val - 120.0;
@@ -459,7 +458,7 @@ void send_master_gain(uint16_t master_val)
     SIGMA_SAFELOAD_WRITE_DATA(DEVICE_ADDR_IC_1, SIGMA_SAFELOAD_TARGET_ADDRESS, 8, target_address_count);
 }
 
-void send_master_gain_db(int master_db)
+void send_master_gain_db(const int master_db)
 {
     double master_rate = pow(10.0, (double) master_db / 20.0);
 
