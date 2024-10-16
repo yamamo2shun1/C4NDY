@@ -356,6 +356,7 @@ void copybuf_usb2sai(void)
     for (int i = 0; i < len; i++)
     {
         const int32_t val      = spk_buf[i];
+        spk_buf[i]             = 0;
         sai_buf[sai_buf_index] = val << 16 | val >> 16;
         sai_buf_index          = (sai_buf_index + 1) & (SAI_RNG_BUF_SIZE - 1);
     }
@@ -364,8 +365,7 @@ void copybuf_usb2sai(void)
 void copybuf_sai2codec(void)
 {
     const uint32_t st_index = sai_transmit_index + SAI_BUF_SIZE;
-    if (sai_buf_index >= st_index ||
-        ((st_index > sai_buf_index) && (sai_buf_index + SAI_RNG_BUF_SIZE) >= st_index))
+    if (sai_buf_index >= st_index || ((st_index > sai_buf_index) && (sai_buf_index + SAI_RNG_BUF_SIZE) >= st_index))
     {
         memcpy(hpout_buf, sai_buf + sai_transmit_index, sizeof(hpout_buf));
         sai_transmit_index = (sai_transmit_index + SAI_BUF_SIZE) & (SAI_RNG_BUF_SIZE - 1);
