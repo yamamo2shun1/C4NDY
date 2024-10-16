@@ -46,8 +46,8 @@ MEMORY
 {
   RAM        (xrw)   : ORIGIN = 0x20000000,  LENGTH = 112K
   FLASH_BOOT (rx)    : ORIGIN = 0x8000000,   LENGTH = 128K
-  FLASH_APP  (rx)    : ORIGIN = 0x8020000,   LENGTH = 382K
-  DATA       (rx)    : ORIGIN = 0x807F800,   LENGTH = 2K
+  FLASH_APP  (rx)    : ORIGIN = 0x8020000,   LENGTH = 380K
+  DATA       (rx)    : ORIGIN = 0x807F000,   LENGTH = 4K
 }
 
 /* Sections */

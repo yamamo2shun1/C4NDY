@@ -46,7 +46,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define FLASH_DATA_ADDR 0x0807F800
+#define FLASH_DATA_ADDR 0x0807F000
 
 #define AUDIO_SAMPLE_RATE 48000
 
@@ -114,8 +114,8 @@ void erase_flash_data(void)
     static FLASH_EraseInitTypeDef EraseInitStruct;
     uint32_t PAGEError;
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
-    EraseInitStruct.Page      = 255;
-    EraseInitStruct.NbPages   = 1;
+    EraseInitStruct.Page      = 254;
+    EraseInitStruct.NbPages   = 2;
 
     if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK)
     {
@@ -123,7 +123,7 @@ void erase_flash_data(void)
     }
 }
 
-void write_flash_data(uint8_t index, uint8_t val)
+void write_flash_data(uint16_t index, uint8_t val)
 {
     if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, FLASH_DATA_ADDR + 8 * index, val) != HAL_OK)
     {
@@ -131,7 +131,7 @@ void write_flash_data(uint8_t index, uint8_t val)
     }
 }
 
-uint64_t read_flash_data(uint8_t index)
+uint64_t read_flash_data(uint16_t index)
 {
     return *(uint64_t*) (FLASH_DATA_ADDR + 8 * index);
 }
@@ -153,7 +153,7 @@ void setBootDfuFlag(bool is_boot_dfu)
             SEGGER_RTT_printf(0, "[");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                currentKeyMap[k][i][j] = read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
+                currentKeyMap[k][i][j] = read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j);
                 SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
@@ -163,15 +163,16 @@ void setBootDfuFlag(bool is_boot_dfu)
 
     erase_flash_data();
 
-    write_flash_data(0, getLinePhonoSW());
     if (is_boot_dfu)
     {
-        write_flash_data(1, 1);
+        write_flash_data(0, 1);
     }
     else
     {
-        write_flash_data(1, 0);
+        write_flash_data(0, 0);
     }
+    write_flash_data(1, getLinePhonoSW());
+    write_flash_data(2, getKeymapID());
 
     SEGGER_RTT_printf(0, "reload KeyMap\n");
     for (int k = 0; k < 2; k++)
@@ -183,7 +184,7 @@ void setBootDfuFlag(bool is_boot_dfu)
             SEGGER_RTT_printf(0, "[");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
-                write_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentKeyMap[k][i][j]);
+                write_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, currentKeyMap[k][i][j]);
                 SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
@@ -255,55 +256,10 @@ int main(void)
     {
         SEGGER_RTT_printf(0, "init flash data");
 
-        HAL_FLASH_Unlock();
-
-        erase_flash_data();
-
-        write_flash_data(0, 0);
-        write_flash_data(1, 99);
-
-        for (int i = 0; i < MATRIX_ROWS; i++)
-        {
-            for (int j = 0; j < MATRIX_COLUMNS; j++)
-            {
-                write_flash_data(2 + 0 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(0, i, j));
-                write_flash_data(2 + 1 * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j, getKeyCode(1, i, j));
-            }
-        }
-
-        HAL_FLASH_Lock();
+        factoryReset();
     }
 
-    uint64_t linePhonoSW = read_flash_data(0);
-    setLinePhonoSW(linePhonoSW);
-    SEGGER_RTT_printf(0, "Phono/Line SW = %u\n", getLinePhonoSW());
-
-    uint64_t test_val = 0;
-    test_val          = read_flash_data(1);
-    SEGGER_RTT_printf(0, "test_val1 = %u\n", test_val);
-
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "\n");
-        for (int i = 0; i < MATRIX_ROWS; i++)
-        {
-            SEGGER_RTT_printf(0, "[ ");
-            for (int j = 0; j < MATRIX_COLUMNS; j++)
-            {
-                if (k == 0)
-                {
-                    setKeyCode(0, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                }
-                else
-                {
-                    setKeyCode(1, i, j, read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                }
-                SEGGER_RTT_printf(0, "%02X ", read_flash_data(2 + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-    }
-    HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
+    loadKeyboardSettingsFromFlash();
     /* USER CODE END 2 */
 
     /* Infinite loop */

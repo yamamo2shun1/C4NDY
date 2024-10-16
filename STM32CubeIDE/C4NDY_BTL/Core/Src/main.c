@@ -41,7 +41,7 @@ typedef void (*pFunction)(void);
 /* USER CODE BEGIN PD */
 #define FLASH_APP_ADDR (0x08020000)
 
-#define FLASH_DATA_ADDR (0x0807F800)
+#define FLASH_DATA_ADDR (0x0807F000)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -69,8 +69,8 @@ void erase_flash_data(void)
     static FLASH_EraseInitTypeDef EraseInitStruct;
     uint32_t PAGEError;
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
-    EraseInitStruct.Page      = 255;
-    EraseInitStruct.NbPages   = 1;
+    EraseInitStruct.Page      = 254;
+    EraseInitStruct.NbPages   = 2;
 
     if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK)
     {
@@ -96,187 +96,9 @@ void setBootDfuFlag(bool is_boot_dfu)
     SEGGER_RTT_printf(0, "erase & write FLASH...\n");
     HAL_FLASH_Unlock();
 
-    uint64_t currentKeyMap[2][5][13] = {0x0};
-
-    SEGGER_RTT_printf(0, "current KeyMap ");
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "%d\n", k + 1);
-        SEGGER_RTT_printf(0, "[\n");
-        for (int i = 0; i < 5; i++)
-        {
-            SEGGER_RTT_printf(0, "[");
-            for (int j = 0; j < 13; j++)
-            {
-                currentKeyMap[k][i][j] = read_flash_data(2 + k * 65 + i * 13 + j);
-                SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-        SEGGER_RTT_printf(0, "]\n\n");
-    }
-
     erase_flash_data();
 
     write_flash_data(0, 0);
-    if (is_boot_dfu)
-    {
-        write_flash_data(1, 1);
-    }
-    else
-    {
-        write_flash_data(1, 0);
-    }
-
-    SEGGER_RTT_printf(0, "reload KeyMap ");
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "%d\n", k + 1);
-        SEGGER_RTT_printf(0, "[\n");
-        for (int i = 0; i < 5; i++)
-        {
-            SEGGER_RTT_printf(0, "[");
-            for (int j = 0; j < 13; j++)
-            {
-                write_flash_data(2 + k * 65 + i * 13 + j, currentKeyMap[k][i][j]);
-                SEGGER_RTT_printf(0, "%02X ", currentKeyMap[k][i][j]);
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-        SEGGER_RTT_printf(0, "]\n\n");
-    }
-
-    HAL_FLASH_Lock();
-}
-
-void setBootDfuFlagSTK(bool is_boot_dfu)
-{
-    SEGGER_RTT_printf(0, "erase & write FLASH for STK...\n");
-    HAL_FLASH_Unlock();
-
-    uint64_t currentNormalKeyMap[2][4][10] = {0x0};
-    uint64_t currentUpperKeyMap[2][4][10]  = {0x0};
-    uint64_t currentStickKeyMap[2][2][4]   = {0x0};
-
-    SEGGER_RTT_printf(0, "current Normal KeyMap\n");
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "%d\n", k + 1);
-        SEGGER_RTT_printf(0, "[\n");
-        for (int i = 0; i < 4; i++)
-        {
-            SEGGER_RTT_printf(0, "[");
-            for (int j = 0; j < 10; j++)
-            {
-                currentNormalKeyMap[k][i][j] = read_flash_data(2 + k * 40 + i * 10 + j);
-                SEGGER_RTT_printf(0, "%02X ", currentNormalKeyMap[k][i][j]);
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-        SEGGER_RTT_printf(0, "]\n\n");
-    }
-
-    SEGGER_RTT_printf(0, "current Upper KeyMap\n");
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "%d\n", k + 1);
-        SEGGER_RTT_printf(0, "[\n");
-        for (int i = 0; i < 4; i++)
-        {
-            SEGGER_RTT_printf(0, "[");
-            for (int j = 0; j < 10; j++)
-            {
-                currentUpperKeyMap[k][i][j] = read_flash_data(2 + 80 + k * 40 + i * 10 + j);
-                SEGGER_RTT_printf(0, "%02X ", currentUpperKeyMap[k][i][j]);
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-        SEGGER_RTT_printf(0, "]\n\n");
-    }
-
-    SEGGER_RTT_printf(0, "current Stick KeyMap\n");
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "%d\n", k + 1);
-        SEGGER_RTT_printf(0, "[\n");
-        for (int i = 0; i < 2; i++)
-        {
-            SEGGER_RTT_printf(0, "[");
-            for (int j = 0; j < 4; j++)
-            {
-                currentStickKeyMap[k][i][j] = read_flash_data(2 + 160 + k * 8 + i * 4 + j);
-                SEGGER_RTT_printf(0, "%02X ", currentStickKeyMap[k][i][j]);
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-        SEGGER_RTT_printf(0, "]\n\n");
-    }
-
-    erase_flash_data();
-
-    write_flash_data(0, 0);
-    if (is_boot_dfu)
-    {
-        write_flash_data(1, 2);
-    }
-    else
-    {
-        write_flash_data(1, 0);
-    }
-
-    SEGGER_RTT_printf(0, "reload Normal KeyMap ");
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "%d\n", k + 1);
-        SEGGER_RTT_printf(0, "[\n");
-        for (int i = 0; i < 4; i++)
-        {
-            SEGGER_RTT_printf(0, "[");
-            for (int j = 0; j < 10; j++)
-            {
-                write_flash_data(2 + k * 40 + i * 10 + j, currentNormalKeyMap[k][i][j]);
-                SEGGER_RTT_printf(0, "%02X ", currentNormalKeyMap[k][i][j]);
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-        SEGGER_RTT_printf(0, "]\n\n");
-    }
-
-    SEGGER_RTT_printf(0, "reload Upper KeyMap ");
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "%d\n", k + 1);
-        SEGGER_RTT_printf(0, "[\n");
-        for (int i = 0; i < 4; i++)
-        {
-            SEGGER_RTT_printf(0, "[");
-            for (int j = 0; j < 10; j++)
-            {
-                write_flash_data(2 + 80 + k * 40 + i * 10 + j, currentUpperKeyMap[k][i][j]);
-                SEGGER_RTT_printf(0, "%02X ", currentUpperKeyMap[k][i][j]);
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-        SEGGER_RTT_printf(0, "]\n\n");
-    }
-
-    SEGGER_RTT_printf(0, "reload Stick KeyMap ");
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "%d\n", k + 1);
-        SEGGER_RTT_printf(0, "[\n");
-        for (int i = 0; i < 2; i++)
-        {
-            SEGGER_RTT_printf(0, "[");
-            for (int j = 0; j < 4; j++)
-            {
-                write_flash_data(2 + 160 + k * 8 + i * 4 + j, currentStickKeyMap[k][i][j]);
-                SEGGER_RTT_printf(0, "%02X ", currentStickKeyMap[k][i][j]);
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-        SEGGER_RTT_printf(0, "]\n\n");
-    }
 
     HAL_FLASH_Lock();
 }
@@ -338,18 +160,11 @@ int main(void)
         HAL_Delay(200);
     }
 
-    if (read_flash_data(1) == 1)
+    if (read_flash_data(0) != 0)
     {
         setBootDfuFlag(false);
 
-        SEGGER_RTT_printf(0, "Go to custom DFU mode(KeyVLM).\n");
-        HAL_Delay(100);
-    }
-    if (read_flash_data(1) == 2)
-    {
-        setBootDfuFlagSTK(false);
-
-        SEGGER_RTT_printf(0, "Go to custom DFU mode(STK).\n");
+        SEGGER_RTT_printf(0, "Go to custom DFU mode.\n");
         HAL_Delay(100);
     }
     else
