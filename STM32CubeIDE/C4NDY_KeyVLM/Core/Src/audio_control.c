@@ -59,10 +59,10 @@ uint16_t master_gain_buffer[16] = {0};
 uint16_t master_gain            = 0;
 uint16_t master_gain_prev       = 255;
 
-uint32_t sai_buf_index                = 0;
-uint32_t sai_transmit_index           = 0;
-int32_t sai_buf[SAI_RNG_BUF_SIZE * 2] = {0};
-bool is_dma_pause                     = false;
+uint32_t sai_buf_index            = 0;
+uint32_t sai_transmit_index       = 0;
+int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
+bool is_dma_pause                 = false;
 
 // Speaker data size received in the last frame
 int spk_data_size = 0;
