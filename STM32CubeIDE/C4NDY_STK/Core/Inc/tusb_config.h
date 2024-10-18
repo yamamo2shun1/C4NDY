@@ -110,7 +110,7 @@ extern "C"
 #define CFG_TUD_VENDOR 0
 
 // HID buffer size Should be sufficient to hold ID (if any) + Data
-#define CFG_TUD_HID_EP_BUFSIZE 16
+#define CFG_TUD_HID_EP_BUFSIZE 32
 
     //--------------------------------------------------------------------
     // AUDIO CLASS DRIVER CONFIGURATION
@@ -121,7 +121,7 @@ extern "C"
 #define CFG_TUD_AUDIO_FUNC_1_DESC_LEN TUD_AUDIO_HEADPHONE_STEREO_DESC_LEN
 
 // How many formats are used, need to adjust USB descriptor if changed
-#define CFG_TUD_AUDIO_FUNC_1_N_FORMATS 2
+#define CFG_TUD_AUDIO_FUNC_1_N_FORMATS 1
 
 // Audio format type I specifications
 #if defined(__RX__)

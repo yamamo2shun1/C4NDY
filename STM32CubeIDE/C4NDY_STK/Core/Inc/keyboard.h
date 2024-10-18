@@ -13,6 +13,7 @@
 
 #define ENABLE_LEFT_UP
 #define ENABLE_RIGHT_UP
+#define ENABLE_RIGHT_DOWN
 
 #define BASIC_PARAMS_NUM 5
 
@@ -123,6 +124,17 @@
 #define KC_LAYOUT     0xFE  // Layout Switch
 #define KC_NULL       0xFF
 
+// modifier keys
+#define M_NO 0x00  // No modifiers
+#define M_LC 0x01  // Left Control
+#define M_LS 0x02  // Left Shift
+#define M_LA 0x04  // Left Alt
+#define M_LG 0x08  // Left GUI(Win/Command)
+#define M_RC 0x10  // Right Control
+#define M_RS 0x20  // Right Shift
+#define M_RA 0x40  // Right Alt
+#define M_RG 0x80  // Right GUI(Win/Command)
+
 #define JOYSTICK_H 0
 #define JOYSTICK_V 1
 
@@ -130,7 +142,8 @@
 #define JOYSTICK_AXIS 2
 
 #define JOYSTICK_ON_RADIUS 0.9
-#define JOYSTICK_ON_ANGLE  20
+#define JOYSTICK_ON_ANGLE  10
+#define JOYSTICK_ON_ANGLE2 20
 
 #define JOYSTICK_CENTER       2048
 #define JOYSTICK_ON_THRESHOLD 1200
@@ -150,15 +163,22 @@ void setLinePhonoSW(const uint8_t val);
 uint8_t getLinePhonoSW(void);
 void factoryReset(void);
 void writeAllKeyboardSettings(void);
-uint8_t getKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y);
+void loadKeyboardSettingsFromFlash(void);
+uint8_t getNormalKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y);
 uint8_t getUpperKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y);
 uint8_t getStickKeyCode(const uint8_t keymapId, const uint8_t id, const uint8_t direction);
-void setKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t code);
+void setNormalKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t code);
 void setUpperKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t code);
 void setStickKeyCode(const uint8_t keymapId, const uint8_t id, const uint8_t direction, const uint8_t code);
+uint8_t getNormalModifiers(const uint8_t keymapId, const uint8_t x, const uint8_t y);
+uint8_t getUpperModifiers(const uint8_t keymapId, const uint8_t x, const uint8_t y);
+uint8_t getStickModifiers(const uint8_t keymapId, const uint8_t id, const uint8_t direction);
+void setNormalModifiers(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t modifiers);
+void setUpperModifiers(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t modifiers);
+void setStickModifiers(const uint8_t keymapId, const uint8_t id, const uint8_t direction, const uint8_t modifiers);
 void resetKeys(void);
-void clearKeys(const uint8_t code);
-void setKeys(const uint8_t code);
+void clearKeys(const uint8_t code, const uint8_t modifiers);
+void setKeys(const uint8_t code, const uint8_t modifiers);
 bool isUpperPressed(void);
 bool isShiftPressed(void);
 void hid_keyscan_task(void);
