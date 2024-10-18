@@ -43,9 +43,9 @@ int8_t mute[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];     // +1 for master channe
 int16_t volume[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];  // +1 for master channel 0
 
 // Resolution per format
-const uint8_t resolutions_per_format[CFG_TUD_AUDIO_FUNC_1_N_FORMATS] = {CFG_TUD_AUDIO_FUNC_1_FORMAT_1_RESOLUTION_RX, CFG_TUD_AUDIO_FUNC_1_FORMAT_2_RESOLUTION_RX};
+const uint8_t resolutions_per_format[CFG_TUD_AUDIO_FUNC_1_N_FORMATS] = {CFG_TUD_AUDIO_FUNC_1_FORMAT_1_RESOLUTION_RX};
 // Current resolution, update on format change
-uint8_t current_resolution = 16;
+uint8_t current_resolution = 24;
 
 #define N_SAMPLE_RATES TU_ARRAY_SIZE(sample_rates)
 
@@ -59,8 +59,8 @@ uint16_t master_gain_buffer[16] = {0};
 uint16_t master_gain            = 0;
 uint16_t master_gain_prev       = 255;
 
-uint32_t sai_buf_index            = 0;
-uint32_t sai_transmit_index       = 0;
+uint64_t sai_buf_index            = 0;
+uint64_t sai_transmit_index       = 0;
 int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
 bool is_dma_pause                 = false;
 
@@ -276,7 +276,6 @@ bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const* p_reques
 #endif
 
     // Clear buffer when streaming format is changed
-    clear_usb_audio_buf();
     if (alt != 0)
     {
         current_resolution = resolutions_per_format[alt - 1];
@@ -340,11 +339,6 @@ void start_sai(void)
     }
 }
 
-void clear_usb_audio_buf(void)
-{
-    spk_data_size = 0;
-}
-
 void read_audio_data_from_usb(uint16_t n_bytes_received)
 {
     spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
@@ -356,20 +350,26 @@ void copybuf_usb2sai(void)
     const int len = spk_data_size >> 2;
     for (int i = 0; i < len; i++)
     {
-        const int32_t val      = spk_buf[i];
-        spk_buf[i]             = 0;
-        sai_buf[sai_buf_index] = val << 16 | val >> 16;
-        sai_buf_index          = (sai_buf_index + 1) & (SAI_RNG_BUF_SIZE - 1);
+        if (sai_buf_index + len != sai_transmit_index)
+        {
+            const int32_t val = spk_buf[i];
+            spk_buf[i]        = 0;
+
+            sai_buf[sai_buf_index & (SAI_RNG_BUF_SIZE - 1)] = val << 16 | val >> 16;
+            sai_buf_index++;
+        }
     }
 }
 
 void copybuf_sai2codec(void)
 {
-    const uint32_t st_index = sai_transmit_index + SAI_BUF_SIZE;
-    if (sai_buf_index >= st_index || ((st_index > sai_buf_index) && (sai_buf_index + SAI_RNG_BUF_SIZE) >= st_index))
+    if (sai_buf_index - sai_transmit_index >= SAI_BUF_SIZE)
     {
-        memcpy(hpout_buf, sai_buf + sai_transmit_index, sizeof(hpout_buf));
-        sai_transmit_index = (sai_transmit_index + SAI_BUF_SIZE) & (SAI_RNG_BUF_SIZE - 1);
+        for (int i = 0; i < SAI_BUF_SIZE; i++)
+        {
+            hpout_buf[i] = sai_buf[sai_transmit_index & (SAI_RNG_BUF_SIZE - 1)];
+            sai_transmit_index++;
+        }
     }
 }
 
