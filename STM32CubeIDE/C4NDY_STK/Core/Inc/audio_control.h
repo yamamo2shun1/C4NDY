@@ -25,7 +25,7 @@
 #define SIGMA_SAFELOAD_TRIGGER         0x0007
 
 #define SAI_RNG_BUF_SIZE 16384
-#define SAI_BUF_SIZE     1024
+#define SAI_BUF_SIZE     1920
 
 #define MASTER_GAIN_MIN -60
 #define MASTER_GAIN_MAX 10
@@ -40,7 +40,6 @@ extern int32_t hpout_buf[SAI_BUF_SIZE];
 void start_adc(void);
 void start_sai(void);
 
-void clear_usb_audio_buf(void);
 void read_audio_data_from_usb(const uint16_t n_bytes_received);
 void copybuf_usb2sai(void);
 void copybuf_sai2codec(void);
