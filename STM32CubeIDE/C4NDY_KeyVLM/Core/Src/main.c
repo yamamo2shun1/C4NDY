@@ -123,7 +123,7 @@ void erase_flash_data(void)
     }
 }
 
-void write_flash_data(uint8_t index, uint8_t val)
+void write_flash_data(uint16_t index, uint8_t val)
 {
     if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, FLASH_DATA_ADDR + 8 * index, val) != HAL_OK)
     {
@@ -131,7 +131,7 @@ void write_flash_data(uint8_t index, uint8_t val)
     }
 }
 
-uint64_t read_flash_data(uint8_t index)
+uint64_t read_flash_data(uint16_t index)
 {
     return *(uint64_t*) (FLASH_DATA_ADDR + 8 * index);
 }
@@ -202,6 +202,7 @@ void setBootDfuFlag(bool is_boot_dfu)
  */
 int main(void)
 {
+
     /* USER CODE BEGIN 1 */
 
     /* USER CODE END 1 */
@@ -259,47 +260,7 @@ int main(void)
         factoryReset();
     }
 
-    if (read_flash_data(1) > 1)
-    {
-        setLinePhonoSW(0);
-    }
-    else
-    {
-        setLinePhonoSW(read_flash_data(1));
-    }
-    SEGGER_RTT_printf(0, "Phono/Line SW = %u\n", getLinePhonoSW());
-
-    if (read_flash_data(2) > 1)
-    {
-        setKeymapID(0);
-    }
-    else
-    {
-        setKeymapID(read_flash_data(2));
-    }
-    SEGGER_RTT_printf(0, "keymapID = %u %u\n", getKeymapID(), read_flash_data(2));
-
-    for (int k = 0; k < 2; k++)
-    {
-        SEGGER_RTT_printf(0, "\n");
-        for (int i = 0; i < MATRIX_ROWS; i++)
-        {
-            SEGGER_RTT_printf(0, "[ ");
-            for (int j = 0; j < MATRIX_COLUMNS; j++)
-            {
-                if (k == 0)
-                {
-                    setKeyCode(0, i, j, read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                }
-                else
-                {
-                    setKeyCode(1, i, j, read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                }
-                SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-            }
-            SEGGER_RTT_printf(0, "]\n");
-        }
-    }
+    loadKeyboardSettingsFromFlash();
     /* USER CODE END 2 */
 
     /* Infinite loop */
