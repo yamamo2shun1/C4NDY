@@ -1280,24 +1280,30 @@ void controlJoySticks(void)
             x_offset[i] = x;
             y_offset[i] = y;
             offset_calibrate_count[i]++;
+
+            continue;
         }
-        else if (offset_calibrate_count[i] < 100)
+        if (offset_calibrate_count[i] < 100)
         {
             x_offset[i] += x;
             y_offset[i] += y;
             offset_calibrate_count[i]++;
+
+            continue;
         }
-        else if (offset_calibrate_count[i] == 100)
+        if (offset_calibrate_count[i] == 100)
         {
             x_offset[i] /= (double) offset_calibrate_count[i];
             y_offset[i] /= (double) offset_calibrate_count[i];
             offset_calibrate_count[i]++;
+
+            continue;
         }
 
         x = x - x_offset[i];
         y = y - y_offset[i];
 
-        double r = sqrt(pow(x, 2.0) + pow(y, 2.0));
+        const double r = sqrt(pow(x, 2.0) + pow(y, 2.0));
 
         if (i == 1)
         {
@@ -1309,7 +1315,7 @@ void controlJoySticks(void)
 
         if (r > JOYSTICK_ON_RADIUS)
         {
-            double theta = (y >= 0.0 ? 1.0 : -1.0) * acos(x / r) / M_PI * 180.0;
+            const double theta = (y >= 0.0 ? 1.0 : -1.0) * acos(x / r) / M_PI * 180.0;
 
             if (theta >= 90 - JOYSTICK_ON_ANGLE2 && theta < 90 + JOYSTICK_ON_ANGLE2)
             {
