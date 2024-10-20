@@ -54,6 +54,7 @@ void setColumn2ColorLedBuf(const uint8_t row, const uint16_t column, const RGB_C
 void setColumn3ColorLedBuf(const uint8_t row, const uint16_t column0, const uint16_t column1, const RGB_Color_t* rgb_color1, const RGB_Color_t* rgb_color2, const RGB_Color_t* rgb_color0);
 void renew(void);
 void checkColor(const uint8_t r, const uint8_t g, const uint8_t b);
+void loadLEDColorsFromFlash(void);
 void led_control_task(void);
 
 #endif /* INC_ICLED_H_ */
