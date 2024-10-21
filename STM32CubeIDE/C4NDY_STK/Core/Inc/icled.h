@@ -18,8 +18,6 @@
 #define WL_LED_ONE     12
 #define WL_LED_ZERO    4
 
-#define LED_INTENSITY_RATE 1.0
-
 #define LED_NUMS 34
 
 #define GRADATION_RATE_STEP 0.2
@@ -43,6 +41,9 @@ RGB_Color_t* getNormalColor(const uint8_t keymapId);
 RGB_Color_t* getUpperColor(const uint8_t keymapId);
 RGB_Color_t* getShiftColor(const uint8_t keymapId);
 RGB_Color_t* getBlankColor(void);
+
+void setIntensity(const uint8_t keymapId, const uint8_t value);
+double getIntensity(const uint8_t keymapId);
 
 void setSpaceFlag(void);
 void setBackspaceFlag(void);

@@ -62,7 +62,7 @@ int8_t currentStk[JOYSTICK_NUMS][JOYSTICK_AXIS] = {0};
 int8_t prevStk[JOYSTICK_NUMS][JOYSTICK_AXIS]    = {0};
 
 const uint8_t keymaps_normal_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
-    // clang-format off
+  // clang-format off
     {
 	    {{KC_Q, M_NO},    {KC_W, M_NO},    {KC_E, M_NO},    {KC_R, M_NO},    {KC_T, M_NO},        {KC_Y, M_NO},    {KC_U, M_NO},    {KC_I, M_NO},     {KC_O, M_NO},      {KC_P, M_NO}},
 		{{KC_A, M_NO},    {KC_S, M_NO},    {KC_D, M_NO},    {KC_F, M_NO},    {KC_G, M_NO},        {KC_H, M_NO},    {KC_J, M_NO},    {KC_K, M_NO},     {KC_L, M_NO},      {KC_SC, M_NO}},
@@ -75,11 +75,11 @@ const uint8_t keymaps_normal_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
 		{{KC_J, M_NO},    {KC_Q, M_NO},     {KC_SC, M_NO},   {KC_K, M_NO},    {KC_X, M_NO},        {KC_B, M_NO},    {KC_M, M_NO},    {KC_W, M_NO},    {KC_N, M_NO},  {KC_V, M_NO}},
 		{{KC_NULL, M_NO}, {KC_LGUI, M_NO},  {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO}, {KC_UP, M_NO}, {KC_RIGHT, M_NO}}
 	}
-    // clang-format on
+  // clang-format on
 };
 
 const uint8_t keymaps_upper_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
-    // clang-format off
+  // clang-format off
 	{
 		{{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},    {KC_8, M_NO},          {KC_9, M_NO},        {KC_0, M_NO}},
 		{{KC_APS, M_NO},  {KC_GA, M_NO},       {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_NULL, M_NO},     {KC_NULL, M_NO}, {KC_LSB, M_NO},  {KC_RSB, M_NO},        {KC_MINUS, M_NO},    {KC_EQUAL, M_NO}},
@@ -92,11 +92,11 @@ const uint8_t keymaps_upper_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
 		{{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_EQUAL, M_NO}, {KC_NULL, M_NO},       {KC_NULL, M_NO},     {KC_BSLASH, M_NO}},
 		{{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO},  {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO}, {KC_RESET, M_NO}}
 	}
-    // clang-format on
+  // clang-format on
 };
 
 const uint8_t keymaps_stk_default[2][2][4][2] = {
-    // clang-format off
+  // clang-format off
     //   left,      right,    down,     up
 	{
 		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
@@ -106,11 +106,11 @@ const uint8_t keymaps_stk_default[2][2][4][2] = {
 		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
 		{{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
 	}
-    // clang-format on
+  // clang-format on
 };
 
 uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
-    // clang-format off
+  // clang-format off
     {
 	    {{KC_Q, M_NO},    {KC_W, M_NO},    {KC_E, M_NO},    {KC_R, M_NO},    {KC_T, M_NO},        {KC_Y, M_NO},    {KC_U, M_NO},    {KC_I, M_NO},     {KC_O, M_NO},      {KC_P, M_NO}},
 		{{KC_A, M_NO},    {KC_S, M_NO},    {KC_D, M_NO},    {KC_F, M_NO},    {KC_G, M_NO},        {KC_H, M_NO},    {KC_J, M_NO},    {KC_K, M_NO},     {KC_L, M_NO},      {KC_SC, M_NO}},
@@ -123,11 +123,11 @@ uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
 		{{KC_J, M_NO},    {KC_Q, M_NO},     {KC_SC, M_NO},   {KC_K, M_NO},    {KC_X, M_NO},        {KC_B, M_NO},    {KC_M, M_NO},    {KC_W, M_NO},    {KC_N, M_NO},  {KC_V, M_NO}},
 		{{KC_NULL, M_NO}, {KC_LGUI, M_NO},  {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO}, {KC_UP, M_NO}, {KC_RIGHT, M_NO}}
 	}
-    // clang-format on
+  // clang-format on
 };
 
 uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
-    // clang-format off
+  // clang-format off
 	{
 		{{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},    {KC_8, M_NO},          {KC_9, M_NO},        {KC_0, M_NO}},
 		{{KC_APS, M_NO},  {KC_GA, M_NO},       {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_NULL, M_NO},     {KC_NULL, M_NO}, {KC_LSB, M_NO},  {KC_RSB, M_NO},        {KC_MINUS, M_NO},    {KC_EQUAL, M_NO}},
@@ -140,11 +140,11 @@ uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
 		{{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_EQUAL, M_NO}, {KC_NULL, M_NO},       {KC_NULL, M_NO},      {KC_BSLASH, M_NO}},
 		{{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO},  {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO},  {KC_RESET, M_NO}}
 	}
-    // clang-format on
+  // clang-format on
 };
 
 uint8_t keymaps_stk[2][2][4][2] = {
-    // clang-format off
+  // clang-format off
     //   left,      right,    down,     up
 	{
 		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
@@ -154,7 +154,7 @@ uint8_t keymaps_stk[2][2][4][2] = {
 		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
 		{{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
 	}
-    // clang-format on
+  // clang-format on
 };
 
 // Invoked when sent REPORT successfully to host
@@ -529,6 +529,19 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             break;
         }
     }
+    else if (buffer[0] == 0xF0 && buffer[1] == 0x05)
+    {
+        SEGGER_RTT_printf(0, "write to layout1 intensity:\n");
+
+        switch (buffer[0])
+        {
+        case 0xF0:
+            setIntensity(0, buffer[2]);
+            break;
+        default:
+            break;
+        }
+    }
     else if (buffer[0] >= 0xF0 && buffer[0] <= 0xF3 && buffer[1] == 0x09)
     {
         SEGGER_RTT_printf(0, "write to layout2:\n");
@@ -573,6 +586,19 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             break;
         case 0xF2:
             setShiftColor(1, buffer[2], buffer[3], buffer[4]);
+            break;
+        default:
+            break;
+        }
+    }
+    else if (buffer[0] == 0xF0 && buffer[1] == 0x0D)
+    {
+        SEGGER_RTT_printf(0, "write to layout2 intensity:\n");
+
+        switch (buffer[0])
+        {
+        case 0xF0:
+            setIntensity(1, buffer[2]);
             break;
         default:
             break;
@@ -633,6 +659,20 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
             buffer_sb[0]                 = rgb_shift->r;
             buffer_sb[1]                 = rgb_shift->g;
             buffer_sb[2]                 = rgb_shift->b;
+            break;
+        default:
+            break;
+        }
+
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
+    }
+    else if (buffer[0] == 0xF0 && buffer[1] == 0x15)
+    {
+        SEGGER_RTT_printf(0, "read from layout1 intensity:\n");
+        switch (buffer[0])
+        {
+        case 0xF0:
+            buffer_sb[0] = (uint8_t) (getIntensity(0) * 255.0);
             break;
         default:
             break;
@@ -703,6 +743,20 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
         tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
+    else if (buffer[0] == 0xF0 && buffer[1] == 0x1D)
+    {
+        SEGGER_RTT_printf(0, "read from layout2 intensity:\n");
+        switch (buffer[0])
+        {
+        case 0xF0:
+            buffer_sb[0] = (uint8_t) (getIntensity(1) * 255.0);
+            break;
+        default:
+            break;
+        }
+
+        tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
+    }
     else if (buffer[0] == 0xF5)
     {
         SEGGER_RTT_printf(0, "erase & write FLASH...\n");
@@ -733,11 +787,18 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
     }
     else if (buffer[0] == 0xF8)
     {
+        SEGGER_RTT_printf(0, "change LED intensity = %d\n", buffer[1]);
+
+        setIntensity(keymapID, buffer[1]);
+        renew();
+    }
+    else if (buffer[0] == 0xF9)
+    {
         SEGGER_RTT_printf(0, "factory reset...\n");
 
         factoryReset();
 
-        buffer_sb[1] = 0xF8;
+        buffer_sb[1] = 0xF9;
         buffer_sb[2] = 0x01;
         tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
     }
