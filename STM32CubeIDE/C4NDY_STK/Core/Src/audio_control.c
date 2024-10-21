@@ -58,17 +58,17 @@ uint16_t master_gain_buffer[16] = {0};
 uint16_t master_gain            = 0;
 uint16_t master_gain_prev       = 255;
 
-uint64_t sai_buf_index            = 0;
-uint64_t sai_transmit_index       = 0;
-int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
-bool is_dma_pause                 = false;
+uint_fast64_t sai_buf_index            = 0;
+uint_fast64_t sai_transmit_index       = 0;
+int_fast32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
+bool is_dma_pause                      = false;
 
 // Speaker data size received in the last frame
-int spk_data_size = 0;
+uint_fast16_t spk_data_size = 0;
 
 // Buffer for speaker data
-int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ] = {0};
-int32_t hpout_buf[SAI_BUF_SIZE]                        = {0};
+int_fast32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ] = {0};
+int_fast32_t hpout_buf[SAI_BUF_SIZE]                        = {0};
 
 // Helper for clock get requests
 static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t const* request)
@@ -203,6 +203,8 @@ static bool tud_audio_feature_unit_set_request(uint8_t rhport, audio_control_req
             break;
         case 2:
             send_usb_gain_R(volume[request->bChannelNumber] / 256);
+            break;
+        default:
             break;
         }
 
@@ -344,16 +346,21 @@ void read_audio_data_from_usb(const uint16_t n_bytes_received)
 
 void copybuf_usb2sai(void)
 {
-    const int len = spk_data_size >> 2;
-    for (int i = 0; i < len; i++)
+    const uint_fast16_t len = spk_data_size >> 2;
+    for (uint_fast16_t i = 0; i < len; i++)
     {
         if (sai_buf_index + len != sai_transmit_index)
         {
-            const int32_t val = spk_buf[i];
-            spk_buf[i]        = 0;
+            const int_fast32_t val = spk_buf[i];
+
+            spk_buf[i] = 0;
 
             sai_buf[sai_buf_index & (SAI_RNG_BUF_SIZE - 1)] = val << 16 | val >> 16;
             sai_buf_index++;
+        }
+        else
+        {
+            spk_buf[i] = 0;
         }
     }
 }
@@ -362,7 +369,7 @@ void copybuf_sai2codec(void)
 {
     if (sai_buf_index - sai_transmit_index >= SAI_BUF_SIZE)
     {
-        for (int i = 0; i < SAI_BUF_SIZE; i++)
+        for (uint_fast16_t i = 0; i < SAI_BUF_SIZE; i++)
         {
             hpout_buf[i] = sai_buf[sai_transmit_index & (SAI_RNG_BUF_SIZE - 1)];
             sai_transmit_index++;
