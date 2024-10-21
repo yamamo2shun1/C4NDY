@@ -26,6 +26,8 @@
 /** @addtogroup STM32G4xx_HAL_Driver
   * @{
   */
+
+#if defined(SAI1)
 #ifdef HAL_SAI_MODULE_ENABLED
 
 /** @defgroup SAIEx SAIEx
@@ -73,7 +75,8 @@
   * @param  pdmMicDelay Microphone delays configuration.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_SAIEx_ConfigPdmMicDelay(SAI_HandleTypeDef *hsai, SAIEx_PdmMicDelayParamTypeDef *pdmMicDelay)
+HAL_StatusTypeDef HAL_SAIEx_ConfigPdmMicDelay(const SAI_HandleTypeDef *hsai,
+                                              const SAIEx_PdmMicDelayParamTypeDef *pdmMicDelay)
 {
   HAL_StatusTypeDef status = HAL_OK;
   uint32_t offset;
@@ -123,7 +126,8 @@ HAL_StatusTypeDef HAL_SAIEx_ConfigPdmMicDelay(SAI_HandleTypeDef *hsai, SAIEx_Pdm
   */
 
 #endif /* HAL_SAI_MODULE_ENABLED */
+#endif /* SAI1 */
+
 /**
   * @}
   */
-
