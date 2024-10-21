@@ -51,7 +51,9 @@ C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドラ�
 		[0xEF, 0x00, 0xAE],
 		[0xAE, 0xEF, 0x00]
 	]
-    intensity = 1.0
+    intensity = [
+        1.0
+    ]
 
 [layout2]
 	normal = [
@@ -75,14 +77,16 @@ C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドラ�
 		[0x00, 0xFF, 0xFF],
 		[0x00, 0x00, 0xFF]
 	]
-    intensity = 1.0
+    intensity = [
+        1.0
+    ]
 ```
 
 ## インストール方法
 `go install`でインストールすることが可能です。
 
 ```shellscript
-$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.11.0
+$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.12.0
 ```
 
 ## 使い方
