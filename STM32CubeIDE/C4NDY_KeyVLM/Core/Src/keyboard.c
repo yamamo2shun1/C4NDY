@@ -337,7 +337,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         HAL_Delay(100);
         NVIC_SystemReset();
     }
-    else if (buffer[0] == 0xF8)
+    else if (buffer[0] == 0xF9)
     {
         SEGGER_RTT_printf(0, "factory reset...\n");
 
