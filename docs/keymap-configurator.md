@@ -120,6 +120,10 @@ $ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.12.0
         Set LED RGB value for checking color.
         ex) confiseur -led 0xFF0000 # red
             confiseur id 0 -led 0x00FFFF # cyan
+-intensity [float(0.0-1.0)]
+        Set LED intensity.
+        ex) confiseur -intensity 1.0
+            confiseur -id 1 -intensity 0.5
 -restart
         Restart the keyboard immediately.
         ex) confiseur -restart
