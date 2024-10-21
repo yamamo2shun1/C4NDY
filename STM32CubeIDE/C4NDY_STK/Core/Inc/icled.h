@@ -18,8 +18,6 @@
 #define WL_LED_ONE     12
 #define WL_LED_ZERO    4
 
-#define LED_INTENSITY_RATE 1.0
-
 #define LED_NUMS 34
 
 #define GRADATION_RATE_STEP 0.2
@@ -44,6 +42,9 @@ RGB_Color_t* getUpperColor(const uint8_t keymapId);
 RGB_Color_t* getShiftColor(const uint8_t keymapId);
 RGB_Color_t* getBlankColor(void);
 
+void setIntensity(const uint8_t keymapId, const uint8_t value);
+double getIntensity(const uint8_t keymapId);
+
 void setSpaceFlag(void);
 void setBackspaceFlag(void);
 void setEnterFlag(void);
@@ -54,6 +55,7 @@ void setColumn2ColorLedBuf(const uint8_t row, const uint16_t column, const RGB_C
 void setColumn3ColorLedBuf(const uint8_t row, const uint16_t column0, const uint16_t column1, const RGB_Color_t* rgb_color1, const RGB_Color_t* rgb_color2, const RGB_Color_t* rgb_color0);
 void renew(void);
 void checkColor(const uint8_t r, const uint8_t g, const uint8_t b);
+void loadLEDColorsFromFlash(void);
 void led_control_task(void);
 
 #endif /* INC_ICLED_H_ */

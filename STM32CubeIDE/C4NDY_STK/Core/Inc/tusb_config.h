@@ -121,7 +121,7 @@ extern "C"
 #define CFG_TUD_AUDIO_FUNC_1_DESC_LEN TUD_AUDIO_HEADPHONE_STEREO_DESC_LEN
 
 // How many formats are used, need to adjust USB descriptor if changed
-#define CFG_TUD_AUDIO_FUNC_1_N_FORMATS 2
+#define CFG_TUD_AUDIO_FUNC_1_N_FORMATS 1
 
 // Audio format type I specifications
 #if defined(__RX__)

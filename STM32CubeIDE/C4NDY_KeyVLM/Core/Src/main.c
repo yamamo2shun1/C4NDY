@@ -202,6 +202,7 @@ void setBootDfuFlag(bool is_boot_dfu)
  */
 int main(void)
 {
+
     /* USER CODE BEGIN 1 */
 
     /* USER CODE END 1 */
