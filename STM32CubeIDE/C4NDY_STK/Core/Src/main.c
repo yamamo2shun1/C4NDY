@@ -226,6 +226,8 @@ void setBootDfuFlag(bool is_boot_dfu)
     }
     write_flash_data(1, getLinePhonoSW());
     write_flash_data(2, getKeymapID());
+    write_flash_data(3, (uint8_t) (getIntensity(0) * 255));
+    write_flash_data(4, (uint8_t) (getIntensity(1) * 255));
 
     SEGGER_RTT_printf(0, "reload KeyMap/Modifiers\n");
     for (int k = 0; k < 2; k++)
