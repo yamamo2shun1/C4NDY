@@ -31,11 +31,11 @@
 #define MASTER_GAIN_MAX 10
 
 // Speaker data size received in the last frame
-extern int spk_data_size;
+extern uint_fast16_t spk_data_size;
 
 // Buffer for speaker data
-extern int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ];
-extern int32_t hpout_buf[SAI_BUF_SIZE];
+extern int_fast32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ];
+extern int_fast32_t hpout_buf[SAI_BUF_SIZE];
 
 void start_adc(void);
 void start_sai(void);
