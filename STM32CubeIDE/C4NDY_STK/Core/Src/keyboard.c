@@ -224,8 +224,6 @@ void factoryReset(void)
     write_flash_data(0, 0);
     write_flash_data(1, 0);
     write_flash_data(2, 0);
-    write_flash_data(3, 255);
-    write_flash_data(4, 255);
 
     for (int i = 0; i < MATRIX_ROWS; i++)
     {
@@ -308,8 +306,6 @@ void writeAllKeyboardSettings(void)
     write_flash_data(0, 0);
     write_flash_data(1, linePhonoSW);
     write_flash_data(2, keymapID);
-    write_flash_data(3, (uint8_t) (getIntensity(0) * 255));
-    write_flash_data(4, (uint8_t) (getIntensity(1) * 255));
 
     for (int i = 0; i < MATRIX_ROWS; i++)
     {
@@ -384,10 +380,6 @@ void loadKeyboardSettingsFromFlash(void)
         setKeymapID(read_flash_data(2));
     }
     SEGGER_RTT_printf(0, "keymapID = %u\n", getKeymapID());
-
-    setIntensity(0, read_flash_data(3));
-    setIntensity(1, read_flash_data(4));
-    SEGGER_RTT_printf(0, "intensity = {%d, %d}\n", getIntensity(0), getIntensity(1));
 
     SEGGER_RTT_printf(0, "// Normal");
     for (int k = 0; k < 2; k++)
