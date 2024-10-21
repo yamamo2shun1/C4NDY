@@ -51,9 +51,7 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 		[0xEF, 0x00, 0xAE],
 		[0xAE, 0xEF, 0x00]
 	]
-    intensity = [
-        1.0
-    ]
+    intensity = 1.0
 
 [layout2]
 	normal = [
@@ -77,15 +75,13 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 		[0x00, 0xFF, 0xFF],
 		[0x00, 0x00, 0xFF]
 	]
-    intensity = [
-        1.0
-    ]
+    intensity = 1.0
 ```
 
 ## Installation
 The `go install` is available.
 ```shellscript
-$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.12.0
+$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.11.0
 ```
 
 ## Usage
