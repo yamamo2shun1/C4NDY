@@ -386,14 +386,14 @@ int main(void)
     SEGGER_RTT_printf(0, "initialize ADAU1761...\n");
     default_download_IC_1();
 
-    SEGGER_RTT_printf(0, "initialize tinyUSB...\n");
-    tusb_init();
-
     SEGGER_RTT_printf(0, "start ADC DMA...\n");
     start_adc();
 
     SEGGER_RTT_printf(0, "start SAI DMA...\n");
     start_sai();
+
+    SEGGER_RTT_printf(0, "initialize tinyUSB...\n");
+    tusb_init();
 
     int state_index = 0;
     /* USER CODE END 2 */
