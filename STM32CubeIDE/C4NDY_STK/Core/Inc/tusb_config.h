@@ -116,8 +116,6 @@ extern "C"
     // AUDIO CLASS DRIVER CONFIGURATION
     //--------------------------------------------------------------------
 
-#define __RX__
-
 #define CFG_TUD_AUDIO_FUNC_1_DESC_LEN TUD_AUDIO_HEADPHONE_STEREO_DESC_LEN
 
 // Audio format type I specifications
