@@ -27,15 +27,15 @@
 
 enum
 {
-  REPORT_ID_KEYBOARD = 1,
-  REPORT_ID_MOUSE,
-  REPORT_ID_CONSUMER_CONTROL,
-  REPORT_ID_GAMEPAD,
-  REPORT_ID_COUNT
+    REPORT_ID_KEYBOARD = 1,
+    REPORT_ID_MOUSE,
+    REPORT_ID_CONSUMER_CONTROL,
+    REPORT_ID_GAMEPAD,
+    REPORT_ID_COUNT
 };
 
 // Unit numbers are arbitrary selected
-#define UAC2_ENTITY_CLOCK               0x04
+#define UAC2_ENTITY_CLOCK 0x04
 // Speaker path
 #define UAC2_ENTITY_SPK_INPUT_TERMINAL  0x01
 #define UAC2_ENTITY_SPK_FEATURE_UNIT    0x02
@@ -46,13 +46,14 @@ enum
 
 enum
 {
-  ITF_NUM_HID = 0,
-  ITF_NUM_HID_GIO,
-  ITF_NUM_AUDIO_CONTROL,
-  ITF_NUM_AUDIO_STREAMING_SPK,
-  ITF_NUM_TOTAL
+    ITF_NUM_HID = 0,
+    ITF_NUM_HID_GIO,
+    ITF_NUM_AUDIO_CONTROL,
+    ITF_NUM_AUDIO_STREAMING_SPK,
+    ITF_NUM_TOTAL
 };
 
+// clang-format off
 #define TUD_AUDIO_HEADPHONE_STEREO_DESC_LEN (TUD_AUDIO_DESC_IAD_LEN\
     + TUD_AUDIO_DESC_STD_AC_LEN\
     + TUD_AUDIO_DESC_CS_AC_LEN\
@@ -153,8 +154,8 @@ enum
     /* Class-Specific AS Isochronous Audio Data Endpoint Descriptor(4.10.1.2) */\
     TUD_AUDIO_DESC_CS_AS_ISO_EP(/*_attr*/ AUDIO_CS_AS_ISO_DATA_EP_ATT_NON_MAX_PACKETS_OK,\
     							/*_ctrl*/ AUDIO_CTRL_NONE,\
-								/*_lockdelayunit*/ AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_MILLISEC,\
-								/*_lockdelay*/ 0x0001),\
+								/*_lockdelayunit*/ AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_PCM_SAMPLES,\
+								/*_lockdelay*/ 0x0000),\
     /* Interface 1, Alternate 2 - alternate interface for data streaming */\
     TUD_AUDIO_DESC_STD_AS_INT(/*_itfnum*/ (uint8_t)(ITF_NUM_AUDIO_STREAMING_SPK),\
     						  /*_altset*/ 0x02,\
@@ -181,6 +182,7 @@ enum
     /* Class-Specific AS Isochronous Audio Data Endpoint Descriptor(4.10.1.2) */\
     TUD_AUDIO_DESC_CS_AS_ISO_EP(/*_attr*/ AUDIO_CS_AS_ISO_DATA_EP_ATT_NON_MAX_PACKETS_OK,\
     							/*_ctrl*/ AUDIO_CTRL_NONE,\
-								/*_lockdelayunit*/ AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_MILLISEC,\
-								/*_lockdelay*/ 0x0001)
+								/*_lockdelayunit*/ AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_PCM_SAMPLES,\
+								/*_lockdelay*/ 0x0000)
+// clang-format on
 #endif /* USB_DESCRIPTORS_H_ */
