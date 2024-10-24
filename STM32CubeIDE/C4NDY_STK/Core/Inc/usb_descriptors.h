@@ -62,10 +62,9 @@ enum
     + TUD_AUDIO_DESC_CS_AS_INT_LEN\
     + TUD_AUDIO_DESC_TYPE_I_FORMAT_LEN\
     + TUD_AUDIO_DESC_STD_AS_ISO_EP_LEN\
-    + TUD_AUDIO_DESC_CS_AS_ISO_EP_LEN\
-    + TUD_AUDIO_DESC_STD_AS_ISO_FB_EP_LEN)
+    + TUD_AUDIO_DESC_CS_AS_ISO_EP_LEN)
 
-#define TUD_AUDIO_HEADPHONE_STEREO_DESCRIPTOR(_stridx, _epout, _epfb) \
+#define TUD_AUDIO_HEADPHONE_STEREO_DESCRIPTOR(_stridx, _epout) \
     /* Standard Interface Association Descriptor (IAD) */\
     TUD_AUDIO_DESC_IAD(/*_firstitf*/ ITF_NUM_AUDIO_CONTROL,\
     			  /*_nitfs*/ 0x02,\
@@ -135,17 +134,13 @@ enum
     				 CFG_TUD_AUDIO_FUNC_1_RESOLUTION_RX),\
     /* Standard AS Isochronous Audio Data Endpoint Descriptor(4.10.1.1) */\
     TUD_AUDIO_DESC_STD_AS_ISO_EP(/*_ep*/ _epout,\
-    			       /*_attr*/ (uint8_t) ((uint8_t)TUSB_XFER_ISOCHRONOUS | (uint8_t)TUSB_ISO_EP_ATT_ADAPTIVE | (uint8_t)TUSB_ISO_EP_ATT_DATA),\
+    			       /*_attr*/ (uint8_t) ((uint8_t) TUSB_XFER_ISOCHRONOUS | (uint8_t) TUSB_ISO_EP_ATT_SYNCHRONOUS | (uint8_t) TUSB_ISO_EP_ATT_DATA),\
 			  /*_maxEPsize*/ CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX,\
 			   /*_interval*/ 0x01),\
     /* Class-Specific AS Isochronous Audio Data Endpoint Descriptor(4.10.1.2) */\
     TUD_AUDIO_DESC_CS_AS_ISO_EP(/*_attr*/ AUDIO_CS_AS_ISO_DATA_EP_ATT_NON_MAX_PACKETS_OK,\
     				/*_ctrl*/ AUDIO_CTRL_NONE,\
-		       /*_lockdelayunit*/ AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_MILLISEC,\
-			   /*_lockdelay*/ 0x0001),\
-  /* Standard AS Isochronous Feedback Endpoint Descriptor(4.10.2.1) */\
-  TUD_AUDIO_DESC_STD_AS_ISO_FB_EP(/*_ep*/ _epfb,\
-                              /*_epsize*/ 0x04,\
-                            /*_interval*/ TUD_OPT_HIGH_SPEED ? 4 : 1)\
+		       /*_lockdelayunit*/ AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_PCM_SAMPLES,\
+			   /*_lockdelay*/ 0x0001)
 // clang-format on
 #endif /* USB_DESCRIPTORS_H_ */

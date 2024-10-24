@@ -125,7 +125,6 @@ uint8_t const* tud_hid_descriptor_report_cb(uint8_t itf)
 #define EPNUM_HID_MOUSE 0x02
 #define EPNUM_HID_GIO   0x03
 #define EPNUM_AUDIO_OUT 0x04
-#define EPNUM_AUDIO_FB  0x04
 
 uint8_t const desc_configuration[] =
     {
@@ -140,7 +139,7 @@ uint8_t const desc_configuration[] =
         TUD_HID_INOUT_DESCRIPTOR(ITF_NUM_HID_GIO, 6, HID_ITF_PROTOCOL_NONE, sizeof(desc_hid_report_gio), EPNUM_HID_GIO, 0x80 | EPNUM_HID_GIO, CFG_TUD_HID_EP_BUFSIZE, 10),
 
         // Interface number, string index, EP Out & EP In address, EP size
-        TUD_AUDIO_HEADPHONE_STEREO_DESCRIPTOR(7, EPNUM_AUDIO_OUT, EPNUM_AUDIO_FB | 0x80)};
+        TUD_AUDIO_HEADPHONE_STEREO_DESCRIPTOR(7, EPNUM_AUDIO_OUT)};
 
 // Invoked when received GET CONFIGURATION DESCRIPTOR
 // Application return pointer to descriptor
