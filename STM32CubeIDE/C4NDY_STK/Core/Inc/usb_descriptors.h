@@ -154,8 +154,8 @@ enum
     /* Class-Specific AS Isochronous Audio Data Endpoint Descriptor(4.10.1.2) */\
     TUD_AUDIO_DESC_CS_AS_ISO_EP(/*_attr*/ AUDIO_CS_AS_ISO_DATA_EP_ATT_NON_MAX_PACKETS_OK,\
     				/*_ctrl*/ AUDIO_CTRL_NONE,\
-		       /*_lockdelayunit*/ AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_MILLISEC,\
-			   /*_lockdelay*/ 0x0001),\
+		       /*_lockdelayunit*/ AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_PCM_SAMPLES,\
+			   /*_lockdelay*/ 0x0000),\
     /* Interface 1, Alternate 2 - alternate interface for data streaming */\
     TUD_AUDIO_DESC_STD_AS_INT(/*_itfnum*/ (uint8_t)(ITF_NUM_AUDIO_STREAMING_SPK),\
     			      /*_altset*/ 0x02,\
@@ -182,7 +182,7 @@ enum
     /* Class-Specific AS Isochronous Audio Data Endpoint Descriptor(4.10.1.2) */\
     TUD_AUDIO_DESC_CS_AS_ISO_EP(/*_attr*/ AUDIO_CS_AS_ISO_DATA_EP_ATT_NON_MAX_PACKETS_OK,\
     				/*_ctrl*/ AUDIO_CTRL_NONE,\
-		       /*_lockdelayunit*/ AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_MILLISEC,\
-			   /*_lockdelay*/ 0x0001)
+		       /*_lockdelayunit*/ AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_PCM_SAMPLES,\
+			   /*_lockdelay*/ 0x0000)
 // clang-format on
 #endif /* USB_DESCRIPTORS_H_ */
