@@ -256,35 +256,20 @@ bool tud_audio_set_itf_close_EP_cb(uint8_t rhport, tusb_control_request_t const*
     // uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
     // uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
 
-#if 0
-  if (ITF_NUM_AUDIO_STREAMING_SPK == itf && alt == 0)
-      blink_interval_ms = BLINK_MOUNTED;
-#endif
-
     return true;
 }
 
 bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const* p_request)
 {
     (void) rhport;
+
     // uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
-    uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
-
-#if 0
-  TU_LOG2("Set interface %d alt %d\r\n", itf, alt);
-  if (ITF_NUM_AUDIO_STREAMING_SPK == itf && alt != 0)
-      blink_interval_ms = BLINK_STREAMING;
-#endif
-
-    // Clear buffer when streaming format is changed
-    if (alt != 0)
-    {
-        current_resolution = resolutions_per_format[alt - 1];
-    }
+    // uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
 
     return true;
 }
 
+#if 0
 bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, uint8_t func_id, uint8_t ep_out, uint8_t cur_alt_setting)
 {
     (void) rhport;
@@ -307,6 +292,7 @@ bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, u
     // This callback could be used to fill microphone data separately
     return true;
 }
+#endif
 
 void HAL_SAI_TxCpltCallback(SAI_HandleTypeDef* hsai)
 {
@@ -341,15 +327,16 @@ void start_sai(void)
 void read_audio_data_from_usb(const uint16_t n_bytes_received)
 {
     spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
+    // SEGGER_RTT_printf(0, "rcv data = %d, %d\n", spk_data_size, n_bytes_received);
     copybuf_usb2sai();
 }
 
 void copybuf_usb2sai(void)
 {
-    const uint_fast16_t len = spk_data_size >> 2;
-    for (uint_fast16_t i = 0; i < len; i++)
+    const uint_fast16_t array_size = spk_data_size >> 2;
+    for (uint_fast16_t i = 0; i < array_size; i++)
     {
-        if (sai_buf_index + len != sai_transmit_index)
+        if (sai_buf_index + array_size != sai_transmit_index)
         {
             const int_fast32_t val = spk_buf[i];
 
@@ -369,11 +356,9 @@ void copybuf_sai2codec(void)
 {
     if (sai_buf_index - sai_transmit_index >= SAI_BUF_SIZE)
     {
-        for (uint_fast16_t i = 0; i < SAI_BUF_SIZE; i++)
-        {
-            hpout_buf[i] = sai_buf[sai_transmit_index & (SAI_RNG_BUF_SIZE - 1)];
-            sai_transmit_index++;
-        }
+        const uint_fast64_t index = sai_transmit_index & (SAI_RNG_BUF_SIZE - 1);
+        memcpy(hpout_buf, sai_buf + index, sizeof(hpout_buf));
+        sai_transmit_index += SAI_BUF_SIZE;
     }
 }
 
