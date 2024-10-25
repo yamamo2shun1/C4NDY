@@ -62,7 +62,6 @@ uint16_t master_gain_prev       = 255;
 uint64_t sai_buf_index            = 0;
 uint64_t sai_transmit_index       = 0;
 int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
-bool is_dma_pause                 = false;
 
 // Speaker data size received in the last frame
 int spk_data_size = 0;
@@ -255,11 +254,6 @@ bool tud_audio_set_itf_close_EP_cb(uint8_t rhport, tusb_control_request_t const*
     uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
     uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
 
-#if 0
-  if (ITF_NUM_AUDIO_STREAMING_SPK == itf && alt == 0)
-      blink_interval_ms = BLINK_MOUNTED;
-#endif
-
     return true;
 }
 
@@ -268,12 +262,6 @@ bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const* p_reques
     (void) rhport;
     uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
     uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
-
-#if 0
-  TU_LOG2("Set interface %d alt %d\r\n", itf, alt);
-  if (ITF_NUM_AUDIO_STREAMING_SPK == itf && alt != 0)
-      blink_interval_ms = BLINK_STREAMING;
-#endif
 
     // Clear buffer when streaming format is changed
     if (alt != 0)
@@ -347,10 +335,10 @@ void read_audio_data_from_usb(uint16_t n_bytes_received)
 
 void copybuf_usb2sai(void)
 {
-    const int len = spk_data_size >> 2;
-    for (int i = 0; i < len; i++)
+    const int array_size = spk_data_size >> 2;
+    for (int i = 0; i < array_size; i++)
     {
-        if (sai_buf_index + len != sai_transmit_index)
+        if (sai_buf_index + array_size != sai_transmit_index)
         {
             const int32_t val = spk_buf[i];
             spk_buf[i]        = 0;
