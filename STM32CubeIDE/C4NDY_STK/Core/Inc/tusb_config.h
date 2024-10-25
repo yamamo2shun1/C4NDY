@@ -43,7 +43,9 @@ extern "C"
 #define BOARD_DEVICE_RHPORT_NUM   0
 #define BOARD_TUD_RHPORT          0
 #define CFG_TUSB_RHPORT0_MODE     (OPT_MODE_DEVICE | OPT_MODE_FULL_SPEED)
-// #define CFG_TUSB_DEBUG            2
+
+//#define CFG_TUSB_DEBUG            3
+//#define CFG_TUSB_DEBUG_PRINTF SEGGER_RTT_printf
 
 // RHPort number used for device can be defined by board.mk, default to port 0
 #ifndef BOARD_TUD_RHPORT
@@ -131,6 +133,7 @@ extern "C"
 
 // EP and buffer size - for isochronous EP´s, the buffer and EP size are equal (different sizes would not make sense)
 #define CFG_TUD_AUDIO_ENABLE_EP_OUT 1
+#define CFG_TUD_AUDIO_ENABLE_FEEDBACK_EP 1
 
 #define CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX TUD_AUDIO_EP_SIZE(CFG_TUD_AUDIO_FUNC_1_MAX_SAMPLE_RATE, CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX, CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX)
 #define CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX * 4

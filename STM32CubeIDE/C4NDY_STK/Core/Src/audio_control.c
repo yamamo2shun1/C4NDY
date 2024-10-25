@@ -294,6 +294,15 @@ bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, u
 }
 #endif
 
+void tud_audio_feedback_params_cb(uint8_t func_id, uint8_t alt_itf, audio_feedback_params_t* feedback_param)
+{
+  (void)func_id;
+  (void)alt_itf;
+
+  feedback_param->method = AUDIO_FEEDBACK_METHOD_DISABLED;
+  feedback_param->sample_freq = current_sample_rate;
+}
+
 void HAL_SAI_TxCpltCallback(SAI_HandleTypeDef* hsai)
 {
     copybuf_sai2codec();
