@@ -61,7 +61,6 @@ uint16_t master_gain_prev       = 255;
 uint_fast64_t sai_buf_index            = 0;
 uint_fast64_t sai_transmit_index       = 0;
 int_fast32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
-bool is_dma_pause                      = false;
 
 // Speaker data size received in the last frame
 uint_fast16_t spk_data_size = 0;
@@ -349,13 +348,9 @@ void copybuf_usb2sai(void)
         {
             const int_fast32_t val = spk_buf[i];
 
-            spk_buf[i] = 0;
-
             sai_buf[sai_buf_index & (SAI_RNG_BUF_SIZE - 1)] = val << 16 | val >> 16;
             sai_buf_index++;
-        }
-        else
-        {
+
             spk_buf[i] = 0;
         }
     }
