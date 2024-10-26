@@ -146,6 +146,6 @@ enum
     /* Standard AS Isochronous Feedback Endpoint Descriptor(4.10.2.1) */\
     TUD_AUDIO_DESC_STD_AS_ISO_FB_EP(/*_ep*/ _epfb,\
                                 /*_epsize*/ 0x04,\
-                              /*_interval*/ 0x01)
+                              /*_interval*/ 0x10)
 // clang-format on
 #endif /* USB_DESCRIPTORS_H_ */
