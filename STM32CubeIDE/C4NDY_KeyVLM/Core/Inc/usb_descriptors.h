@@ -61,9 +61,10 @@ enum
     + TUD_AUDIO_DESC_CS_AS_INT_LEN\
     + TUD_AUDIO_DESC_TYPE_I_FORMAT_LEN\
     + TUD_AUDIO_DESC_STD_AS_ISO_EP_LEN\
-    + TUD_AUDIO_DESC_CS_AS_ISO_EP_LEN)
+    + TUD_AUDIO_DESC_CS_AS_ISO_EP_LEN\
+	+ TUD_AUDIO_DESC_STD_AS_ISO_FB_EP_LEN)
 
-#define TUD_AUDIO_HEADPHONE_STEREO_DESCRIPTOR(_stridx, _epout) \
+#define TUD_AUDIO_HEADPHONE_STEREO_DESCRIPTOR(_stridx, _epout, _epfb) \
     /* Standard Interface Association Descriptor (IAD) */\
     TUD_AUDIO_DESC_IAD(/*_firstitf*/ ITF_NUM_AUDIO_CONTROL,\
                           /*_nitfs*/ 0x02,\
@@ -118,7 +119,7 @@ enum
     /* Interface 1, Alternate 1 - alternate interface for data streaming */\
     TUD_AUDIO_DESC_STD_AS_INT(/*_itfnum*/ (uint8_t)(ITF_NUM_AUDIO_STREAMING_SPK),\
                               /*_altset*/ 0x01,\
-                                /*_nEPs*/ 0x01,\
+                                /*_nEPs*/ 0x02,\
                               /*_stridx*/ 0x06),\
     /* Class-Specific AS Interface Descriptor(4.9.2) */\
     TUD_AUDIO_DESC_CS_AS_INT(/*_termid*/ UAC2_ENTITY_INPUT_TERMINAL,\
@@ -133,12 +134,17 @@ enum
                                  CFG_TUD_AUDIO_FUNC_1_RESOLUTION_RX),\
     /* Standard AS Isochronous Audio Data Endpoint Descriptor(4.10.1.1) */\
     TUD_AUDIO_DESC_STD_AS_ISO_EP(/*_ep*/ _epout,\
-                               /*_attr*/ (uint8_t) ((uint8_t) TUSB_XFER_ISOCHRONOUS | (uint8_t) TUSB_ISO_EP_ATT_ADAPTIVE | (uint8_t) TUSB_ISO_EP_ATT_DATA),\
+                               /*_attr*/ (uint8_t) ((uint8_t) TUSB_XFER_ISOCHRONOUS | (uint8_t) TUSB_ISO_EP_ATT_ASYNCHRONOUS | (uint8_t) TUSB_ISO_EP_ATT_DATA),\
                           /*_maxEPsize*/ CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX,\
                            /*_interval*/ 0x01),\
     /* Class-Specific AS Isochronous Audio Data Endpoint Descriptor(4.10.1.2) */\
     TUD_AUDIO_DESC_CS_AS_ISO_EP(/*_attr*/ AUDIO_CS_AS_ISO_DATA_EP_ATT_NON_MAX_PACKETS_OK,\
     		                    /*_ctrl*/ 0x00,\
                        /*_lockdelayunit*/ AUDIO_CS_AS_ISO_DATA_EP_LOCK_DELAY_UNIT_PCM_SAMPLES,\
-                           /*_lockdelay*/ 0x0001),  // clang-format on
-#endif                                                                                                                                                                                                  /* USB_DESCRIPTORS_H_ */
+                           /*_lockdelay*/ 0x0001),\
+    /* Standard AS Isochronous Feedback Endpoint Descriptor(4.10.2.1) */\
+    TUD_AUDIO_DESC_STD_AS_ISO_FB_EP(/*_ep*/ _epfb,\
+                                /*_epsize*/ 0x04,\
+                              /*_interval*/ 0xFF)
+// clang-format on
+#endif /* USB_DESCRIPTORS_H_ */
