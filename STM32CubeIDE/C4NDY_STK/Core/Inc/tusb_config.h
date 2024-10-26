@@ -44,8 +44,8 @@ extern "C"
 #define BOARD_TUD_RHPORT          0
 #define CFG_TUSB_RHPORT0_MODE     (OPT_MODE_DEVICE | OPT_MODE_FULL_SPEED)
 
-//#define CFG_TUSB_DEBUG            3
-//#define CFG_TUSB_DEBUG_PRINTF SEGGER_RTT_printf
+// #define CFG_TUSB_DEBUG            3
+// #define CFG_TUSB_DEBUG_PRINTF SEGGER_RTT_printf
 
 // RHPort number used for device can be defined by board.mk, default to port 0
 #ifndef BOARD_TUD_RHPORT
@@ -126,16 +126,14 @@ extern "C"
 #define CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX 2
 
 // 24bit in 32bit slots
-#define CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_TX 4
-#define CFG_TUD_AUDIO_FUNC_1_RESOLUTION_TX         24
 #define CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX 4
 #define CFG_TUD_AUDIO_FUNC_1_RESOLUTION_RX         24
 
 // EP and buffer size - for isochronous EP´s, the buffer and EP size are equal (different sizes would not make sense)
-#define CFG_TUD_AUDIO_ENABLE_EP_OUT 1
+#define CFG_TUD_AUDIO_ENABLE_EP_OUT      1
 #define CFG_TUD_AUDIO_ENABLE_FEEDBACK_EP 1
 
-#define CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX TUD_AUDIO_EP_SIZE(CFG_TUD_AUDIO_FUNC_1_MAX_SAMPLE_RATE, CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX, CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX)
+#define CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX    512  // TUD_AUDIO_EP_SIZE(CFG_TUD_AUDIO_FUNC_1_MAX_SAMPLE_RATE, CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX, CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX)
 #define CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX * 4
 
 // Number of Standard AS Interface Descriptors (4.9.1) defined per audio function - this is required to be able to remember the current alternate settings of these interfaces - We restrict us here to have a constant number for all audio functions (which means this has to be the maximum number of AS interfaces an audio function has and a second audio function with less AS interfaces just wastes a few bytes)
