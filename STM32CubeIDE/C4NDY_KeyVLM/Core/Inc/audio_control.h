@@ -24,7 +24,7 @@
 
 #define SAI_RNG_BUF_SIZE   16384
 #define SAI_BUF_SIZE       4096
-#define N_SAMPLES_PER_1_RX 192
+#define N_SAMPLES_PER_1_RX 96
 
 // Speaker data size received in the last frame
 extern uint_fast16_t spk_data_size;

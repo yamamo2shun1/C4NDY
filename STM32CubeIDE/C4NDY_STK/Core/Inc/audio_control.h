@@ -26,7 +26,7 @@
 
 #define SAI_RNG_BUF_SIZE   16384
 #define SAI_BUF_SIZE       4096
-#define N_SAMPLES_PER_1_RX 64
+#define N_SAMPLES_PER_1_RX 96
 
 #define MASTER_GAIN_MIN -60
 #define MASTER_GAIN_MAX 10
