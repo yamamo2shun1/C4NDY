@@ -59,16 +59,18 @@ uint16_t master_gain_buffer[16] = {0};
 uint16_t master_gain            = 0;
 uint16_t master_gain_prev       = 255;
 
-uint64_t sai_buf_index            = 0;
-uint64_t sai_transmit_index       = 0;
-int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
+uint_fast64_t sai_buf_index            = 0;
+uint_fast64_t sai_transmit_index       = 0;
+int_fast32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
 
 // Speaker data size received in the last frame
-int spk_data_size = 0;
+uint_fast16_t spk_data_size = 0;
 
 // Buffer for speaker data
-int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ] = {0};
-int32_t hpout_buf[SAI_BUF_SIZE]                        = {0};
+int_fast32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ] = {0};
+int_fast32_t hpout_buf[SAI_BUF_SIZE]                        = {0};
+
+volatile int16_t update_pointer = -1;
 
 // Helper for clock get requests
 static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t const* request)
@@ -272,6 +274,7 @@ bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const* p_reques
     return true;
 }
 
+#if 0
 bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, uint8_t func_id, uint8_t ep_out, uint8_t cur_alt_setting)
 {
     (void) rhport;
@@ -280,8 +283,6 @@ bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, ui
     (void) cur_alt_setting;
 
     read_audio_data_from_usb(n_bytes_received);
-
-    // SEGGER_RTT_printf(0, "sai_buf_index = %d\n", sai_buf_index);
 
     return true;
 }
@@ -296,10 +297,29 @@ bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, u
     // This callback could be used to fill microphone data separately
     return true;
 }
+#endif
+
+void tud_audio_feedback_params_cb(uint8_t func_id, uint8_t alt_itf, audio_feedback_params_t* feedback_param)
+{
+    (void) func_id;
+    (void) alt_itf;
+
+    feedback_param->method      = AUDIO_FEEDBACK_METHOD_FIFO_COUNT;
+    feedback_param->sample_freq = current_sample_rate;
+
+    SEGGER_RTT_printf(0, "feedback\n");
+}
 
 void HAL_SAI_TxCpltCallback(SAI_HandleTypeDef* hsai)
 {
-    copybuf_sai2codec();
+    // SEGGER_RTT_printf(0, "tx cplt\n");
+    update_pointer = SAI_BUF_SIZE / 2;
+}
+
+void HAL_SAI_TxHalfCpltCallback(SAI_HandleTypeDef* hsai)
+{
+    // SEGGER_RTT_printf(0, "tx half cplt\n");
+    update_pointer = 0;
 }
 
 void start_adc(void)
@@ -330,33 +350,54 @@ void start_sai(void)
 void read_audio_data_from_usb(uint16_t n_bytes_received)
 {
     spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
+    // SEGGER_RTT_printf(0, "size = %d, %d %d\n", spk_data_size, n_bytes_received, CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX);
+
     copybuf_usb2sai();
+    copybuf_sai2codec();
 }
 
 void copybuf_usb2sai(void)
 {
-    const int array_size = spk_data_size >> 2;
-    for (int i = 0; i < array_size; i++)
+    // SEGGER_RTT_printf(0, "sb_index = %d -> ", sai_buf_index);
+
+    const uint_fast16_t array_size = spk_data_size >> 2;
+    for (uint_fast16_t i = 0; i < array_size; i++)
     {
         if (sai_buf_index + array_size != sai_transmit_index)
         {
-            const int32_t val = spk_buf[i];
-            spk_buf[i]        = 0;
+            const int_fast32_t val = spk_buf[i];
 
             sai_buf[sai_buf_index & (SAI_RNG_BUF_SIZE - 1)] = val << 16 | val >> 16;
             sai_buf_index++;
+
+            spk_buf[i] = 0;
         }
     }
+    // SEGGER_RTT_printf(0, " %d\n", sai_buf_index);
 }
 
 void copybuf_sai2codec(void)
 {
-    if (sai_buf_index - sai_transmit_index >= SAI_BUF_SIZE)
+    if (sai_buf_index - sai_transmit_index >= SAI_BUF_SIZE / 2)
     {
-        for (int i = 0; i < SAI_BUF_SIZE; i++)
+        while (update_pointer == -1)
         {
-            hpout_buf[i] = sai_buf[sai_transmit_index & (SAI_RNG_BUF_SIZE - 1)];
-            sai_transmit_index++;
+        }
+
+        const int16_t index0 = update_pointer;
+        update_pointer       = -1;
+
+        // SEGGER_RTT_printf(0, "st_index = %d -> ", sai_transmit_index);
+
+        const uint_fast64_t index1 = sai_transmit_index & (SAI_RNG_BUF_SIZE - 1);
+        memcpy(hpout_buf + index0, sai_buf + index1, sizeof(hpout_buf) / 2);
+        sai_transmit_index += SAI_BUF_SIZE / 2;
+
+        // SEGGER_RTT_printf(0, " %d\n", sai_transmit_index);
+
+        if (update_pointer != -1)
+        {
+            SEGGER_RTT_printf(0, "buffer update too long...\n");
         }
     }
 }
