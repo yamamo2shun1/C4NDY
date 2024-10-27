@@ -406,6 +406,8 @@ int main(void)
     {
         tud_task();
 
+        read_audio_data_from_usb(N_SAMPLES_PER_1_RX * CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX * CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX);
+
         switch (state_index)
         {
         case 0:
