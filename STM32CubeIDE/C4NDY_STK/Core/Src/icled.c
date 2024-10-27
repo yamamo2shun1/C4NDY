@@ -334,6 +334,14 @@ void loadLEDColorsFromFlash(void)
     SEGGER_RTT_printf(0, "]\n");
 
     setAllLedBuf(getNormalColor(getKeymapID()));
+
+    SEGGER_RTT_printf(0, "// LED\n");
+    SEGGER_RTT_printf(0, "[ ");
+    setIntensity(0, read_flash_data(3));
+    setIntensity(1, read_flash_data(4));
+    SEGGER_RTT_printf(0, "%d ", read_flash_data(3));
+    SEGGER_RTT_printf(0, "%d ", read_flash_data(4));
+    SEGGER_RTT_printf(0, "]\n");
 }
 
 void led_control_task(void)

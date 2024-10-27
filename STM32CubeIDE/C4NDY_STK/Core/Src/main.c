@@ -226,6 +226,8 @@ void setBootDfuFlag(bool is_boot_dfu)
     }
     write_flash_data(1, getLinePhonoSW());
     write_flash_data(2, getKeymapID());
+    write_flash_data(3, (uint8_t) (getIntensity(0) * 255));
+    write_flash_data(4, (uint8_t) (getIntensity(1) * 255));
 
     SEGGER_RTT_printf(0, "reload KeyMap/Modifiers\n");
     for (int k = 0; k < 2; k++)
@@ -403,6 +405,8 @@ int main(void)
     while (1)
     {
         tud_task();
+
+        read_audio_data_from_usb(N_SAMPLES_PER_1_RX * CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX * CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX);
 
         switch (state_index)
         {
