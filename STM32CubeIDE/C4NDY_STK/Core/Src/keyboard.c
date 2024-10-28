@@ -378,54 +378,54 @@ void loadKeyboardSettingsFromFlash(void)
     }
     SEGGER_RTT_printf(0, "keymapID = %u\n", getKeymapID());
 
-    SEGGER_RTT_printf(0, "// Normal");
+    //SEGGER_RTT_printf(0, "// Normal");
     for (int k = 0; k < 2; k++)
     {
-        SEGGER_RTT_printf(0, "\n");
+        //SEGGER_RTT_printf(0, "\n");
         for (int i = 0; i < MATRIX_ROWS; i++)
         {
-            SEGGER_RTT_printf(0, "[ ");
+            //SEGGER_RTT_printf(0, "[ ");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
                 setNormalKeyCode(k, i, j, read_flash_data(BASIC_PARAMS_NUM + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
                 setNormalModifiers(k, i, j, read_flash_data(BASIC_PARAMS_NUM + (k + 2) * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                SEGGER_RTT_printf(0, "{%02X, %02X} ", getNormalKeyCode(k, i, j), getNormalModifiers(k, i, j));
+                //SEGGER_RTT_printf(0, "{%02X, %02X} ", getNormalKeyCode(k, i, j), getNormalModifiers(k, i, j));
             }
-            SEGGER_RTT_printf(0, "]\n");
+            //SEGGER_RTT_printf(0, "]\n");
         }
     }
 
-    SEGGER_RTT_printf(0, "// Upper");
+    //SEGGER_RTT_printf(0, "// Upper");
     for (int k = 0; k < 2; k++)
     {
-        SEGGER_RTT_printf(0, "\n");
+        //SEGGER_RTT_printf(0, "\n");
         for (int i = 0; i < MATRIX_ROWS; i++)
         {
-            SEGGER_RTT_printf(0, "[ ");
+            //SEGGER_RTT_printf(0, "[ ");
             for (int j = 0; j < MATRIX_COLUMNS; j++)
             {
                 setUpperKeyCode(k, i, j, read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
                 setUpperModifiers(k, i, j, read_flash_data(BASIC_PARAMS_NUM + (4 * MATRIX_ROWS * MATRIX_COLUMNS) + (k + 2) * (MATRIX_ROWS * MATRIX_COLUMNS) + i * MATRIX_COLUMNS + j));
-                SEGGER_RTT_printf(0, "{%02X, %02X} ", getUpperKeyCode(k, i, j), getUpperModifiers(k, i, j));
+                //SEGGER_RTT_printf(0, "{%02X, %02X} ", getUpperKeyCode(k, i, j), getUpperModifiers(k, i, j));
             }
-            SEGGER_RTT_printf(0, "]\n");
+            //SEGGER_RTT_printf(0, "]\n");
         }
     }
 
-    SEGGER_RTT_printf(0, "// Stick");
+    //SEGGER_RTT_printf(0, "// Stick");
     for (int k = 0; k < 2; k++)
     {
-        SEGGER_RTT_printf(0, "\n");
+        //SEGGER_RTT_printf(0, "\n");
         for (int i = 0; i < 2; i++)
         {
-            SEGGER_RTT_printf(0, "[ ");
+            //SEGGER_RTT_printf(0, "[ ");
             for (int j = 0; j < 4; j++)
             {
                 setStickKeyCode(k, i, j, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j));
                 setStickModifiers(k, i, j, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (k + 2) * (2 * 4) + i * 4 + j));
-                SEGGER_RTT_printf(0, "{%02X, %02X} ", getStickKeyCode(k, i, j), getStickModifiers(k, i, j));
+                //SEGGER_RTT_printf(0, "{%02X, %02X} ", getStickKeyCode(k, i, j), getStickModifiers(k, i, j));
             }
-            SEGGER_RTT_printf(0, "]\n");
+            //SEGGER_RTT_printf(0, "]\n");
         }
     }
 }
@@ -772,7 +772,7 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         buffer_sb[2] = 0x01;
         tud_hid_n_report(ITF_NUM_HID_GIO, 0, buffer_sb, CFG_TUD_HID_EP_BUFSIZE);
 
-        setBootDfuFlag(false);
+        //setBootDfuFlag(false);
         HAL_Delay(100);
         NVIC_SystemReset();
     }
@@ -1125,7 +1125,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
         if (!isKeymapIDChanged)
         {
             setKeymapID(!keymapID);
-            writeAllKeyboardSettings();
+            // writeAllKeyboardSettings();
 
             isKeymapIDChanged = true;
 
@@ -1144,7 +1144,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
         if (!isLinePhonoSWChanged)
         {
             setLinePhonoSW(!linePhonoSW);
-            writeAllKeyboardSettings();
+            // writeAllKeyboardSettings();
 
             isLinePhonoSWChanged = true;
         }
