@@ -544,8 +544,8 @@ void codec_control_task(void)
 
     if (isXFadeCutPressed())
     {
-        xfade      = 0;
-        xfade_prev = 1023;
+        xfade      = 65535;
+        xfade_prev = 0;
     }
     else
     {
