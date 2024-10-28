@@ -71,7 +71,8 @@ uint_fast16_t spk_data_size = 0;
 int_fast32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ] = {0};
 int_fast32_t hpout_buf[SAI_BUF_SIZE]                        = {0};
 
-int16_t update_pointer = -1;
+int16_t update_pointer    = -1;
+int16_t hpout_clear_count = 0;
 
 // Helper for clock get requests
 static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t const* request)
@@ -350,6 +351,21 @@ void read_audio_data_from_usb(uint16_t n_bytes_received)
     spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
     // SEGGER_RTT_printf(0, "size = %d, %d %d\n", spk_data_size, n_bytes_received, CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX);
 
+    if (spk_data_size == 0 && hpout_clear_count < 100)
+    {
+        hpout_clear_count++;
+
+        if (hpout_clear_count == 100)
+        {
+            memset(hpout_buf, 0, sizeof(hpout_buf));
+            hpout_clear_count = 101;
+        }
+    }
+    else
+    {
+        hpout_clear_count = 0;
+    }
+
     copybuf_usb2sai();
     copybuf_sai2codec();
 }
@@ -367,8 +383,6 @@ void copybuf_usb2sai(void)
 
             sai_buf[sai_buf_index & (SAI_RNG_BUF_SIZE - 1)] = val << 16 | val >> 16;
             sai_buf_index++;
-
-            spk_buf[i] = 0;
         }
     }
     // SEGGER_RTT_printf(0, " %d\n", sai_buf_index);
