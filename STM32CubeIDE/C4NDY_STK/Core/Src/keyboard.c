@@ -1125,7 +1125,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
         if (!isKeymapIDChanged)
         {
             setKeymapID(!keymapID);
-            writeAllKeyboardSettings();
+            // writeAllKeyboardSettings();
 
             isKeymapIDChanged = true;
 
@@ -1144,7 +1144,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
         if (!isLinePhonoSWChanged)
         {
             setLinePhonoSW(!linePhonoSW);
-            writeAllKeyboardSettings();
+            // writeAllKeyboardSettings();
 
             isLinePhonoSWChanged = true;
         }
