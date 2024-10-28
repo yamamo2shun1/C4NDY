@@ -17,6 +17,8 @@
 #include "ADAU1761_IC_1.h"
 #include "SigmaStudioFW.h"
 
+#include <keyboard.h>
+
 // List of supported sample rates
 const uint32_t sample_rates[] = {48000};
 uint32_t current_sample_rate  = 48000;
@@ -540,19 +542,27 @@ void codec_control_task(void)
 {
     // SEGGER_RTT_printf(0, "pot_val = [%d, %d, %d, %d, %d]\r\n", pot_value[1], pot_value[0], pot_value[2], pot_value[3], pot_value[4]);
 
-    xfade_buffer[xfade_buffer_index] = pot_value[0] >> 2;
-    xfade_buffer_index               = (xfade_buffer_index + 1) & (16 - 1);
-    xfade                            = 0;
-    for (int i = 0; i < 16; i++)
+    if (isXFadeCutPressed())
     {
-        xfade += xfade_buffer[i];
+        xfade      = 65535;
+        xfade_prev = 0;
     }
-    xfade >>= 4;
-
-    if (abs(xfade - xfade_prev) > 2)
+    else
     {
-        send_xfade(xfade);
-        xfade_prev = xfade;
+        xfade_buffer[xfade_buffer_index] = pot_value[0] >> 2;
+        xfade_buffer_index               = (xfade_buffer_index + 1) & (16 - 1);
+        xfade                            = 0;
+        for (int i = 0; i < 16; i++)
+        {
+            xfade += xfade_buffer[i];
+        }
+        xfade >>= 4;
+
+        if (abs(xfade - xfade_prev) > 2)
+        {
+            send_xfade(xfade);
+            xfade_prev = xfade;
+        }
     }
 #if 0
     master_gain_buffer[buffer_index] = 1500;  // pot_value[0] >> 2;
