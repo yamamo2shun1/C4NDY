@@ -116,7 +116,9 @@
 #define KC_M_LBTN     0xF0  // Mouse Left Button
 #define KC_M_RBTN     0xF1  // Mouse Right Button
 #define KC_M_WHEEL    0xF2  // Mouse Wheel
-#define KC_RESET      0xF9  // Reset
+#define KC_RESET      0xF7  // Reset
+#define KC_XF_CUT1    0xF8
+#define KC_XF_CUT2    0xF9
 #define KC_MGAIN_UP   0xFA  // Master Gain Up
 #define KC_MGAIN_DOWN 0xFB  // Master Gain Down
 #define KC_UPPER      0xFC  // Upper
@@ -181,6 +183,7 @@ void clearKeys(const uint8_t code, const uint8_t modifiers);
 void setKeys(const uint8_t code, const uint8_t modifiers);
 bool isUpperPressed(void);
 bool isShiftPressed(void);
+bool isXFadeCutPressed(void);
 void hid_keyscan_task(void);
 
 #endif /* INC_KEYBOARD_H_ */
