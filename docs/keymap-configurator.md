@@ -85,7 +85,7 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 ## Installation
 The `go install` is available.
 ```shellscript
-$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.12.0
+$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.13.0
 ```
 
 ## Usage

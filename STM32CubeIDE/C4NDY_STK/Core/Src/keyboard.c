@@ -1023,25 +1023,25 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
                 {
                     for (int i = 0; i < MATRIX_COLUMNS; i++)
                     {
-                        int index = MATRIX_COLUMNS * j + i;
+                        const int index = MATRIX_COLUMNS * j + i;
                         if (index < 30)
                         {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL)
+                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
                             {
                                 setLedBuf(index, getUpperColor(keymapID));
                             }
-                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL)
+                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL || getUpperModifiers(keymapID, j, i) == M_NO)
                             {
                                 setLedBuf(index, getBlankColor());
                             }
                         }
                         else if (index >= 36)
                         {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL)
+                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
                             {
                                 setLedBuf(index - 6, getUpperColor(keymapID));
                             }
-                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL)
+                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL || getUpperModifiers(keymapID, j, i) == M_NO)
                             {
                                 setLedBuf(index - 6, getBlankColor());
                             }
@@ -1083,22 +1083,22 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
                         int index = MATRIX_COLUMNS * j + i;
                         if (index < 30)
                         {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL)
+                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
                             {
                                 setLedBuf(index, getUpperColor(keymapID));
                             }
-                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL)
+                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL || getUpperModifiers(keymapID, j, i) == M_NO)
                             {
                                 setLedBuf(index, getBlankColor());
                             }
                         }
                         else if (index >= 36)
                         {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL)
+                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
                             {
                                 setLedBuf(index - 6, getUpperColor(keymapID));
                             }
-                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL)
+                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL || getUpperModifiers(keymapID, j, i) == M_NO)
                             {
                                 setLedBuf(index - 6, getBlankColor());
                             }
@@ -1197,13 +1197,13 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
             {
                 for (int i = 0; i < MATRIX_COLUMNS; i++)
                 {
-                    int index = MATRIX_COLUMNS * j + i;
+                    const int index = MATRIX_COLUMNS * j + i;
                     if (index < 30)
                     {
                         if ((((keyboardHID.modifiers >> (KC_LSHIFT - KC_LCONTROL)) & 0x01) ||
                              ((keyboardHID.modifiers >> (KC_RSHIFT - KC_LCONTROL)) & 0x01)))
                         {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL)
+                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
                             {
                                 setLedBuf(index, getShiftColor(keymapID));
                             }
@@ -1214,7 +1214,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
                         }
                         else
                         {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL)
+                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
                             {
                                 setLedBuf(index, getUpperColor(keymapID));
                             }
@@ -1229,7 +1229,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
                         if ((((keyboardHID.modifiers >> (KC_LSHIFT - KC_LCONTROL)) & 0x01) ||
                              ((keyboardHID.modifiers >> (KC_RSHIFT - KC_LCONTROL)) & 0x01)))
                         {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL)
+                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
                             {
                                 setLedBuf(index - 6, getShiftColor(keymapID));
                             }
@@ -1240,7 +1240,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
                         }
                         else
                         {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL)
+                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
                             {
                                 setLedBuf(index - 6, getUpperColor(keymapID));
                             }
