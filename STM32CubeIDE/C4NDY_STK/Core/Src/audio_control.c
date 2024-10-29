@@ -17,6 +17,8 @@
 #include "ADAU1761_IC_1.h"
 #include "SigmaStudioFW.h"
 
+#include <keyboard.h>
+
 // List of supported sample rates
 const uint32_t sample_rates[] = {48000};
 uint32_t current_sample_rate  = 48000;
@@ -69,7 +71,8 @@ uint_fast16_t spk_data_size = 0;
 int_fast32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ] = {0};
 int_fast32_t hpout_buf[SAI_BUF_SIZE]                        = {0};
 
-int16_t update_pointer = -1;
+int16_t update_pointer    = -1;
+int16_t hpout_clear_count = 0;
 
 // Helper for clock get requests
 static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t const* request)
@@ -348,6 +351,21 @@ void read_audio_data_from_usb(uint16_t n_bytes_received)
     spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
     // SEGGER_RTT_printf(0, "size = %d, %d %d\n", spk_data_size, n_bytes_received, CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX);
 
+    if (spk_data_size == 0 && hpout_clear_count < 100)
+    {
+        hpout_clear_count++;
+
+        if (hpout_clear_count == 100)
+        {
+            memset(hpout_buf, 0, sizeof(hpout_buf));
+            hpout_clear_count = 101;
+        }
+    }
+    else
+    {
+        hpout_clear_count = 0;
+    }
+
     copybuf_usb2sai();
     copybuf_sai2codec();
 }
@@ -365,8 +383,6 @@ void copybuf_usb2sai(void)
 
             sai_buf[sai_buf_index & (SAI_RNG_BUF_SIZE - 1)] = val << 16 | val >> 16;
             sai_buf_index++;
-
-            spk_buf[i] = 0;
         }
     }
     // SEGGER_RTT_printf(0, " %d\n", sai_buf_index);
@@ -540,19 +556,27 @@ void codec_control_task(void)
 {
     // SEGGER_RTT_printf(0, "pot_val = [%d, %d, %d, %d, %d]\r\n", pot_value[1], pot_value[0], pot_value[2], pot_value[3], pot_value[4]);
 
-    xfade_buffer[xfade_buffer_index] = pot_value[0] >> 2;
-    xfade_buffer_index               = (xfade_buffer_index + 1) & (16 - 1);
-    xfade                            = 0;
-    for (int i = 0; i < 16; i++)
+    if (isXFadeCutPressed())
     {
-        xfade += xfade_buffer[i];
+        xfade      = 65535;
+        xfade_prev = 0;
     }
-    xfade >>= 4;
-
-    if (abs(xfade - xfade_prev) > 2)
+    else
     {
-        send_xfade(xfade);
-        xfade_prev = xfade;
+        xfade_buffer[xfade_buffer_index] = pot_value[0] >> 2;
+        xfade_buffer_index               = (xfade_buffer_index + 1) & (16 - 1);
+        xfade                            = 0;
+        for (int i = 0; i < 16; i++)
+        {
+            xfade += xfade_buffer[i];
+        }
+        xfade >>= 4;
+
+        if (abs(xfade - xfade_prev) > 2)
+        {
+            send_xfade(xfade);
+            xfade_prev = xfade;
+        }
     }
 #if 0
     master_gain_buffer[buffer_index] = 1500;  // pot_value[0] >> 2;
