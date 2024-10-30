@@ -128,7 +128,7 @@ void erase_flash_data(void)
     }
 }
 
-void write_flash_data(uint16_t index, uint8_t val)
+void write_flash_data(const uint16_t index, const uint8_t val)
 {
     if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, FLASH_DATA_ADDR + 8 * index, val) != HAL_OK)
     {
@@ -136,9 +136,11 @@ void write_flash_data(uint16_t index, uint8_t val)
     }
 }
 
-uint64_t read_flash_data(uint16_t index)
+uint64_t read_flash_data(const uint16_t index)
 {
-    return *(uint64_t*) (FLASH_DATA_ADDR + 8 * index);
+    const uint64_t val = *(uint64_t*) (FLASH_DATA_ADDR + 8 * index);
+    HAL_Delay(5);
+    return val;
 }
 
 void setBootDfuFlag(bool is_boot_dfu)
@@ -224,6 +226,8 @@ void setBootDfuFlag(bool is_boot_dfu)
     }
     write_flash_data(1, getLinePhonoSW());
     write_flash_data(2, getKeymapID());
+    write_flash_data(3, (uint8_t) (getIntensity(0) * 255));
+    write_flash_data(4, (uint8_t) (getIntensity(1) * 255));
 
     SEGGER_RTT_printf(0, "reload KeyMap/Modifiers\n");
     for (int k = 0; k < 2; k++)
@@ -365,18 +369,6 @@ int main(void)
     // SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", HAL_GetDEVID(), HAL_GetDEVID());
     SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", DBGMCU->IDCODE, DBGMCU->IDCODE);
 
-    SEGGER_RTT_printf(0, "initialize ADAU1761...\n");
-    default_download_IC_1();
-
-    SEGGER_RTT_printf(0, "initialize tinyUSB...\n");
-    tusb_init();
-
-    SEGGER_RTT_printf(0, "start ADC DMA...\n");
-    start_adc();
-
-    SEGGER_RTT_printf(0, "start SAI DMA...\n");
-    start_sai();
-
     // HAL_TIM_Base_Start_IT(&htim6);
 
     SEGGER_RTT_printf(0, "user_sw = %d\n", HAL_GPIO_ReadPin(USER_SW_GPIO_Port, USER_SW_Pin));
@@ -388,52 +380,22 @@ int main(void)
     }
 
     loadKeyboardSettingsFromFlash();
-
-    SEGGER_RTT_printf(0, "// LED\n");
-    SEGGER_RTT_printf(0, "[ ");
-    setNormalColor(0, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 0), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 1), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 2));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 0));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 1));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 2));
-    SEGGER_RTT_printf(0, "]\n");
-
-    SEGGER_RTT_printf(0, "[ ");
-    setUpperColor(0, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 3), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 4), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 5));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 3));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 4));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 5));
-    SEGGER_RTT_printf(0, "]\n");
-
-    SEGGER_RTT_printf(0, "[ ");
-    setShiftColor(0, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 6), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 7), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 8));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 6));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 7));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 8));
-    SEGGER_RTT_printf(0, "]\n");
+    loadLEDColorsFromFlash();
     SEGGER_RTT_printf(0, "\n");
 
-    SEGGER_RTT_printf(0, "[ ");
-    setNormalColor(1, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 9), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 10), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 11));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 9));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 10));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 11));
-    SEGGER_RTT_printf(0, "]\n");
+    HAL_Delay(100);
 
-    SEGGER_RTT_printf(0, "[ ");
-    setUpperColor(1, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 12), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 13), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 14));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 12));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 13));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 14));
-    SEGGER_RTT_printf(0, "]\n");
+    SEGGER_RTT_printf(0, "initialize ADAU1761...\n");
+    default_download_IC_1();
 
-    SEGGER_RTT_printf(0, "[ ");
-    setShiftColor(1, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 15), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 16), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 17));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 15));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 16));
-    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 17));
-    SEGGER_RTT_printf(0, "]\n");
+    SEGGER_RTT_printf(0, "start ADC DMA...\n");
+    start_adc();
 
-    setAllLedBuf(getNormalColor(getKeymapID()));
+    SEGGER_RTT_printf(0, "start SAI DMA...\n");
+    start_sai();
+
+    SEGGER_RTT_printf(0, "initialize tinyUSB...\n");
+    tusb_init();
 
     int state_index = 0;
     /* USER CODE END 2 */
@@ -443,6 +405,8 @@ int main(void)
     while (1)
     {
         tud_task();
+
+        read_audio_data_from_usb(N_SAMPLES_PER_1_RX * CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX * CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX);
 
         switch (state_index)
         {

@@ -17,6 +17,8 @@
 #include "ADAU1761_IC_1.h"
 #include "SigmaStudioFW.h"
 
+#include <keyboard.h>
+
 // List of supported sample rates
 const uint32_t sample_rates[] = {48000};
 uint32_t current_sample_rate  = 48000;
@@ -43,7 +45,7 @@ int8_t mute[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];     // +1 for master channe
 int16_t volume[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];  // +1 for master channel 0
 
 // Resolution per format
-const uint8_t resolutions_per_format[CFG_TUD_AUDIO_FUNC_1_N_FORMATS] = {CFG_TUD_AUDIO_FUNC_1_FORMAT_1_RESOLUTION_RX};
+const uint8_t resolutions_per_format[1] = {CFG_TUD_AUDIO_FUNC_1_RESOLUTION_RX};
 // Current resolution, update on format change
 uint8_t current_resolution = 24;
 
@@ -58,17 +60,19 @@ uint16_t master_gain_buffer[16] = {0};
 uint16_t master_gain            = 0;
 uint16_t master_gain_prev       = 255;
 
-uint64_t sai_buf_index            = 0;
-uint64_t sai_transmit_index       = 0;
-int32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
-bool is_dma_pause                 = false;
+uint_fast64_t sai_buf_index            = 0;
+uint_fast64_t sai_transmit_index       = 0;
+int_fast32_t sai_buf[SAI_RNG_BUF_SIZE] = {0};
 
 // Speaker data size received in the last frame
-int spk_data_size = 0;
+uint_fast16_t spk_data_size = 0;
 
 // Buffer for speaker data
-int32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ] = {0};
-int32_t hpout_buf[SAI_BUF_SIZE]                        = {0};
+int_fast32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ] = {0};
+int_fast32_t hpout_buf[SAI_BUF_SIZE]                        = {0};
+
+int16_t update_pointer    = -1;
+int16_t hpout_clear_count = 0;
 
 // Helper for clock get requests
 static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t const* request)
@@ -140,7 +144,7 @@ static bool tud_audio_clock_set_request(uint8_t rhport, audio_control_request_t 
 // PC側で音量調整をするとここも呼ばれる
 static bool tud_audio_feature_unit_get_request(uint8_t rhport, audio_control_request_t const* request)
 {
-    TU_ASSERT(request->bEntityID == UAC2_ENTITY_SPK_FEATURE_UNIT);
+    TU_ASSERT(request->bEntityID == UAC2_ENTITY_FEATURE_UNIT);
 
     if (request->bControlSelector == AUDIO_FU_CTRL_MUTE && request->bRequest == AUDIO_CS_REQ_CUR)
     {
@@ -148,7 +152,7 @@ static bool tud_audio_feature_unit_get_request(uint8_t rhport, audio_control_req
         SEGGER_RTT_printf(0, "Get channel %u mute %d\r\n", request->bChannelNumber, mute1.bCur);
         return tud_audio_buffer_and_schedule_control_xfer(rhport, (tusb_control_request_t const*) request, &mute1, sizeof(mute1));
     }
-    else if (UAC2_ENTITY_SPK_FEATURE_UNIT && request->bControlSelector == AUDIO_FU_CTRL_VOLUME)
+    else if (UAC2_ENTITY_FEATURE_UNIT && request->bControlSelector == AUDIO_FU_CTRL_VOLUME)
     {
         if (request->bRequest == AUDIO_CS_REQ_RANGE)
         {
@@ -177,7 +181,7 @@ static bool tud_audio_feature_unit_set_request(uint8_t rhport, audio_control_req
 {
     (void) rhport;
 
-    TU_ASSERT(request->bEntityID == UAC2_ENTITY_SPK_FEATURE_UNIT);
+    TU_ASSERT(request->bEntityID == UAC2_ENTITY_FEATURE_UNIT);
     TU_VERIFY(request->bRequest == AUDIO_CS_REQ_CUR);
 
     if (request->bControlSelector == AUDIO_FU_CTRL_MUTE)
@@ -204,6 +208,8 @@ static bool tud_audio_feature_unit_set_request(uint8_t rhport, audio_control_req
         case 2:
             send_usb_gain_R(volume[request->bChannelNumber] / 256);
             break;
+        default:
+            break;
         }
 
         SEGGER_RTT_printf(0, "Set channel %d volume: %d dB\r\n", request->bChannelNumber, volume[request->bChannelNumber] / 256);
@@ -224,7 +230,7 @@ bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const* p
 
     if (request->bEntityID == UAC2_ENTITY_CLOCK)
         return tud_audio_clock_get_request(rhport, request);
-    if (request->bEntityID == UAC2_ENTITY_SPK_FEATURE_UNIT)
+    if (request->bEntityID == UAC2_ENTITY_FEATURE_UNIT)
         return tud_audio_feature_unit_get_request(rhport, request);
     else
     {
@@ -238,7 +244,7 @@ bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const* p
 {
     audio_control_request_t const* request = (audio_control_request_t const*) p_request;
 
-    if (request->bEntityID == UAC2_ENTITY_SPK_FEATURE_UNIT)
+    if (request->bEntityID == UAC2_ENTITY_FEATURE_UNIT)
         return tud_audio_feature_unit_set_request(rhport, request, buf);
     if (request->bEntityID == UAC2_ENTITY_CLOCK)
         return tud_audio_clock_set_request(rhport, request, buf);
@@ -254,35 +260,20 @@ bool tud_audio_set_itf_close_EP_cb(uint8_t rhport, tusb_control_request_t const*
     // uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
     // uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
 
-#if 0
-  if (ITF_NUM_AUDIO_STREAMING_SPK == itf && alt == 0)
-      blink_interval_ms = BLINK_MOUNTED;
-#endif
-
     return true;
 }
 
 bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const* p_request)
 {
     (void) rhport;
+
     // uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
-    uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
-
-#if 0
-  TU_LOG2("Set interface %d alt %d\r\n", itf, alt);
-  if (ITF_NUM_AUDIO_STREAMING_SPK == itf && alt != 0)
-      blink_interval_ms = BLINK_STREAMING;
-#endif
-
-    // Clear buffer when streaming format is changed
-    if (alt != 0)
-    {
-        current_resolution = resolutions_per_format[alt - 1];
-    }
+    // uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
 
     return true;
 }
 
+#if 0
 bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, uint8_t func_id, uint8_t ep_out, uint8_t cur_alt_setting)
 {
     (void) rhport;
@@ -305,10 +296,29 @@ bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, u
     // This callback could be used to fill microphone data separately
     return true;
 }
+#endif
+
+void tud_audio_feedback_params_cb(uint8_t func_id, uint8_t alt_itf, audio_feedback_params_t* feedback_param)
+{
+    (void) func_id;
+    (void) alt_itf;
+
+    feedback_param->method      = AUDIO_FEEDBACK_METHOD_FIFO_COUNT;
+    feedback_param->sample_freq = current_sample_rate;
+
+    SEGGER_RTT_printf(0, "feedback\n");
+}
 
 void HAL_SAI_TxCpltCallback(SAI_HandleTypeDef* hsai)
 {
-    copybuf_sai2codec();
+    // SEGGER_RTT_printf(0, "tx cplt\n");
+    update_pointer = SAI_BUF_SIZE / 2;
+}
+
+void HAL_SAI_TxHalfCpltCallback(SAI_HandleTypeDef* hsai)
+{
+    // SEGGER_RTT_printf(0, "tx half cplt\n");
+    update_pointer = 0;
 }
 
 void start_adc(void)
@@ -336,36 +346,70 @@ void start_sai(void)
     }
 }
 
-void read_audio_data_from_usb(const uint16_t n_bytes_received)
+void read_audio_data_from_usb(uint16_t n_bytes_received)
 {
     spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
+    // SEGGER_RTT_printf(0, "size = %d, %d %d\n", spk_data_size, n_bytes_received, CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX);
+
+    if (spk_data_size == 0 && hpout_clear_count < 100)
+    {
+        hpout_clear_count++;
+
+        if (hpout_clear_count == 100)
+        {
+            memset(hpout_buf, 0, sizeof(hpout_buf));
+            hpout_clear_count = 101;
+        }
+    }
+    else
+    {
+        hpout_clear_count = 0;
+    }
+
     copybuf_usb2sai();
+    copybuf_sai2codec();
 }
 
 void copybuf_usb2sai(void)
 {
-    const int len = spk_data_size >> 2;
-    for (int i = 0; i < len; i++)
+    // SEGGER_RTT_printf(0, "sb_index = %d -> ", sai_buf_index);
+
+    const uint_fast16_t array_size = spk_data_size >> 2;
+    for (uint_fast16_t i = 0; i < array_size; i++)
     {
-        if (sai_buf_index + len != sai_transmit_index)
+        if (sai_buf_index + array_size != sai_transmit_index)
         {
-            const int32_t val = spk_buf[i];
-            spk_buf[i]        = 0;
+            const int_fast32_t val = spk_buf[i];
 
             sai_buf[sai_buf_index & (SAI_RNG_BUF_SIZE - 1)] = val << 16 | val >> 16;
             sai_buf_index++;
         }
     }
+    // SEGGER_RTT_printf(0, " %d\n", sai_buf_index);
 }
 
 void copybuf_sai2codec(void)
 {
-    if (sai_buf_index - sai_transmit_index >= SAI_BUF_SIZE)
+    if (sai_buf_index - sai_transmit_index >= SAI_BUF_SIZE / 2)
     {
-        for (int i = 0; i < SAI_BUF_SIZE; i++)
+        while (update_pointer == -1)
         {
-            hpout_buf[i] = sai_buf[sai_transmit_index & (SAI_RNG_BUF_SIZE - 1)];
-            sai_transmit_index++;
+        }
+
+        const int16_t index0 = update_pointer;
+        update_pointer       = -1;
+
+        // SEGGER_RTT_printf(0, "st_index = %d -> ", sai_transmit_index);
+
+        const uint_fast64_t index1 = sai_transmit_index & (SAI_RNG_BUF_SIZE - 1);
+        memcpy(hpout_buf + index0, sai_buf + index1, sizeof(hpout_buf) / 2);
+        sai_transmit_index += SAI_BUF_SIZE / 2;
+
+        // SEGGER_RTT_printf(0, " %d\n", sai_transmit_index);
+
+        if (update_pointer != -1)
+        {
+            SEGGER_RTT_printf(0, "buffer update too long...\n");
         }
     }
 }
@@ -512,19 +556,27 @@ void codec_control_task(void)
 {
     // SEGGER_RTT_printf(0, "pot_val = [%d, %d, %d, %d, %d]\r\n", pot_value[1], pot_value[0], pot_value[2], pot_value[3], pot_value[4]);
 
-    xfade_buffer[xfade_buffer_index] = pot_value[0] >> 2;
-    xfade_buffer_index               = (xfade_buffer_index + 1) & (16 - 1);
-    xfade                            = 0;
-    for (int i = 0; i < 16; i++)
+    if (isXFadeCutPressed())
     {
-        xfade += xfade_buffer[i];
+        xfade      = 65535;
+        xfade_prev = 0;
     }
-    xfade >>= 4;
-
-    if (abs(xfade - xfade_prev) > 2)
+    else
     {
-        send_xfade(xfade);
-        xfade_prev = xfade;
+        xfade_buffer[xfade_buffer_index] = pot_value[0] >> 2;
+        xfade_buffer_index               = (xfade_buffer_index + 1) & (16 - 1);
+        xfade                            = 0;
+        for (int i = 0; i < 16; i++)
+        {
+            xfade += xfade_buffer[i];
+        }
+        xfade >>= 4;
+
+        if (abs(xfade - xfade_prev) > 2)
+        {
+            send_xfade(xfade);
+            xfade_prev = xfade;
+        }
     }
 #if 0
     master_gain_buffer[buffer_index] = 1500;  // pot_value[0] >> 2;

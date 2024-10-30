@@ -25,6 +25,8 @@ RGB_Color_t rgb_shift[2] = {
 };
 RGB_Color_t rgb_blank = {0x00, 0x00, 0x00};
 
+double intensity[2] = {1.0, 1.0};
+
 uint8_t grb_prev[LED_NUMS][RGB]    = {0};
 uint8_t grb_current[LED_NUMS][RGB] = {0};
 uint8_t grb[LED_NUMS][RGB]         = {0};
@@ -96,6 +98,16 @@ RGB_Color_t* getBlankColor(void)
     return &rgb_blank;
 }
 
+void setIntensity(const uint8_t keymapId, const uint8_t value)
+{
+    intensity[keymapId] = (double) value / 255.0;
+}
+
+double getIntensity(const uint8_t keymapId)
+{
+    return intensity[keymapId];
+}
+
 void setSpaceFlag(void)
 {
     // SEGGER_RTT_printf(0, "space on.\n");
@@ -122,18 +134,18 @@ void setEnterFlag(void)
 
 void setLedBufDirect(const uint8_t index, const RGB_Color_t* rgb_color)
 {
-    grb[index][0] = (uint8_t) ((double) rgb_color->g * LED_INTENSITY_RATE);
-    grb[index][1] = (uint8_t) ((double) rgb_color->r * LED_INTENSITY_RATE);
-    grb[index][2] = (uint8_t) ((double) rgb_color->b * LED_INTENSITY_RATE);
+    grb[index][0] = (uint8_t) ((double) rgb_color->g);
+    grb[index][1] = (uint8_t) ((double) rgb_color->r);
+    grb[index][2] = (uint8_t) ((double) rgb_color->b);
 }
 
 void setAllLedBufDirect(const RGB_Color_t* rgb_color)
 {
     for (int i = 0; i < LED_NUMS; i++)
     {
-        grb[i][0] = (uint8_t) ((double) rgb_color->g * LED_INTENSITY_RATE);
-        grb[i][1] = (uint8_t) ((double) rgb_color->r * LED_INTENSITY_RATE);
-        grb[i][2] = (uint8_t) ((double) rgb_color->b * LED_INTENSITY_RATE);
+        grb[i][0] = (uint8_t) ((double) rgb_color->g);
+        grb[i][1] = (uint8_t) ((double) rgb_color->r);
+        grb[i][2] = (uint8_t) ((double) rgb_color->b);
     }
 }
 
@@ -143,9 +155,9 @@ void setLedBuf(const uint8_t index, const RGB_Color_t* rgb_color)
     grb_prev[index][1] = grb_current[index][1];
     grb_prev[index][2] = grb_current[index][2];
 
-    grb_current[index][0] = (uint8_t) ((double) rgb_color->g * LED_INTENSITY_RATE);
-    grb_current[index][1] = (uint8_t) ((double) rgb_color->r * LED_INTENSITY_RATE);
-    grb_current[index][2] = (uint8_t) ((double) rgb_color->b * LED_INTENSITY_RATE);
+    grb_current[index][0] = (uint8_t) ((double) rgb_color->g);
+    grb_current[index][1] = (uint8_t) ((double) rgb_color->r);
+    grb_current[index][2] = (uint8_t) ((double) rgb_color->b);
 
     if (grb_prev[index][0] != grb_current[index][0] ||
         grb_prev[index][1] != grb_current[index][1] ||
@@ -164,9 +176,9 @@ void setAllLedBuf(const RGB_Color_t* rgb_color)
         grb_prev[i][1] = grb_current[i][1];
         grb_prev[i][2] = grb_current[i][2];
 
-        grb_current[i][0] = (uint8_t) ((double) rgb_color->g * LED_INTENSITY_RATE);
-        grb_current[i][1] = (uint8_t) ((double) rgb_color->r * LED_INTENSITY_RATE);
-        grb_current[i][2] = (uint8_t) ((double) rgb_color->b * LED_INTENSITY_RATE);
+        grb_current[i][0] = (uint8_t) ((double) rgb_color->g);
+        grb_current[i][1] = (uint8_t) ((double) rgb_color->r);
+        grb_current[i][2] = (uint8_t) ((double) rgb_color->b);
 
         if (grb_prev[i][0] != grb_current[i][0] ||
             grb_prev[i][1] != grb_current[i][1] ||
@@ -241,7 +253,9 @@ void renew(void)
         {
             for (int k = 0; k < RGB; k++)
             {
-                led_buf[j * WL_LED_BIT_LEN + i + COL_BITS * k] = ((grb[j][k] >> ((COL_BITS - 1) - i)) & 0x01) ? WL_LED_ONE : WL_LED_ZERO;
+                const uint8_t val = (uint8_t) ((double) grb[j][k] * getIntensity(getKeymapID()));
+
+                led_buf[j * WL_LED_BIT_LEN + i + COL_BITS * k] = ((val >> ((COL_BITS - 1) - i)) & 0x01) ? WL_LED_ONE : WL_LED_ZERO;
 
                 if (led_buf_prev[j * WL_LED_BIT_LEN + i + COL_BITS * k] != led_buf[j * WL_LED_BIT_LEN + i + COL_BITS * k])
                 {
@@ -271,6 +285,63 @@ void checkColor(const uint8_t r, const uint8_t g, const uint8_t b)
 
     setAllLedBufDirect(&rgb_check);
     renew();
+}
+
+void loadLEDColorsFromFlash(void)
+{
+    SEGGER_RTT_printf(0, "// LED\n");
+    SEGGER_RTT_printf(0, "[ ");
+    setNormalColor(0, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 0), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 1), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 2));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 0));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 1));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 2));
+    SEGGER_RTT_printf(0, "]\n");
+
+    SEGGER_RTT_printf(0, "[ ");
+    setUpperColor(0, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 3), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 4), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 5));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 3));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 4));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 5));
+    SEGGER_RTT_printf(0, "]\n");
+
+    SEGGER_RTT_printf(0, "[ ");
+    setShiftColor(0, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 6), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 7), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 8));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 6));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 7));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 8));
+    SEGGER_RTT_printf(0, "]\n");
+    SEGGER_RTT_printf(0, "\n");
+
+    SEGGER_RTT_printf(0, "[ ");
+    setNormalColor(1, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 9), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 10), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 11));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 9));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 10));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 11));
+    SEGGER_RTT_printf(0, "]\n");
+
+    SEGGER_RTT_printf(0, "[ ");
+    setUpperColor(1, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 12), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 13), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 14));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 12));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 13));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 14));
+    SEGGER_RTT_printf(0, "]\n");
+
+    SEGGER_RTT_printf(0, "[ ");
+    setShiftColor(1, read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 15), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 16), read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 17));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 15));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 16));
+    SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 17));
+    SEGGER_RTT_printf(0, "]\n");
+
+    setAllLedBuf(getNormalColor(getKeymapID()));
+
+    SEGGER_RTT_printf(0, "// LED\n");
+    SEGGER_RTT_printf(0, "[ ");
+    setIntensity(0, read_flash_data(3));
+    setIntensity(1, read_flash_data(4));
+    SEGGER_RTT_printf(0, "%d ", read_flash_data(3));
+    SEGGER_RTT_printf(0, "%d ", read_flash_data(4));
+    SEGGER_RTT_printf(0, "]\n");
 }
 
 void led_control_task(void)

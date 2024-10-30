@@ -337,14 +337,14 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         HAL_Delay(100);
         NVIC_SystemReset();
     }
-    else if (buffer[0] == 0xF8)
+    else if (buffer[0] == 0xF9)
     {
         SEGGER_RTT_printf(0, "factory reset...\n");
 
         factoryReset();
 
         uint8_t rbuf[CFG_TUD_HID_EP_BUFSIZE] = {0x00};
-        rbuf[1]                              = 0xF8;
+        rbuf[1]                              = 0xF9;
         rbuf[2]                              = 0x01;
         tud_hid_n_report(ITF_NUM_HID_GIO, 0, rbuf, CFG_TUD_HID_EP_BUFSIZE);
     }
