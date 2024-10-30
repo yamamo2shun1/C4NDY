@@ -1540,7 +1540,6 @@ void controlJoySticks(void)
                 {
                     SEGGER_RTT_printf(0, "UL: clear upper+shift\n");
                     clearKeys(KC_UPPER, M_RS);
-                    resetKeys();
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
 #endif
@@ -1549,7 +1548,6 @@ void controlJoySticks(void)
                 {
                     SEGGER_RTT_printf(0, "UR: clear upper+shift\n");
                     clearKeys(KC_UPPER, M_RS);
-                    resetKeys();
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 
@@ -1561,7 +1559,6 @@ void controlJoySticks(void)
                 {
                     SEGGER_RTT_printf(0, "UR: clear down+shift\n");
                     clearKeys(KC_SPACE, M_RS);
-                    resetKeys();
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 
@@ -1581,7 +1578,6 @@ void controlJoySticks(void)
                     {
                         const int direction = (j == 0) ? ((prevStk[i][j] + 1) / 2) : ((5 - prevStk[i][j]) / 2);
                         clearKeys(keymaps_stk[keymapID][i][direction][0], keymaps_stk[keymapID][i][direction][1]);
-                        resetKeys();
 
                         if (keymaps_stk[keymapID][i][direction][0] == KC_UPPER ||
                             (keymaps_stk[keymapID][i][direction][0] >= KC_LCONTROL && keymaps_stk[keymapID][i][direction][0] <= KC_RGUI))
