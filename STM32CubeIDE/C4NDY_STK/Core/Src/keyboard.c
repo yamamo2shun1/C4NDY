@@ -1152,6 +1152,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
     else if (code == KC_XF_CUT1)
     {
         isXFadeCut = true;
+        HAL_Delay(5);
         send_xfade(1023);
     }
     else if (code == KC_XF_CUT2)
