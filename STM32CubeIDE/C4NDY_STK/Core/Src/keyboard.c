@@ -985,6 +985,8 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
     {
         if (isUpper)
         {
+            resetKeys();
+
             isUpper = false;
             isWheel = false;
 
@@ -1080,7 +1082,7 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
                 {
                     for (int i = 0; i < MATRIX_COLUMNS; i++)
                     {
-                        int index = MATRIX_COLUMNS * j + i;
+                        const int index = MATRIX_COLUMNS * j + i;
                         if (index < 30)
                         {
                             if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
@@ -1541,6 +1543,7 @@ void controlJoySticks(void)
                 {
                     SEGGER_RTT_printf(0, "UL: clear upper+shift\n");
                     clearKeys(KC_UPPER, M_RS);
+
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
 #endif
@@ -1667,7 +1670,6 @@ void hid_keyscan_task(void)
                             if (isUpper && keycode == KC_UPPER)
                             {
                                 clearKeys(keycode, modifiers);
-                                resetKeys();
                                 countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                             }
                             else
