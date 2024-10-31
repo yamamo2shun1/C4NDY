@@ -71,8 +71,8 @@ uint_fast16_t spk_data_size = 0;
 int_fast32_t spk_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ] = {0};
 int_fast32_t hpout_buf[SAI_BUF_SIZE]                        = {0};
 
-int16_t update_pointer    = -1;
-int16_t hpout_clear_count = 0;
+volatile int16_t update_pointer    = -1;
+volatile int16_t hpout_clear_count = 0;
 
 // Helper for clock get requests
 static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t const* request)
