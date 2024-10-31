@@ -64,86 +64,86 @@ int8_t prevStk[JOYSTICK_NUMS][JOYSTICK_AXIS]    = {0};
 // clang-format off
 const uint8_t keymaps_normal_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
     {
-	    {{KC_Q, M_NO},    {KC_W, M_NO},    {KC_E, M_NO},    {KC_R, M_NO},    {KC_T, M_NO},        {KC_Y, M_NO},    {KC_U, M_NO},    {KC_I, M_NO},     {KC_O, M_NO},      {KC_P, M_NO}},
-		{{KC_A, M_NO},    {KC_S, M_NO},    {KC_D, M_NO},    {KC_F, M_NO},    {KC_G, M_NO},        {KC_H, M_NO},    {KC_J, M_NO},    {KC_K, M_NO},     {KC_L, M_NO},      {KC_SC, M_NO}},
-		{{KC_Z, M_NO},    {KC_X, M_NO},    {KC_C, M_NO},    {KC_V, M_NO},    {KC_B, M_NO},        {KC_N, M_NO},    {KC_M, M_NO},    {KC_COMMA, M_NO}, {KC_PERIOD, M_NO}, {KC_SLASH, M_NO}},
-		{{KC_NULL, M_NO}, {KC_LGUI, M_NO}, {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO},  {KC_UP, M_NO},     {KC_RIGHT, M_NO}}
-	},
-	{
-		{{KC_APS, M_NO},  {KC_COMMA, M_NO}, {KC_O, M_NO},    {KC_U, M_NO},    {KC_Y, M_NO},        {KC_F, M_NO},    {KC_G, M_NO},    {KC_C, M_NO},    {KC_R, M_NO},  {KC_L, M_NO}},
-		{{KC_P, M_NO},    {KC_I, M_NO},     {KC_E, M_NO},    {KC_A, M_NO},    {KC_PERIOD, M_NO},   {KC_D, M_NO},    {KC_S, M_NO},    {KC_T, M_NO},    {KC_H, M_NO},  {KC_Z, M_NO}},
-		{{KC_J, M_NO},    {KC_Q, M_NO},     {KC_SC, M_NO},   {KC_K, M_NO},    {KC_X, M_NO},        {KC_B, M_NO},    {KC_M, M_NO},    {KC_W, M_NO},    {KC_N, M_NO},  {KC_V, M_NO}},
-		{{KC_NULL, M_NO}, {KC_LGUI, M_NO},  {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO}, {KC_UP, M_NO}, {KC_RIGHT, M_NO}}
-	}
+        {{KC_Q, M_NO},    {KC_W, M_NO},    {KC_E, M_NO},    {KC_R, M_NO},    {KC_T, M_NO},        {KC_Y, M_NO},    {KC_U, M_NO},    {KC_I, M_NO},     {KC_O, M_NO},      {KC_P, M_NO}},
+        {{KC_A, M_NO},    {KC_S, M_NO},    {KC_D, M_NO},    {KC_F, M_NO},    {KC_G, M_NO},        {KC_H, M_NO},    {KC_J, M_NO},    {KC_K, M_NO},     {KC_L, M_NO},      {KC_SC, M_NO}},
+        {{KC_Z, M_NO},    {KC_X, M_NO},    {KC_C, M_NO},    {KC_V, M_NO},    {KC_B, M_NO},        {KC_N, M_NO},    {KC_M, M_NO},    {KC_COMMA, M_NO}, {KC_PERIOD, M_NO}, {KC_SLASH, M_NO}},
+        {{KC_NULL, M_NO}, {KC_LGUI, M_NO}, {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO},  {KC_UP, M_NO},     {KC_RIGHT, M_NO}}
+    },
+    {
+        {{KC_APS, M_NO},  {KC_COMMA, M_NO}, {KC_O, M_NO},    {KC_U, M_NO},    {KC_Y, M_NO},        {KC_F, M_NO},    {KC_G, M_NO},    {KC_C, M_NO},    {KC_R, M_NO},  {KC_L, M_NO}},
+        {{KC_P, M_NO},    {KC_I, M_NO},     {KC_E, M_NO},    {KC_A, M_NO},    {KC_PERIOD, M_NO},   {KC_D, M_NO},    {KC_S, M_NO},    {KC_T, M_NO},    {KC_H, M_NO},  {KC_Z, M_NO}},
+        {{KC_J, M_NO},    {KC_Q, M_NO},     {KC_SC, M_NO},   {KC_K, M_NO},    {KC_X, M_NO},        {KC_B, M_NO},    {KC_M, M_NO},    {KC_W, M_NO},    {KC_N, M_NO},  {KC_V, M_NO}},
+        {{KC_NULL, M_NO}, {KC_LGUI, M_NO},  {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO}, {KC_UP, M_NO}, {KC_RIGHT, M_NO}}
+    }
 };
 
 const uint8_t keymaps_upper_default[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
-	{
-		{{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},    {KC_8, M_NO},          {KC_9, M_NO},        {KC_0, M_NO}},
-		{{KC_APS, M_NO},  {KC_GA, M_NO},       {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_NULL, M_NO},     {KC_NULL, M_NO}, {KC_LSB, M_NO},  {KC_RSB, M_NO},        {KC_MINUS, M_NO},    {KC_EQUAL, M_NO}},
-		{{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_NULL, M_NO}, {KC_COMMA, M_NO},      {KC_PERIOD, M_NO},   {KC_BSLASH, M_NO}},
-		{{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO}, {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO}, {KC_RESET, M_NO}}
-	},
-	{
-		{{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},     {KC_8, M_NO},          {KC_9, M_NO},        {KC_0, M_NO}},
-		{{KC_APS, M_NO},  {KC_COMMA, M_NO},    {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_PERIOD, M_NO},   {KC_NULL, M_NO}, {KC_LSB, M_NO},   {KC_RSB, M_NO},        {KC_SLASH, M_NO},    {KC_MINUS, M_NO}},
-		{{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_EQUAL, M_NO}, {KC_NULL, M_NO},       {KC_NULL, M_NO},     {KC_BSLASH, M_NO}},
-		{{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO},  {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO}, {KC_RESET, M_NO}}
-	}
+    {
+        {{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},    {KC_8, M_NO},          {KC_9, M_NO},        {KC_0, M_NO}},
+        {{KC_APS, M_NO},  {KC_GA, M_NO},       {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_NULL, M_NO},     {KC_NULL, M_NO}, {KC_LSB, M_NO},  {KC_RSB, M_NO},        {KC_MINUS, M_NO},    {KC_EQUAL, M_NO}},
+        {{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_NULL, M_NO}, {KC_COMMA, M_NO},      {KC_PERIOD, M_NO},   {KC_BSLASH, M_NO}},
+        {{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO}, {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO}, {KC_RESET, M_NO}}
+    },
+    {
+        {{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},     {KC_8, M_NO},          {KC_9, M_NO},        {KC_0, M_NO}},
+        {{KC_APS, M_NO},  {KC_COMMA, M_NO},    {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_PERIOD, M_NO},   {KC_NULL, M_NO}, {KC_LSB, M_NO},   {KC_RSB, M_NO},        {KC_SLASH, M_NO},    {KC_MINUS, M_NO}},
+        {{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_EQUAL, M_NO}, {KC_NULL, M_NO},       {KC_NULL, M_NO},     {KC_BSLASH, M_NO}},
+        {{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO},  {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO}, {KC_RESET, M_NO}}
+    }
 };
 
 const uint8_t keymaps_stk_default[2][2][4][2] = {
     //   left,      right,    down,     up
-	{
-		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
-		{{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
-	},
-	{
-		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
-		{{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
-	}
+    {
+        {{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
+        {{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
+    },
+    {
+        {{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
+        {{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
+    }
 };
 
 uint8_t keymaps_normal[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
     {
-	    {{KC_Q, M_NO},    {KC_W, M_NO},    {KC_E, M_NO},    {KC_R, M_NO},    {KC_T, M_NO},        {KC_Y, M_NO},    {KC_U, M_NO},    {KC_I, M_NO},     {KC_O, M_NO},      {KC_P, M_NO}},
-		{{KC_A, M_NO},    {KC_S, M_NO},    {KC_D, M_NO},    {KC_F, M_NO},    {KC_G, M_NO},        {KC_H, M_NO},    {KC_J, M_NO},    {KC_K, M_NO},     {KC_L, M_NO},      {KC_SC, M_NO}},
-		{{KC_Z, M_NO},    {KC_X, M_NO},    {KC_C, M_NO},    {KC_V, M_NO},    {KC_B, M_NO},        {KC_N, M_NO},    {KC_M, M_NO},    {KC_COMMA, M_NO}, {KC_PERIOD, M_NO}, {KC_SLASH, M_NO}},
-		{{KC_NULL, M_NO}, {KC_LGUI, M_NO}, {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO},  {KC_UP, M_NO},     {KC_RIGHT, M_NO}}
-	},
-	{
-		{{KC_APS, M_NO},  {KC_COMMA, M_NO}, {KC_O, M_NO},    {KC_U, M_NO},    {KC_Y, M_NO},        {KC_F, M_NO},    {KC_G, M_NO},    {KC_C, M_NO},    {KC_R, M_NO},  {KC_L, M_NO}},
-		{{KC_P, M_NO},    {KC_I, M_NO},     {KC_E, M_NO},    {KC_A, M_NO},    {KC_PERIOD, M_NO},   {KC_D, M_NO},    {KC_S, M_NO},    {KC_T, M_NO},    {KC_H, M_NO},  {KC_Z, M_NO}},
-		{{KC_J, M_NO},    {KC_Q, M_NO},     {KC_SC, M_NO},   {KC_K, M_NO},    {KC_X, M_NO},        {KC_B, M_NO},    {KC_M, M_NO},    {KC_W, M_NO},    {KC_N, M_NO},  {KC_V, M_NO}},
-		{{KC_NULL, M_NO}, {KC_LGUI, M_NO},  {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO}, {KC_UP, M_NO}, {KC_RIGHT, M_NO}}
-	}
+        {{KC_Q, M_NO},    {KC_W, M_NO},    {KC_E, M_NO},    {KC_R, M_NO},    {KC_T, M_NO},        {KC_Y, M_NO},    {KC_U, M_NO},    {KC_I, M_NO},     {KC_O, M_NO},      {KC_P, M_NO}},
+        {{KC_A, M_NO},    {KC_S, M_NO},    {KC_D, M_NO},    {KC_F, M_NO},    {KC_G, M_NO},        {KC_H, M_NO},    {KC_J, M_NO},    {KC_K, M_NO},     {KC_L, M_NO},      {KC_SC, M_NO}},
+        {{KC_Z, M_NO},    {KC_X, M_NO},    {KC_C, M_NO},    {KC_V, M_NO},    {KC_B, M_NO},        {KC_N, M_NO},    {KC_M, M_NO},    {KC_COMMA, M_NO}, {KC_PERIOD, M_NO}, {KC_SLASH, M_NO}},
+        {{KC_NULL, M_NO}, {KC_LGUI, M_NO}, {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO},  {KC_UP, M_NO},     {KC_RIGHT, M_NO}}
+    },
+    {
+        {{KC_APS, M_NO},  {KC_COMMA, M_NO}, {KC_O, M_NO},    {KC_U, M_NO},    {KC_Y, M_NO},        {KC_F, M_NO},    {KC_G, M_NO},    {KC_C, M_NO},    {KC_R, M_NO},  {KC_L, M_NO}},
+        {{KC_P, M_NO},    {KC_I, M_NO},     {KC_E, M_NO},    {KC_A, M_NO},    {KC_PERIOD, M_NO},   {KC_D, M_NO},    {KC_S, M_NO},    {KC_T, M_NO},    {KC_H, M_NO},  {KC_Z, M_NO}},
+        {{KC_J, M_NO},    {KC_Q, M_NO},     {KC_SC, M_NO},   {KC_K, M_NO},    {KC_X, M_NO},        {KC_B, M_NO},    {KC_M, M_NO},    {KC_W, M_NO},    {KC_N, M_NO},  {KC_V, M_NO}},
+        {{KC_NULL, M_NO}, {KC_LGUI, M_NO},  {KC_LALT, M_NO}, {KC_NULL, M_NO}, {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_LEFT, M_NO}, {KC_DOWN, M_NO}, {KC_UP, M_NO}, {KC_RIGHT, M_NO}}
+    }
 };
 
 uint8_t keymaps_upper[2][MATRIX_ROWS][MATRIX_COLUMNS][2] = {
-	{
-		{{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},    {KC_8, M_NO},          {KC_9, M_NO},        {KC_0, M_NO}},
-		{{KC_APS, M_NO},  {KC_GA, M_NO},       {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_NULL, M_NO},     {KC_NULL, M_NO}, {KC_LSB, M_NO},  {KC_RSB, M_NO},        {KC_MINUS, M_NO},    {KC_EQUAL, M_NO}},
-		{{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_NULL, M_NO}, {KC_COMMA, M_NO},      {KC_PERIOD, M_NO},   {KC_BSLASH, M_NO}},
-		{{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO}, {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO}, {KC_RESET, M_NO}}
-	},
-	{
-		{{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},     {KC_8, M_NO},          {KC_9, M_NO},         {KC_0, M_NO}},
-		{{KC_APS, M_NO},  {KC_COMMA, M_NO},    {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_PERIOD, M_NO},   {KC_NULL, M_NO}, {KC_LSB, M_NO},   {KC_RSB, M_NO},        {KC_SLASH, M_NO},     {KC_MINUS, M_NO}},
-		{{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_EQUAL, M_NO}, {KC_NULL, M_NO},       {KC_NULL, M_NO},      {KC_BSLASH, M_NO}},
-		{{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO},  {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO},  {KC_RESET, M_NO}}
-	}
+    {
+        {{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},    {KC_8, M_NO},          {KC_9, M_NO},        {KC_0, M_NO}},
+        {{KC_APS, M_NO},  {KC_GA, M_NO},       {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_NULL, M_NO},     {KC_NULL, M_NO}, {KC_LSB, M_NO},  {KC_RSB, M_NO},        {KC_MINUS, M_NO},    {KC_EQUAL, M_NO}},
+        {{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_NULL, M_NO}, {KC_COMMA, M_NO},      {KC_PERIOD, M_NO},   {KC_BSLASH, M_NO}},
+        {{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO}, {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO}, {KC_RESET, M_NO}}
+    },
+    {
+        {{KC_1, M_NO},    {KC_2, M_NO},        {KC_3, M_NO},      {KC_4, M_NO},      {KC_5, M_NO},        {KC_6, M_NO},    {KC_7, M_NO},     {KC_8, M_NO},          {KC_9, M_NO},         {KC_0, M_NO}},
+        {{KC_APS, M_NO},  {KC_COMMA, M_NO},    {KC_NULL, M_NO},   {KC_LGUI, M_NO},   {KC_PERIOD, M_NO},   {KC_NULL, M_NO}, {KC_LSB, M_NO},   {KC_RSB, M_NO},        {KC_SLASH, M_NO},     {KC_MINUS, M_NO}},
+        {{KC_NULL, M_NO}, {KC_CAPSLOCK, M_NO}, {KC_M_LBTN, M_NO}, {KC_M_RBTN, M_NO}, {KC_M_WHEEL, M_NO},  {KC_NULL, M_NO}, {KC_EQUAL, M_NO}, {KC_NULL, M_NO},       {KC_NULL, M_NO},      {KC_BSLASH, M_NO}},
+        {{KC_NULL, M_NO}, {KC_LNPH, M_NO},     {KC_LAYOUT, M_NO}, {KC_NULL, M_NO},   {KC_LCONTROL, M_NO}, {KC_NULL, M_NO}, {KC_NULL, M_NO},  {KC_MGAIN_DOWN, M_NO}, {KC_MGAIN_UP, M_NO},  {KC_RESET, M_NO}}
+    }
 };
 
 uint8_t keymaps_stk[2][2][4][2] = {
     //   left,      right,    down,     up
-	{
-		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
-		{{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
-	},
-	{
-		{{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
-		{{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
-	}
+    {
+        {{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
+        {{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
+    },
+    {
+        {{KC_BS, M_NO},     {KC_TAB, M_NO},   {KC_ENTER, M_NO}, {KC_UPPER, M_NO}}, // left stick
+        {{KC_DELETE, M_NO}, {KC_SPACE, M_NO}, {KC_ESC, M_NO},   {KC_RSHIFT, M_NO}} // right stick
+    }
 };
 // clang-format on
 
@@ -985,6 +985,8 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
     {
         if (isUpper)
         {
+            resetKeys();
+
             isUpper = false;
             isWheel = false;
 
@@ -1080,7 +1082,7 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
                 {
                     for (int i = 0; i < MATRIX_COLUMNS; i++)
                     {
-                        int index = MATRIX_COLUMNS * j + i;
+                        const int index = MATRIX_COLUMNS * j + i;
                         if (index < 30)
                         {
                             if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
@@ -1541,6 +1543,7 @@ void controlJoySticks(void)
                 {
                     SEGGER_RTT_printf(0, "UL: clear upper+shift\n");
                     clearKeys(KC_UPPER, M_RS);
+
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
 #endif
@@ -1667,7 +1670,6 @@ void hid_keyscan_task(void)
                             if (isUpper && keycode == KC_UPPER)
                             {
                                 clearKeys(keycode, modifiers);
-                                resetKeys();
                                 countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                             }
                             else
