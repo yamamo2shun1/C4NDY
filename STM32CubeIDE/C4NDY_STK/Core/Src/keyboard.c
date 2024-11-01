@@ -1310,7 +1310,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
             {
                 isShift = true;
 
-                //switchLEDColorAccordingKeymaps();
+                // switchLEDColorAccordingKeymaps();
             }
         }
 
@@ -1372,7 +1372,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
             {
                 isShift = true;
 
-                //switchLEDColorAccordingKeymaps();
+                // switchLEDColorAccordingKeymaps();
             }
         }
 
@@ -1444,26 +1444,58 @@ void controlJoySticks(void)
             else if (theta >= 135 - JOYSTICK_ON_ANGLE2 && theta < 135 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:up left (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_H] = -1;
-                currentStk[i][JOYSTICK_V] = -1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 0 ;
+                    currentStk[i][JOYSTICK_V] = 0;
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = -1;
+                    currentStk[i][JOYSTICK_V] = -1;
+                }
             }
             else if (theta >= 45 - JOYSTICK_ON_ANGLE2 && theta < 45 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:up right (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_H] = 1;
-                currentStk[i][JOYSTICK_V] = -1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 0;
+                    currentStk[i][JOYSTICK_V] = 0;
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = 1;
+                    currentStk[i][JOYSTICK_V] = -1;
+                }
             }
             else if (theta >= -135 - JOYSTICK_ON_ANGLE2 && theta < -135 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:down left (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_H] = -1;
-                currentStk[i][JOYSTICK_V] = 1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 0;
+                    currentStk[i][JOYSTICK_V] = 0;
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = -1;
+                    currentStk[i][JOYSTICK_V] = 1;
+                }
             }
             else if (theta >= -45 - JOYSTICK_ON_ANGLE2 && theta < -45 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:down right (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_H] = 1;
-                currentStk[i][JOYSTICK_V] = 1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 0;
+                    currentStk[i][JOYSTICK_V] = 0;
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = 1;
+                    currentStk[i][JOYSTICK_V] = 1;
+                }
             }
             else if (theta >= -90 - JOYSTICK_ON_ANGLE && theta < -90 + JOYSTICK_ON_ANGLE)
             {
