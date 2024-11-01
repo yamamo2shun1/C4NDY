@@ -634,6 +634,7 @@ void led_control_task(void)
             {
                 fadeRightMark = 0.0;
                 isRightMarked = false;
+                stateMouseMark = 4;
             }
         }
     }
