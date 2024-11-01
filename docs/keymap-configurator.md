@@ -9,20 +9,21 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 ```toml
 [layout1]
 	normal = [
-		["Esc",      "1",    "2",      "3",     "4",  "5",     "6",     "7",      "8",         "9",      "0",     "Minus",      "Equal"],
-		["Tab",      "Q",    "W",      "E",     "R",  "T",     "Y",     "U",      "I",         "O",      "P",     "O_SBracket", "C_SBracket"],
-		["CapsLock", "A",    "S",      "D",     "F",  "G",     "H",     "J",      "K",         "L",      "Colon", "Apostrophe", "Yen"],
-		["L_Shift",  "Z",    "X",      "C",     "V",  "B",     "N",     "M",      "Comma",     "Period", "Slash", "R_Shift",    "Backquote"],
-		["L_Gui",    "LNPH", "LAYOUT", "L_Alt", "BS", "Enter", "Space", "Henkan", "R_Control", "Left",   "Down",  "Up",         "Right"]
+		[["Esc", "00000000"],  ["1", "00000000"],    ["2", "00000000"],      ["3", "00000000"],    ["4", "00000000"],  ["5", "00000000"],   ["6", "00000000"],     ["7", "00000000"],     ["8", "00000000"],        ["9", "00000000"],      ["0", "00000000"],     ["Minus", "00000000"],      ["Equal", "00000000"]],
+		[["Tab", "00000000"],  ["Q", "00000000"],    ["W", "00000000"],      ["E", "00000000"],    ["R", "00000000"],  ["T", "00000000"],   ["Y", "00000000"],     ["U", "00000000"],     ["V", "00000000"],        ["O", "00000000"],      ["P", "00000000"],     ["O_SBracket", "00000000"], ["C_SBracket", "00000000"]],
+		[["Null", "00000001"], ["A", "00000000"],    ["S", "00000000"],      ["D", "00000000"],    ["F", "00000000"],  ["G", "00000000"],   ["H", "00000000"],     ["J", "00000000"],     ["K", "00000000"],        ["L", "00000000"],      ["Colon", "00000000"], ["Apostrophe", "00000000"], ["Yen", "00000000"]],
+		[["Null", "00000010"], ["Z", "00000000"],    ["X", "00000000"],      ["C", "00000000"],    ["I", "00000000"],  ["B", "00000000"],   ["N", "00000000"],     ["M", "00000000"],     ["Comma", "00000000"],    ["Period", "00000000"], ["Slash", "00000000"], ["Null", "00100000"],       ["Backquote", "00000000"]],
+		[["Null", "00001000"], ["LNPH", "00000000"], ["LAYOUT", "00000000"], ["Null", "00000100"], ["BS", "00000000"], ["Del", "00000000"], ["Enter", "00000000"], ["Space", "00000000"], ["CapsLock", "00000000"], ["Left", "00000000"],   ["Down", "00000000"],  ["Up", "00000000"],         ["Right", "00000000"]]
+
 	]
 
 [layout2]
 	normal = [
-		["Esc",       "1",          "2",      "3",     "4",  "5",      "6",     "7",     "8",        "9",    "0",    "O_SBracket", "C_SBracket"],
-		["Tab",       "Apostrophe", "Comma",  "O",     "U",  "Y",      "F",     "G",     "C",        "R",    "L",    "Slash",      "Equal"],
-		["L_Control", "P",          "I",      "E",     "A",  "Period", "D",     "S",     "T",        "H",    "Z",    "Minus",      "Backslash"],
-		["L_Shift",   "J",          "Q",      "Colon", "K",  "X",      "B",     "M",     "W",        "N",    "V",    "R_Shift",    "Backquote"],
-		["L_Gui",     "LNPH",       "LAYOUT", "L_Alt", "BS", "Del",    "Enter", "Space", "CapsLock", "Left", "Down", "Up",         "Right"]
+		[["Esc", "00000000"],  ["1", "00000000"],          ["2", "00000000"],      ["3", "00000000"],     ["4", "00000000"],  ["5", "00000000"],      ["6", "00000000"],     ["7", "00000000"],     ["8", "00000000"],        ["9", "00000000"],    ["0", "00000000"],    ["O_SBracket", "00000000"], ["C_SBracket", "00000000"]],
+		[["Tab", "00000000"],  ["Apostrophe", "00000000"], ["Comma", "00000000"],  ["O", "00000000"],     ["U", "00000000"],  ["Y", "00000000"],      ["F", "00000000"],     ["G", "00000000"],     ["C", "00000000"],        ["R", "00000000"],    ["L", "00000000"],    ["Slash", "00000000"],      ["Equal", "00000000"]],
+		[["Null", "00000001"], ["P", "00000000"],          ["I", "00000000"],      ["E", "00000000"],     ["A", "00000000"],  ["Period", "00000000"], ["D", "00000000"],     ["S", "00000000"],     ["T", "00000000"],        ["H", "00000000"],    ["Z", "00000000"],    ["Minus", "00000000"],      ["Backslash", "00000000"]],
+		[["Null", "00000010"], ["J", "00000000"],          ["Q", "00000000"],      ["Colon", "00000000"], ["K", "00000000"],  ["X", "00000000"],      ["B", "00000000"],     ["M", "00000000"],     ["W", "00000000"],        ["N", "00000000"],    ["V", "00000000"],    ["Null", "00100000"],       ["Backquote", "00000000"]],
+		[["Null", "00001000"], ["LNPH", "00000000"],       ["LAYOUT", "00000000"], ["Null", "00000100"],  ["BS", "00000000"], ["Del", "00000000"],    ["Enter", "00000000"], ["Space", "00000000"], ["CapsLock", "00000000"], ["Left", "00000000"], ["Down", "00000000"], ["Up", "00000000"],         ["Right", "00000000"]]
 	]
 ```
 
@@ -30,55 +31,77 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 ```toml
 [layout1]
 	normal = [
-		["Q",    "W",     "E",     "R",    "T",       "Y",    "U",    "I",     "O",      "P"],
-		["A",    "S",     "D",     "F",    "G",       "H",    "J",    "K",     "L",      "Colon"],
-		["Z",    "X",     "C",     "V",    "B",       "N",    "M",    "Comma", "Period", "Slash"],
-		["Null", "L_Gui", "R_Alt", "Null", "CapsLock", "Null", "Left", "Down",  "Up",     "Right"]
+		[["Q", "00000000"],    ["W", "00000000"],    ["E", "00000000"],    ["R", "00000000"],    ["T", "00000000"],    ["Y", "00000000"],    ["U", "00000000"],    ["I", "00000000"],     ["O", "00000000"],      ["P", "00000000"]],
+		[["A", "00000000"],    ["S", "00000000"],    ["D", "00000000"],    ["F", "00000000"],    ["G", "00000000"],    ["H", "00000000"],    ["J", "00000000"],    ["K", "00000000"],     ["L", "00000000"],      ["Colon", "00000000"]],
+		[["Z", "00000000"],    ["X", "00000000"],    ["C", "00000000"],    ["V", "00000000"],    ["B", "00000000"],    ["N", "00000000"],    ["M", "00000000"],    ["Comma", "00000000"], ["Period", "00000000"], ["Slash", "00000000"]],
+		[["Null", "00000000"], ["Null", "00001000"], ["Null", "00000100"], ["Null", "00000000"], ["Null", "00000001"], ["Null", "00000000"], ["Left", "00000000"], ["Down", "00000000"],  ["Up", "00000000"],     ["Right", "00000000"]]
 	]
 	upper = [
-		["1",    "2",         "3",      "4",      "5",       "6",    "7",          "8",          "9",          "0"],
-		["Q",    "W",         "Null",   "L_Gui",  "G",       "Null", "Minus",      "Equal",      "O_SBracket", "Apostrophe"],
-		["Null", "R_Control", "M_LBTN", "M_RBTN", "M_WHEEL", "Null", "C_SBracket", "Null",       "Backquote",  "Yen"],
-		["Null", "LNPH",      "LAYOUT", "Null",   "CapsLock",   "Null", "Null",       "MGain_Down", "MGain_Up",   "Reset"]
+		[["1", "00000000"],          ["2", "00000000"],         ["3", "00000000"],      ["4", "00000000"],      ["5", "00000000"],       ["6", "00000000"],    ["7", "00000000"],          ["8", "00000000"],          ["9", "00000000"],        ["0", "00000000"]],
+		[["Apostrophe", "00000000"], ["Backquote", "00000000"], ["Null", "00000000"],   ["Null", "00001000"],   ["Null", "00000000"],    ["Null", "00000000"], ["O_SBracket", "00000000"], ["C_SBracket", "00000000"], ["Minus", "00000000"],    ["Equal", "00000000"]],
+		[["Null", "00000000"],       ["CapsLock", "00000000"],  ["M_LBTN", "00000000"], ["M_RBTN", "00000000"], ["M_WHEEL", "00000000"], ["Null", "00000000"], ["Null", "00000000"],       ["Comma", "00000000"],      ["Period", "00000000"],   ["Backslash", "00000000"]],
+		[["Null", "00000000"],       ["LNPH", "00000000"],      ["LAYOUT", "00000000"], ["Null", "00000000"],   ["Null", "00000001"],    ["Null", "00000000"], ["Null", "00000000"],       ["MGain_Down", "00000000"], ["MGain_Up", "00000000"], ["Reset", "00000000"]]
 	]
 	stick = [
-		["BS",  "Tab",    "Space",   "Upper"],
-		["Del", "Henkan", "Esc", "R_Shift"]
+		[
+			["Null", "00000000"], ["Upper", "00000000"], ["Null", "00000000"],
+			["BS",   "00000000"], ["Null",  "00000000"], ["Tab",  "00000000"],
+			["Null", "00000000"], ["Enter", "00000000"], ["Null", "00000000"]
+		],
+		[
+			["Null", "00000000"], ["Null", "00100000"], ["Null",  "00000000"],
+			["Del",  "00000000"], ["Null", "00000000"], ["Space", "00000000"],
+			["Null", "00000000"], ["Esc",  "00000000"], ["Null",  "00000000"]
+		]
 	]
 	led = [
-		[0xEC, 0x80, 0x8C],
-		[0xEC, 0x00, 0x8C],
-		[0x2C, 0x00, 0x8C]
+		[0x00, 0xAE, 0xEF],
+		[0xEF, 0x00, 0xAE],
+		[0xAE, 0xEF, 0x00]
 	]
+    intensity = [
+        1.0
+    ]
 
 [layout2]
 	normal = [
-		["Apostrophe", "Comma", "O",     "U",    "Y",       "F",    "G",    "C",    "R",  "L"],
-		["P",          "I",     "E",     "A",    "Period",  "D",    "S",    "T",    "H",  "Z"],
-		["J",          "Q",     "Colon", "K",    "X",       "B",    "M",    "W",    "N",  "V"],
-		["Null",       "L_Gui", "L_Alt", "Null", "Upper", "Null", "Left", "Down", "Up", "Right"]
+		[["Apostrophe", "00000000"], ["Comma", "00000000"], ["O", "00000000"],     ["U", "00000000"],    ["Y", "00000000"],      ["F", "00000000"],    ["G", "00000000"],    ["C", "00000000"],    ["R", "00000000"],  ["L", "00000000"]],
+		[["P", "00000000"],          ["I", "00000000"],     ["E", "00000000"],     ["A", "00000000"],    ["Period", "00000000"], ["D", "00000000"],    ["S", "00000000"],    ["T", "00000000"],    ["H", "00000000"],  ["Z", "00000000"]],
+		[["J", "00000000"],          ["Q", "00000000"],     ["Colon", "00000000"], ["K", "00000000"],    ["X", "00000000"],      ["B", "00000000"],    ["M", "00000000"],    ["W", "00000000"],    ["N", "00000000"],  ["V", "00000000"]],
+		[["Null", "00000000"],       ["Null", "00001000"],  ["Null", "00000100"],  ["Null", "00000000"], ["Null", "00000001"],   ["Null", "00000000"], ["Left", "00000000"], ["Down", "00000000"], ["Up", "00000000"], ["Right", "00000000"]]
 	]
 	upper = [
-		["1",          "2",        "3",      "4",      "5",       "6",    "7",          "8",          "9",         "0"],
-		["Apostrophe", "Comma",    "Null",   "L_Gui",  "Period",  "Null", "O_SBracket", "C_SBracket", "Slash",     "Minus"],
-		["Null",       "CapsLock", "M_LBTN", "M_RBTN", "M_WHEEL", "Null", "Equal",      "Null",       "Backquote", "Backslash"],
-		["Null",       "LNPH",     "LAYOUT", "Null",   "Upper",   "Null", "Null",       "MGain_Down", "MGain_Up",  "Reset"]
+		[["1", "00000000"],          ["2", "00000000"],        ["3", "00000000"],      ["4", "00000000"],      ["5", "00000000"],       ["6", "00000000"],    ["7", "00000000"],          ["8", "00000000"],          ["9", "00000000"],         ["0", "00000000"]],
+		[["Apostrophe", "00000000"], ["Comma", "00000000"],    ["Null", "00000000"],   ["Null", "00001000"],   ["Period", "00000000"],  ["Null", "00000000"], ["O_SBracket", "00000000"], ["C_SBracket", "00000000"], ["Slash", "00000000"],     ["Minus", "00000000"]],
+		[["Null", "00000000"],       ["CapsLock", "00000000"], ["M_LBTN", "00000000"], ["M_RBTN", "00000000"], ["M_WHEEL", "00000000"], ["Null", "00000000"], ["Equal", "00000000"],      ["Null", "00000000"],       ["Backquote", "00000000"], ["Backslash", "00000000"]],
+		[["Null", "00000000"],       ["LNPH", "00000000"],     ["LAYOUT", "00000000"], ["Null", "00000000"],   ["Null", "00000001"],    ["Null", "00000000"], ["Null", "00000000"],       ["MGain_Down", "00000000"], ["MGain_Up", "00000000"],  ["Reset", "00000000"]]
 	]
 	stick = [
-		["BS", "Tab",    "Esc",   "L_Shift"],
-		["Del", "Space", "Enter", "R_Control"]
+		[
+			["Null", "00000000"], ["Upper", "00000000"], ["Null", "00000000"],
+			["BS",   "00000000"], ["Null",  "00000000"], ["Tab",  "00000000"],
+			["Null", "00000000"], ["Enter", "00000000"], ["Null", "00000000"]
+		],
+		[
+			["Null", "00000000"], ["Null", "00100000"], ["Null",  "00000000"],
+			["Del",  "00000000"], ["Null", "00000000"], ["Space", "00000000"],
+			["Null", "00000000"], ["Esc",  "00000000"], ["Null",  "00000000"]
+		]
 	]
 	led = [
 		[0xFF, 0x00, 0x8C],
 		[0x00, 0xFF, 0xFF],
 		[0x00, 0x00, 0xFF]
 	]
+    intensity = [
+        1.0
+    ]
 ```
 
 ## Installation
 The `go install` is available.
 ```shellscript
-$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@latest
+$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.14.0
 ```
 
 ## Usage
@@ -113,10 +136,18 @@ $ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@latest
         Set LED RGB value for checking color.
         ex) confiseur -led 0xFF0000 # red
             confiseur id 0 -led 0x00FFFF # cyan
+-intensity [float(0.0-1.0)]
+        Set LED intensity.
+        ex) confiseur -intensity 1.0
+            confiseur -id 1 -intensity 0.5
 -restart
         Restart the keyboard immediately.
         ex) confiseur -restart
             confiseur -restart -id 1
+-factoryreset
+        Reset all settings to factory defaults.
+        ex) confiseur -factoryreset
+            confiseur -id 0 -factoryreset
 ```
 
 ## Preparation to build
@@ -131,5 +162,7 @@ Add `CGO_ENABLED=1` to your shell configuration file, such as .zshrc.
 
 ## How to build from Source Code
 ```shellscript
+$ git clone https://github.com/yamamo2shun1/Confiseur
+$ cd Confiseur/cmd/confiseur
 $ go build -o confiseur
 ```
