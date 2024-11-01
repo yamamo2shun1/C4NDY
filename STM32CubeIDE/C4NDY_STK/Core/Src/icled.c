@@ -50,6 +50,11 @@ int countRightMark     = 0;
 double fadeRightMark   = 0.0;
 uint8_t stateRightMark = 0;
 
+bool isMouseMarked = false;
+int countMouseMark     = 0;
+double fadeMouseMark   = 0.0;
+uint8_t stateMouseMark = 4;
+
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef* htim)
 {
     HAL_TIM_PWM_Stop_DMA(htim, TIM_CHANNEL_1);
@@ -146,6 +151,28 @@ void clearMark(const uint8_t index, const uint8_t state)
         stateRightMark = state;
         setLedMarkForJoystick(1, stateRightMark);
     }
+}
+
+void setMouseMark(const uint8_t state)
+{
+    isMouseMarked  = false;
+    countMouseMark = 0;
+    fadeMouseMark  = 1.0;
+    stateMouseMark = state;
+    setLedMouseMarkForJoystick(stateMouseMark);
+}
+
+void clearMouseMark(void)
+{
+    isMouseMarked  = true;
+    countMouseMark = 0;
+    fadeMouseMark  = 1.0;
+    setLedMouseMarkForJoystick(stateMouseMark);
+}
+
+void setMouseOrigin(void)
+{
+    stateMouseMark = 4;
 }
 
 void setLedBufDirect(const uint8_t index, const RGB_Color_t* rgb_color)
@@ -268,7 +295,6 @@ void setRightHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, con
         }
     }
 }
-
 
 void gradation(const uint8_t index, const double rate)
 {
@@ -394,8 +420,68 @@ void setLedMarkForJoystick(const uint8_t index, const uint8_t state)
             setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeRightMark);
             break;
         }
-
     }
+    renew();
+}
+
+void setLedMouseMarkForJoystick(const uint8_t state)
+{
+    // SEGGER_RTT_printf(0, "set: %d, %d, %d\n", index, state, isLeftMarked);
+
+    switch (state)
+    {
+    case 0:
+        setRightHalfColumnColorLedBuf(0, 0b0000010000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        break;
+    case 1:
+        setRightHalfColumnColorLedBuf(0, 0b0000001000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        break;
+    case 2:
+        setRightHalfColumnColorLedBuf(0, 0b0000000100, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        break;
+    case 3:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000010000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        break;
+    case 4:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000001000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        break;
+    case 5:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000100, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        break;
+    case 6:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000010000, rgb_normal[getKeymapID()], fadeMouseMark);
+        break;
+    case 7:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000001000, rgb_normal[getKeymapID()], fadeMouseMark);
+        break;
+    case 8:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000100, rgb_normal[getKeymapID()], fadeMouseMark);
+        break;
+    default:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeMouseMark);
+        break;
+    }
+
     renew();
 }
 
@@ -550,8 +636,27 @@ void led_control_task(void)
             fadeRightMark -= 0.075;
             if (fadeRightMark <= 0)
             {
-                fadeRightMark = 0.0;
-                isRightMarked = false;
+                fadeRightMark  = 0.0;
+                isRightMarked  = false;
+            }
+        }
+    }
+
+    if (isMouseMarked)
+    {
+        countMouseMark++;
+        if (countMouseMark > ANIMATION_COUNT_MAX)
+        {
+            countMouseMark = 0;
+
+            setLedMouseMarkForJoystick(stateMouseMark);
+
+            fadeMouseMark -= 0.075;
+            if (fadeMouseMark <= 0)
+            {
+                fadeMouseMark  = 0.0;
+                isMouseMarked  = false;
+                stateMouseMark = 4;
             }
         }
     }

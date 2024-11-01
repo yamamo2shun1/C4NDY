@@ -44,11 +44,12 @@ uint8_t linePhonoSW       = 0;
 
 bool isMasterGainChanged = false;
 
-bool isUpper    = false;
-bool isShift    = false;
-bool isClicked  = false;
-bool isWheel    = false;
-bool isXFadeCut = false;
+bool isUpper         = false;
+bool isShift         = false;
+bool isClicked       = false;
+bool isWheel         = false;
+bool isXFadeCut      = false;
+bool isStickReturned = false;
 
 int offset_calibrate_count[JOYSTICK_NUMS] = {0};
 double x_offset[JOYSTICK_NUMS]            = {0.0};
@@ -1016,8 +1017,9 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
         {
             resetKeys();
 
-            isUpper = false;
-            isWheel = false;
+            isUpper         = false;
+            isWheel         = false;
+            isStickReturned = false;
 
             countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
 #if 0
@@ -1435,6 +1437,7 @@ void controlJoySticks(void)
                 if (isUpper && i == 1)
                 {
                     currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(1);
                 }
                 else
                 {
@@ -1446,8 +1449,9 @@ void controlJoySticks(void)
                 // SEGGER_RTT_printf(0, "%d:up left (%d)\n", i, (int) theta);
                 if (isUpper && i == 1)
                 {
-                    currentStk[i][JOYSTICK_H] = 0 ;
+                    currentStk[i][JOYSTICK_H] = 0;
                     currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(0);
                 }
                 else
                 {
@@ -1462,6 +1466,7 @@ void controlJoySticks(void)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
                     currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(2);
                 }
                 else
                 {
@@ -1476,6 +1481,7 @@ void controlJoySticks(void)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
                     currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(6);
                 }
                 else
                 {
@@ -1490,6 +1496,7 @@ void controlJoySticks(void)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
                     currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(8);
                 }
                 else
                 {
@@ -1503,6 +1510,7 @@ void controlJoySticks(void)
                 if (isUpper && i == 1)
                 {
                     currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(7);
                 }
                 else
                 {
@@ -1515,6 +1523,7 @@ void controlJoySticks(void)
                 if (isUpper && i == 1)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
+                    setMouseMark(3);
                 }
                 else
                 {
@@ -1527,6 +1536,7 @@ void controlJoySticks(void)
                 if (isUpper && i == 1)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
+                    setMouseMark(5);
                 }
                 else
                 {
@@ -1538,11 +1548,24 @@ void controlJoySticks(void)
                 currentStk[i][JOYSTICK_H] = 0;
                 currentStk[i][JOYSTICK_V] = 0;
             }
+
+            if (i == 1)
+            {
+                isStickReturned = false;
+            }
         }
         else
         {
             currentStk[i][JOYSTICK_H] = 0;
             currentStk[i][JOYSTICK_V] = 0;
+
+            if (isUpper && i == 1 && !isStickReturned)
+            {
+                SEGGER_RTT_printf(0, "stick returned\n");
+                clearMouseMark();
+
+                isStickReturned = true;
+            }
         }
     }
 
