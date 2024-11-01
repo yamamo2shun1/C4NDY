@@ -192,21 +192,21 @@ void setBootDfuFlag(bool is_boot_dfu)
         SEGGER_RTT_printf(0, "]\n\n");
     }
 
-    uint64_t currentStickKeyMap[2][2][4]    = {0x0};
-    uint64_t currentStickModifiers[2][2][4] = {0x0};
+    uint64_t currentStickKeyMap[2][STICK_NUM][STICK_DIRECTION]    = {0x0};
+    uint64_t currentStickModifiers[2][STICK_NUM][STICK_DIRECTION] = {0x0};
 
     SEGGER_RTT_printf(0, "current Stick KeyMap/Modifiers\n");
     for (int k = 0; k < 2; k++)
     {
         SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
         SEGGER_RTT_printf(0, "[\n");
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < STICK_NUM; i++)
         {
             SEGGER_RTT_printf(0, "[");
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < STICK_DIRECTION; j++)
             {
-                currentStickKeyMap[k][i][j]    = read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j);
-                currentStickModifiers[k][i][j] = read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (k + 2) * (2 * 4) + i * 4 + j);
+                currentStickKeyMap[k][i][j]    = read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (STICK_NUM * STICK_DIRECTION) + i * STICK_DIRECTION + j);
+                currentStickModifiers[k][i][j] = read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (k + 2) * (STICK_NUM * STICK_DIRECTION) + i * STICK_DIRECTION + j);
                 SEGGER_RTT_printf(0, "{%02X, %02X} ", currentStickKeyMap[k][i][j], currentModifiers[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
@@ -272,13 +272,13 @@ void setBootDfuFlag(bool is_boot_dfu)
     {
         SEGGER_RTT_printf(0, "Layout:%d\n", k + 1);
         SEGGER_RTT_printf(0, "[\n");
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < STICK_NUM; i++)
         {
             SEGGER_RTT_printf(0, "[");
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < STICK_DIRECTION; j++)
             {
-                write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (2 * 4) + i * 4 + j, currentStickKeyMap[k][i][j]);
-                write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (k + 2) * (2 * 4) + i * 4 + j, currentStickModifiers[k][i][j]);
+                write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + k * (STICK_NUM * STICK_DIRECTION) + i * STICK_DIRECTION + j, currentStickKeyMap[k][i][j]);
+                write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (k + 2) * (STICK_NUM * STICK_DIRECTION) + i * STICK_DIRECTION + j, currentStickModifiers[k][i][j]);
                 SEGGER_RTT_printf(0, "{%02X, %02X} ", currentStickKeyMap[k][i][j], currentModifiers[k][i][j]);
             }
             SEGGER_RTT_printf(0, "]\n");
@@ -294,15 +294,15 @@ void setBootDfuFlag(bool is_boot_dfu)
     SEGGER_RTT_printf(0, "  [%02X, %02X, %02X]\n", getShiftColor(0)->r, getShiftColor(0)->g, getShiftColor(0)->b);
     SEGGER_RTT_printf(0, "]\n\n");
 
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 0, getNormalColor(0)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 1, getNormalColor(0)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 2, getNormalColor(0)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 3, getUpperColor(0)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 4, getUpperColor(0)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 5, getUpperColor(0)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 6, getShiftColor(0)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 7, getShiftColor(0)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 8, getShiftColor(0)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 0, getNormalColor(0)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 1, getNormalColor(0)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 2, getNormalColor(0)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 3, getUpperColor(0)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 4, getUpperColor(0)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 5, getUpperColor(0)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 6, getShiftColor(0)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 7, getShiftColor(0)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 8, getShiftColor(0)->b);
 
     SEGGER_RTT_printf(0, "Layout:2\n");
     SEGGER_RTT_printf(0, "[\n");
@@ -311,15 +311,15 @@ void setBootDfuFlag(bool is_boot_dfu)
     SEGGER_RTT_printf(0, "  [%02X, %02X, %02X]\n", getShiftColor(1)->r, getShiftColor(1)->g, getShiftColor(1)->b);
     SEGGER_RTT_printf(0, "]\n\n");
 
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 9, getNormalColor(1)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 10, getNormalColor(1)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 11, getNormalColor(1)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 12, getUpperColor(1)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 13, getUpperColor(1)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 14, getUpperColor(1)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 15, getShiftColor(1)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 16, getShiftColor(1)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * 2 * 4) + 17, getShiftColor(1)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 9, getNormalColor(1)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 10, getNormalColor(1)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 11, getNormalColor(1)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 12, getUpperColor(1)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 13, getUpperColor(1)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 14, getUpperColor(1)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 15, getShiftColor(1)->r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 16, getShiftColor(1)->g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 17, getShiftColor(1)->b);
 
     HAL_FLASH_Lock();
 }
@@ -405,6 +405,8 @@ int main(void)
     while (1)
     {
         tud_task();
+
+        read_audio_data_from_usb(N_SAMPLES_PER_1_RX * CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX * CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX);
 
         switch (state_index)
         {

@@ -86,7 +86,7 @@ C4NDY KeyVLM/STKのキーをリマップするには、専用のコマンドラ�
 `go install`でインストールすることが可能です。
 
 ```shellscript
-$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.12.0
+$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.13.0
 ```
 
 ## 使い方
