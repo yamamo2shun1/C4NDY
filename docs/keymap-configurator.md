@@ -43,8 +43,16 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 		[["Null", "00000000"],       ["LNPH", "00000000"],      ["LAYOUT", "00000000"], ["Null", "00000000"],   ["Null", "00000001"],    ["Null", "00000000"], ["Null", "00000000"],       ["MGain_Down", "00000000"], ["MGain_Up", "00000000"], ["Reset", "00000000"]]
 	]
 	stick = [
-		[["BS", "00000000"],  ["Tab", "00000000"],   ["Enter", "00000000"], ["Upper", "00000000"]],
-		[["Del", "00000000"], ["Space", "00000000"], ["Esc", "00000000"],   ["Null", "00100000"]]
+		[
+			["Null", "00000000"], ["Upper", "00000000"], ["Null", "00000000"],
+			["BS",   "00000000"], ["Null",  "00000000"], ["Tab",  "00000000"],
+			["Null", "00000000"], ["Enter", "00000000"], ["Null", "00000000"]
+		],
+		[
+			["Null", "00000000"], ["Null", "00100000"], ["Null",  "00000000"],
+			["Del",  "00000000"], ["Null", "00000000"], ["Space", "00000000"],
+			["Null", "00000000"], ["Esc",  "00000000"], ["Null",  "00000000"]
+		]
 	]
 	led = [
 		[0x00, 0xAE, 0xEF],
@@ -69,8 +77,16 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 		[["Null", "00000000"],       ["LNPH", "00000000"],     ["LAYOUT", "00000000"], ["Null", "00000000"],   ["Null", "00000001"],    ["Null", "00000000"], ["Null", "00000000"],       ["MGain_Down", "00000000"], ["MGain_Up", "00000000"],  ["Reset", "00000000"]]
 	]
 	stick = [
-		[["BS", "00000000"],  ["Tab", "00000000"],   ["Enter", "00000000"], ["Upper", "00000000"]],
-		[["Del", "00000000"], ["Space", "00000000"], ["Esc", "00000000"],   ["Null", "00100000"]]
+		[
+			["Null", "00000000"], ["Upper", "00000000"], ["Null", "00000000"],
+			["BS",   "00000000"], ["Null",  "00000000"], ["Tab",  "00000000"],
+			["Null", "00000000"], ["Enter", "00000000"], ["Null", "00000000"]
+		],
+		[
+			["Null", "00000000"], ["Null", "00100000"], ["Null",  "00000000"],
+			["Del",  "00000000"], ["Null", "00000000"], ["Space", "00000000"],
+			["Null", "00000000"], ["Esc",  "00000000"], ["Null",  "00000000"]
+		]
 	]
 	led = [
 		[0xFF, 0x00, 0x8C],
@@ -85,7 +101,7 @@ By preparing a keymap file written in TOML and reading it, it is possible to rem
 ## Installation
 The `go install` is available.
 ```shellscript
-$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.13.0
+$ go install github.com/yamamo2shun1/Confiseur/cmd/confiseur@v0.14.0
 ```
 
 ## Usage

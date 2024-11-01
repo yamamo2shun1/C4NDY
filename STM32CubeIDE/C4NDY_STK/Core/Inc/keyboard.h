@@ -20,6 +20,9 @@
 #define MATRIX_ROWS    4
 #define MATRIX_COLUMNS 10
 
+#define STICK_NUM       2
+#define STICK_DIRECTION 9
+
 #define KC_A        0x04  // a
 #define KC_B        0x05  // b
 #define KC_C        0x06  // c
