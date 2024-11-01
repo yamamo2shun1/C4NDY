@@ -49,7 +49,6 @@ void setMark(const uint8_t index, const uint8_t state);
 void clearMark(const uint8_t index, const uint8_t state);
 void setMouseMark(const uint8_t state);
 void clearMouseMark(void);
-void setMouseOrigin(void);
 
 void setLedBuf(const uint8_t index, const RGB_Color_t* rgb_color);
 void setAllLedBuf(const RGB_Color_t* rgb_color);

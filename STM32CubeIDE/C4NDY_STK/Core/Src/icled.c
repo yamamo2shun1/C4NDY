@@ -50,7 +50,7 @@ int countRightMark     = 0;
 double fadeRightMark   = 0.0;
 uint8_t stateRightMark = 0;
 
-bool isMouseMarked = false;
+bool isMouseMarked     = false;
 int countMouseMark     = 0;
 double fadeMouseMark   = 0.0;
 uint8_t stateMouseMark = 4;
@@ -124,6 +124,7 @@ void setMark(const uint8_t index, const uint8_t state)
     }
     else if (index == 1)
     {
+        isMouseMarked  = false;
         isRightMarked  = false;
         countRightMark = 0;
         fadeRightMark  = 1.0;
@@ -168,11 +169,6 @@ void clearMouseMark(void)
     countMouseMark = 0;
     fadeMouseMark  = 1.0;
     setLedMouseMarkForJoystick(stateMouseMark);
-}
-
-void setMouseOrigin(void)
-{
-    stateMouseMark = 4;
 }
 
 void setLedBufDirect(const uint8_t index, const RGB_Color_t* rgb_color)
@@ -636,8 +632,8 @@ void led_control_task(void)
             fadeRightMark -= 0.075;
             if (fadeRightMark <= 0)
             {
-                fadeRightMark  = 0.0;
-                isRightMarked  = false;
+                fadeRightMark = 0.0;
+                isRightMarked = false;
             }
         }
     }
