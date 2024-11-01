@@ -45,14 +45,13 @@ RGB_Color_t* getBlankColor(void);
 void setIntensity(const uint8_t keymapId, const uint8_t value);
 double getIntensity(const uint8_t keymapId);
 
-void setSpaceFlag(void);
-void setBackspaceFlag(void);
-void setEnterFlag(void);
+void setMark(const uint8_t index, const uint8_t state);
+void clearMark(const uint8_t index, const uint8_t state);
 
 void setLedBuf(const uint8_t index, const RGB_Color_t* rgb_color);
 void setAllLedBuf(const RGB_Color_t* rgb_color);
-void setColumn2ColorLedBuf(const uint8_t row, const uint16_t column, const RGB_Color_t* rgb_color1, const RGB_Color_t* rgb_color0);
-void setColumn3ColorLedBuf(const uint8_t row, const uint16_t column0, const uint16_t column1, const RGB_Color_t* rgb_color1, const RGB_Color_t* rgb_color2, const RGB_Color_t* rgb_color0);
+void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const RGB_Color_t color, const double fade);
+void setLedMarkForJoystick(const uint8_t index, const uint8_t state);
 void renew(void);
 void checkColor(const uint8_t r, const uint8_t g, const uint8_t b);
 void loadLEDColorsFromFlash(void);

@@ -44,11 +44,11 @@ uint8_t linePhonoSW       = 0;
 
 bool isMasterGainChanged = false;
 
-bool isUpper      = false;
-bool isShift      = false;
-bool isClicked    = false;
-bool isWheel      = false;
-bool isXFadeCut   = false;
+bool isUpper    = false;
+bool isShift    = false;
+bool isClicked  = false;
+bool isWheel    = false;
+bool isXFadeCut = false;
 
 int offset_calibrate_count[JOYSTICK_NUMS] = {0};
 double x_offset[JOYSTICK_NUMS]            = {0.0};
@@ -1020,7 +1020,7 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
             isWheel = false;
 
             countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
-
+#if 0
             if (((keyboardHID.modifiers >> (KC_LSHIFT - KC_LCONTROL)) & 0x01) ||
                 ((keyboardHID.modifiers >> (KC_RSHIFT - KC_LCONTROL)) & 0x01))
             {
@@ -1030,6 +1030,7 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
             {
                 setAllLedBuf(getNormalColor(keymapID));
             }
+#endif
         }
     }
     else if (code == KC_M_WHEEL)
@@ -1048,6 +1049,7 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
         {
             isShift = false;
 
+#if 0
             if (isUpper)
             {
                 for (int j = 0; j < MATRIX_ROWS; j++)
@@ -1084,6 +1086,7 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
             {
                 setAllLedBuf(getNormalColor(keymapID));
             }
+#endif
         }
     }
     else
@@ -1105,6 +1108,7 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
         {
             isShift = false;
 
+#if 0
             if (isUpper)
             {
                 for (int j = 0; j < MATRIX_ROWS; j++)
@@ -1141,6 +1145,7 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
             {
                 setAllLedBuf(getNormalColor(keymapID));
             }
+#endif
         }
     }
 
@@ -1189,6 +1194,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
     else if (code == KC_XF_CUT2)
     {
         isXFadeCut = true;
+        HAL_Delay(5);
         send_xfade(0);
     }
     else if (code == KC_MGAIN_UP)
@@ -1224,7 +1230,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
         if (!isUpper)
         {
             isUpper = true;
-
+#if 0
             for (int j = 0; j < MATRIX_ROWS; j++)
             {
                 for (int i = 0; i < MATRIX_COLUMNS; i++)
@@ -1284,6 +1290,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
                     }
                 }
             }
+#endif
         }
     }
     else if (code == KC_M_WHEEL)
@@ -1303,7 +1310,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
             {
                 isShift = true;
 
-                switchLEDColorAccordingKeymaps();
+                //switchLEDColorAccordingKeymaps();
             }
         }
 
@@ -1330,13 +1337,14 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
                 }
                 break;
             }
-            else if (keyboardHID.key[k] == 0x00)
+            if (keyboardHID.key[k] == 0x00)
             {
                 if (code != KC_NULL)
                 {
                     keyboardHID.key[k] = code;
                 }
 
+#if 0
                 if (code == keymaps_stk[keymapID][0][3][0])  // L JoyStick -> Tilt left
                 {
                     setBackspaceFlag();
@@ -1349,7 +1357,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
                 {
                     setEnterFlag();
                 }
-
+#endif
                 break;
             }
         }
@@ -1364,7 +1372,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
             {
                 isShift = true;
 
-                switchLEDColorAccordingKeymaps();
+                //switchLEDColorAccordingKeymaps();
             }
         }
 
@@ -1516,23 +1524,27 @@ void controlJoySticks(void)
 
             if (currentStk[i][JOYSTICK_H] == -1 && currentStk[i][JOYSTICK_V] == -1)
             {
-                // SEGGER_RTT_printf(0, "UL: set upper+shift\n");
+                // SEGGER_RTT_printf(0, "UL: set\n");
                 setKeys(keymaps_stk[keymapID][i][0][0], keymaps_stk[keymapID][i][0][1]);
+                setMark(i, 0);
             }
             else if (currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == -1)
             {
-                // SEGGER_RTT_printf(0, "UR: set upper+shift\n");
+                // SEGGER_RTT_printf(0, "UR: set\n");
                 setKeys(keymaps_stk[keymapID][i][2][0], keymaps_stk[keymapID][i][2][1]);
+                setMark(i, 2);
             }
             else if (currentStk[i][JOYSTICK_H] == -1 && currentStk[i][JOYSTICK_V] == 1)
             {
-                // SEGGER_RTT_printf(0, "DL: set down+shift\n");
+                // SEGGER_RTT_printf(0, "DL: set\n");
                 setKeys(keymaps_stk[keymapID][i][6][0], keymaps_stk[keymapID][i][6][1]);
+                setMark(i, 6);
             }
             else if (currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == 1)
             {
-                // SEGGER_RTT_printf(0, "DR: set down+shift\n");
+                // SEGGER_RTT_printf(0, "DR: set\n");
                 setKeys(keymaps_stk[keymapID][i][8][0], keymaps_stk[keymapID][i][8][1]);
+                setMark(i, 8);
             }
         }
         else
@@ -1541,33 +1553,37 @@ void controlJoySticks(void)
             {
                 if ((currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == -1 && prevStk[i][JOYSTICK_V] == -1))
                 {
-                    SEGGER_RTT_printf(0, "UL: clear upper+shift\n");
+                    SEGGER_RTT_printf(0, "UL: clear\n");
                     clearKeys(keymaps_stk[keymapID][i][0][0], keymaps_stk[keymapID][i][0][1]);
+                    clearMark(i, 0);
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
                 else if ((currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == -1))
                 {
-                    SEGGER_RTT_printf(0, "UR: clear upper+shift\n");
+                    SEGGER_RTT_printf(0, "UR: clear\n");
                     clearKeys(keymaps_stk[keymapID][i][2][0], keymaps_stk[keymapID][i][2][1]);
+                    clearMark(i, 2);
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
                 else if ((currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == -1 && prevStk[i][JOYSTICK_V] == 1))
                 {
-                    SEGGER_RTT_printf(0, "DL: clear down+shift\n");
+                    SEGGER_RTT_printf(0, "DL: clear\n");
                     clearKeys(keymaps_stk[keymapID][i][6][0], keymaps_stk[keymapID][i][6][1]);
+                    clearMark(i, 6);
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
                 else if ((currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
                 {
-                    SEGGER_RTT_printf(0, "DR: clear down+shift\n");
+                    SEGGER_RTT_printf(0, "DR: clear\n");
                     clearKeys(keymaps_stk[keymapID][i][8][0], keymaps_stk[keymapID][i][8][1]);
+                    clearMark(i, 8);
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
-                if (currentStk[i][j] != prevStk[i][j])
+                else if (currentStk[i][j] != prevStk[i][j])
                 {
                     // SEGGER_RTT_printf(0, "currentStk[%d][%d] = %d (%d, %d, %d, %d)\n", i, j, currentStk[i][j], pot_value[1], pot_value[2], pot_value[3], pot_value[4]);
 
@@ -1575,11 +1591,13 @@ void controlJoySticks(void)
                     {
                         const int direction = (j == JOYSTICK_H) ? (currentStk[i][j] + 4) : (3 * currentStk[i][j] + 4);
                         setKeys(keymaps_stk[keymapID][i][direction][0], keymaps_stk[keymapID][i][direction][1]);
+                        setMark(i, direction);
                     }
                     else if (prevStk[i][j] == -1 || prevStk[i][j] == 1)
                     {
                         const int direction = (j == JOYSTICK_H) ? (prevStk[i][j] + 4) : (3 * prevStk[i][j] + 4);
                         clearKeys(keymaps_stk[keymapID][i][direction][0], keymaps_stk[keymapID][i][direction][1]);
+                        clearMark(i, direction);
 
                         if (keymaps_stk[keymapID][i][direction][0] == KC_UPPER ||
                             (keymaps_stk[keymapID][i][direction][0] >= KC_LCONTROL && keymaps_stk[keymapID][i][direction][0] <= KC_RGUI))
