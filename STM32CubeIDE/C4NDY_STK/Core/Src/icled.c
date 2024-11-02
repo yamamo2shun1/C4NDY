@@ -81,24 +81,24 @@ void setShiftColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, con
     rgb_shift[keymapId].b = b;
 }
 
-RGB_Color_t* getNormalColor(const uint8_t keymapId)
+RGB_Color_t getNormalColor(const uint8_t keymapId)
 {
-    return &rgb_normal[keymapId];
+    return rgb_normal[keymapId];
 }
 
-RGB_Color_t* getUpperColor(const uint8_t keymapId)
+RGB_Color_t getUpperColor(const uint8_t keymapId)
 {
-    return &rgb_upper[keymapId];
+    return rgb_upper[keymapId];
 }
 
-RGB_Color_t* getShiftColor(const uint8_t keymapId)
+RGB_Color_t getShiftColor(const uint8_t keymapId)
 {
-    return &rgb_shift[keymapId];
+    return rgb_shift[keymapId];
 }
 
-RGB_Color_t* getBlankColor(void)
+RGB_Color_t getBlankColor(void)
 {
-    return &rgb_blank;
+    return rgb_blank;
 }
 
 void setIntensity(const uint8_t keymapId, const uint8_t value)

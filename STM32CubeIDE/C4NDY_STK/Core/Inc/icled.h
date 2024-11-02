@@ -37,10 +37,10 @@ typedef struct
 void setNormalColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
 void setUpperColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
 void setShiftColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
-RGB_Color_t* getNormalColor(const uint8_t keymapId);
-RGB_Color_t* getUpperColor(const uint8_t keymapId);
-RGB_Color_t* getShiftColor(const uint8_t keymapId);
-RGB_Color_t* getBlankColor(void);
+RGB_Color_t getNormalColor(const uint8_t keymapId);
+RGB_Color_t getUpperColor(const uint8_t keymapId);
+RGB_Color_t getShiftColor(const uint8_t keymapId);
+RGB_Color_t getBlankColor(void);
 
 void setIntensity(const uint8_t keymapId, const uint8_t value);
 double getIntensity(const uint8_t keymapId);
