@@ -169,9 +169,9 @@ void setAllLedBuf(const RGB_Color_t rgb_color)
     }
 }
 
-void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const RGB_Color_t color, const double fade)
+void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    const RGB_Color_t c  = {(uint8_t) ((double) color.r * fade), (uint8_t) ((double) color.g * fade), (uint8_t) ((double) color.b * fade)};
+    const RGB_Color_t c  = {(uint8_t) ((double) rgb_normal[getKeymapID()].r * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].g * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].b * fade)};
     const RGB_Color_t bc = {0x00, 0x00, 0x00};
 
     // SEGGER_RTT_printf(0, "o(r, g, b) = (%d, %d, %d)\n", color.r, color.g, color.b);
