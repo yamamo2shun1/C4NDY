@@ -51,6 +51,11 @@ int countMouseMark     = 0;
 double fadeMouseMark   = 0.0;
 uint8_t stateMouseMark = 4;
 
+bool isMixMarked     = false;
+int countMixMark     = 0;
+double fadeMixMark   = 0.0;
+uint8_t stateMixMark = 4;
+
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef* htim)
 {
     HAL_TIM_PWM_Stop_DMA(htim, TIM_CHANNEL_1);
@@ -135,8 +140,8 @@ void setAllLedBufDirect(const RGB_Color_t rgb_color)
 
 void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    const RGB_Color_t bc = rgb_blank;
-    const RGB_Color_t c  = gradation(rgb_blank, rgb_normal[getKeymapID()], fade);
+    const RGB_Color_t bc = rgb_normal[getKeymapID()];
+    const RGB_Color_t c  = gradation(rgb_normal[getKeymapID()], rgb_upper[getKeymapID()], fade);
 
     for (int i = 0; i < 10; i++)
     {
@@ -357,6 +362,66 @@ void setLedMouseMarkForJoystick(const uint8_t state)
     renew();
 }
 
+void setLedMarkForMix(const uint8_t state)
+{
+    // SEGGER_RTT_printf(0, "set: %d, %d, %d\n", index, state, isLeftMarked);
+
+    switch (state)
+    {
+    case 0:
+        setColumnColorLedBuf(0, 0b1100000000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b1100000000, fadeMixMark);
+        break;
+    case 1:
+        setColumnColorLedBuf(0, 0b0110000000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0110000000, fadeMixMark);
+        break;
+    case 2:
+        setColumnColorLedBuf(0, 0b0011000000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0011000000, fadeMixMark);
+        break;
+    case 3:
+        setColumnColorLedBuf(0, 0b0001100000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0001100000, fadeMixMark);
+        break;
+    case 4:
+        setColumnColorLedBuf(0, 0b0000110000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000110000, fadeMixMark);
+        break;
+    case 5:
+        setColumnColorLedBuf(0, 0b0000011000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000011000, fadeMixMark);
+        break;
+    case 6:
+        setColumnColorLedBuf(0, 0b0000001100, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000001100, fadeMixMark);
+        break;
+    case 7:
+        setColumnColorLedBuf(0, 0b0000000110, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000000110, fadeMixMark);
+        break;
+    case 8:
+        setColumnColorLedBuf(0, 0b0000000011, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000000011, fadeMixMark);
+        break;
+    default:
+        setColumnColorLedBuf(0, 0b0000000000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b0000000000, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000000000, fadeMixMark);
+        break;
+    }
+    renew();
+}
+
 void renew(void)
 {
     bool isRenewed = false;
@@ -523,6 +588,15 @@ void clearMouseMark(void)
     setLedMouseMarkForJoystick(stateMouseMark);
 }
 
+void setMixMark(const uint16_t xfade)
+{
+    isMixMarked  = true;
+    countMixMark = 0;
+    fadeMixMark  = 1.0;
+    stateMixMark = (xfade + 64) >> 7;
+    setLedMarkForMix(stateMixMark);
+}
+
 void led_control_task(void)
 {
     if (isLeftMarked)
@@ -577,6 +651,25 @@ void led_control_task(void)
                 fadeMouseMark  = 0.0;
                 isMouseMarked  = false;
                 stateMouseMark = 4;
+            }
+        }
+    }
+
+    if (isMixMarked)
+    {
+        countMixMark++;
+        if (countMixMark > ANIMATION_COUNT_MAX)
+        {
+            countMixMark = 0;
+
+            setLedMarkForMix(stateMixMark);
+
+            fadeMixMark -= 0.075;
+            if (fadeMixMark <= 0)
+            {
+                fadeMixMark  = 0.0;
+                isMixMarked  = false;
+                stateMixMark = 4;
             }
         }
     }

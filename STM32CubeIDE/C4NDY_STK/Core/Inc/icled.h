@@ -54,6 +54,7 @@ void setMark(const uint8_t index, const uint8_t state);
 void clearMark(const uint8_t index, const uint8_t state);
 void setMouseMark(const uint8_t state);
 void clearMouseMark(void);
+void setMixMark(const uint16_t xfade);
 
 void led_control_task(void);
 
