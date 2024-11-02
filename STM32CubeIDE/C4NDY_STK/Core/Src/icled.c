@@ -153,8 +153,8 @@ void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const double
 
 void setLeftHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    const RGB_Color_t bc = rgb_blank;
-    const RGB_Color_t c  = gradation(rgb_blank, rgb_normal[getKeymapID()], fade);
+    const RGB_Color_t bc = rgb_normal[getKeymapID()];
+    const RGB_Color_t c  = gradation(rgb_normal[getKeymapID()], rgb_upper[getKeymapID()], fade);
 
     for (int i = 0; i < 5; i++)
     {
@@ -171,8 +171,8 @@ void setLeftHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, cons
 
 void setRightHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    const RGB_Color_t bc = rgb_blank;
-    const RGB_Color_t c  = gradation(rgb_blank, rgb_normal[getKeymapID()], fade);
+    const RGB_Color_t bc = rgb_normal[getKeymapID()];
+    const RGB_Color_t c  = gradation(rgb_normal[getKeymapID()], rgb_upper[getKeymapID()], fade);
 
     for (int i = 5; i < 10; i++)
     {
@@ -447,7 +447,11 @@ void loadLEDColorsFromFlash(void)
     SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 17));
     SEGGER_RTT_printf(0, "]\n");
 
-    setAllLedBufDirect(rgb_blank);
+    setAllLedBufDirect(rgb_normal[getKeymapID()]);
+    setLedBufDirect(30, rgb_upper[getKeymapID()]);
+    setLedBufDirect(31, rgb_upper[getKeymapID()]);
+    setLedBufDirect(32, rgb_upper[getKeymapID()]);
+    setLedBufDirect(33, rgb_upper[getKeymapID()]);
     renew();
 
     SEGGER_RTT_printf(0, "// LED\n");
