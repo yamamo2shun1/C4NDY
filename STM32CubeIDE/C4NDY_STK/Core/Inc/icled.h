@@ -9,7 +9,6 @@
 #define INC_ICLED_H_
 
 #include <stdint.h>
-#include <stdbool.h>
 
 #define RGB      3
 #define COL_BITS 8
