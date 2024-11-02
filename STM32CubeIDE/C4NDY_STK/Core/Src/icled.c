@@ -111,66 +111,6 @@ double getIntensity(const uint8_t keymapId)
     return intensity[keymapId];
 }
 
-void setMark(const uint8_t index, const uint8_t state)
-{
-    SEGGER_RTT_printf(0, "setMark(%d, %d)\n", index, state);
-    if (index == 0)
-    {
-        isLeftMarked  = false;
-        countLeftMark = 0;
-        fadeLeftMark  = 1.0;
-        stateLeftMark = state;
-        setLedMarkForJoystick(0, stateLeftMark);
-    }
-    else if (index == 1)
-    {
-        isMouseMarked  = false;
-        isRightMarked  = false;
-        countRightMark = 0;
-        fadeRightMark  = 1.0;
-        stateRightMark = state;
-        setLedMarkForJoystick(1, stateRightMark);
-    }
-}
-
-void clearMark(const uint8_t index, const uint8_t state)
-{
-    SEGGER_RTT_printf(0, "clearMark(%d, %d)\n", index, state);
-    if (index == 0)
-    {
-        isLeftMarked  = true;
-        countLeftMark = 0;
-        fadeLeftMark  = 1.0;
-        stateLeftMark = state;
-        setLedMarkForJoystick(0, stateLeftMark);
-    }
-    else if (index == 1)
-    {
-        isRightMarked  = true;
-        countRightMark = 0;
-        fadeRightMark  = 1.0;
-        stateRightMark = state;
-        setLedMarkForJoystick(1, stateRightMark);
-    }
-}
-
-void setMouseMark(const uint8_t state)
-{
-    isMouseMarked  = false;
-    countMouseMark = 0;
-    fadeMouseMark  = 1.0;
-    stateMouseMark = state;
-    setLedMouseMarkForJoystick(stateMouseMark);
-}
-
-void clearMouseMark(void)
-{
-    isMouseMarked  = true;
-    countMouseMark = 0;
-    fadeMouseMark  = 1.0;
-    setLedMouseMarkForJoystick(stateMouseMark);
-}
-
 void setLedBufDirect(const uint8_t index, const RGB_Color_t rgb_color)
 {
     grb[index][0] = (uint8_t) ((double) rgb_color.g);
@@ -581,6 +521,66 @@ void loadLEDColorsFromFlash(void)
     SEGGER_RTT_printf(0, "%d ", read_flash_data(3));
     SEGGER_RTT_printf(0, "%d ", read_flash_data(4));
     SEGGER_RTT_printf(0, "]\n");
+}
+
+void setMark(const uint8_t index, const uint8_t state)
+{
+    SEGGER_RTT_printf(0, "setMark(%d, %d)\n", index, state);
+    if (index == 0)
+    {
+        isLeftMarked  = false;
+        countLeftMark = 0;
+        fadeLeftMark  = 1.0;
+        stateLeftMark = state;
+        setLedMarkForJoystick(0, stateLeftMark);
+    }
+    else if (index == 1)
+    {
+        isMouseMarked  = false;
+        isRightMarked  = false;
+        countRightMark = 0;
+        fadeRightMark  = 1.0;
+        stateRightMark = state;
+        setLedMarkForJoystick(1, stateRightMark);
+    }
+}
+
+void clearMark(const uint8_t index, const uint8_t state)
+{
+    SEGGER_RTT_printf(0, "clearMark(%d, %d)\n", index, state);
+    if (index == 0)
+    {
+        isLeftMarked  = true;
+        countLeftMark = 0;
+        fadeLeftMark  = 1.0;
+        stateLeftMark = state;
+        setLedMarkForJoystick(0, stateLeftMark);
+    }
+    else if (index == 1)
+    {
+        isRightMarked  = true;
+        countRightMark = 0;
+        fadeRightMark  = 1.0;
+        stateRightMark = state;
+        setLedMarkForJoystick(1, stateRightMark);
+    }
+}
+
+void setMouseMark(const uint8_t state)
+{
+    isMouseMarked  = false;
+    countMouseMark = 0;
+    fadeMouseMark  = 1.0;
+    stateMouseMark = state;
+    setLedMouseMarkForJoystick(stateMouseMark);
+}
+
+void clearMouseMark(void)
+{
+    isMouseMarked  = true;
+    countMouseMark = 0;
+    fadeMouseMark  = 1.0;
+    setLedMouseMarkForJoystick(stateMouseMark);
 }
 
 void led_control_task(void)
