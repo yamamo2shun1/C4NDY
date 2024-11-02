@@ -457,7 +457,7 @@ void renew(void)
 
 void checkColor(const uint8_t r, const uint8_t g, const uint8_t b)
 {
-    RGB_Color_t rgb_check = {r, g, b};
+    const RGB_Color_t rgb_check = {r, g, b};
 
     SEGGER_RTT_printf(0, "(r, g, b) = (%02X, %02X, %02X)\n", r, g, b);
 
