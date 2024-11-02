@@ -113,18 +113,18 @@ double getIntensity(const uint8_t keymapId)
 
 void setLedBufDirect(const uint8_t index, const RGB_Color_t rgb_color)
 {
-    grb[index][0] = (uint8_t) ((double) rgb_color.g);
-    grb[index][1] = (uint8_t) ((double) rgb_color.r);
-    grb[index][2] = (uint8_t) ((double) rgb_color.b);
+    grb[index][0] = rgb_color.g;
+    grb[index][1] = rgb_color.r;
+    grb[index][2] = rgb_color.b;
 }
 
 void setAllLedBufDirect(const RGB_Color_t rgb_color)
 {
     for (int i = 0; i < LED_NUMS; i++)
     {
-        grb[i][0] = (uint8_t) ((double) rgb_color.g);
-        grb[i][1] = (uint8_t) ((double) rgb_color.r);
-        grb[i][2] = (uint8_t) ((double) rgb_color.b);
+        grb[i][0] = rgb_color.g;
+        grb[i][1] = rgb_color.r;
+        grb[i][2] = rgb_color.b;
     }
 }
 
@@ -134,9 +134,9 @@ void setLedBuf(const uint8_t index, const RGB_Color_t rgb_color)
     grb_prev[index][1] = grb_current[index][1];
     grb_prev[index][2] = grb_current[index][2];
 
-    grb_current[index][0] = (uint8_t) ((double) rgb_color.g);
-    grb_current[index][1] = (uint8_t) ((double) rgb_color.r);
-    grb_current[index][2] = (uint8_t) ((double) rgb_color.b);
+    grb_current[index][0] = rgb_color.g;
+    grb_current[index][1] = rgb_color.r;
+    grb_current[index][2] = rgb_color.b;
 
     if (grb_prev[index][0] != grb_current[index][0] ||
         grb_prev[index][1] != grb_current[index][1] ||
@@ -155,9 +155,9 @@ void setAllLedBuf(const RGB_Color_t rgb_color)
         grb_prev[i][1] = grb_current[i][1];
         grb_prev[i][2] = grb_current[i][2];
 
-        grb_current[i][0] = (uint8_t) ((double) rgb_color.g);
-        grb_current[i][1] = (uint8_t) ((double) rgb_color.r);
-        grb_current[i][2] = (uint8_t) ((double) rgb_color.b);
+        grb_current[i][0] = rgb_color.g;
+        grb_current[i][1] = rgb_color.r;
+        grb_current[i][2] = rgb_color.b;
 
         if (grb_prev[i][0] != grb_current[i][0] ||
             grb_prev[i][1] != grb_current[i][1] ||
