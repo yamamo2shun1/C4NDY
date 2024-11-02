@@ -135,14 +135,10 @@ void setAllLedBufDirect(const RGB_Color_t rgb_color)
 
 void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    //const RGB_Color_t c  = {(uint8_t) ((double) rgb_normal[getKeymapID()].r * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].g * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].b * fade)};
-    const RGB_Color_t bc = {0x00, 0x00, 0x00};
-    const RGB_Color_t c = gradation(bc, rgb_normal[getKeymapID()], fade);
+    const RGB_Color_t bc = rgb_blank;
+    const RGB_Color_t c  = gradation(rgb_blank, rgb_normal[getKeymapID()], fade);
 
-        // SEGGER_RTT_printf(0, "o(r, g, b) = (%d, %d, %d)\n", color.r, color.g, color.b);
-        // SEGGER_RTT_printf(0, "m(r, g, b) = (%d, %d, %d)\n", c.r, c.g, c.b);
-
-        for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; i++)
     {
         if ((column >> (9 - i)) & 0x01)
         {
@@ -157,12 +153,8 @@ void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const double
 
 void setLeftHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    //const RGB_Color_t c  = {(uint8_t) ((double) rgb_normal[getKeymapID()].r * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].g * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].b * fade)};
-    const RGB_Color_t bc = {0x00, 0x00, 0x00};
-    const RGB_Color_t c = gradation(bc, rgb_normal[getKeymapID()], fade);
-
-    // SEGGER_RTT_printf(0, "o(r, g, b) = (%d, %d, %d)\n", color.r, color.g, color.b);
-    // SEGGER_RTT_printf(0, "m(r, g, b) = (%d, %d, %d)\n", c.r, c.g, c.b);
+    const RGB_Color_t bc = rgb_blank;
+    const RGB_Color_t c  = gradation(rgb_blank, rgb_normal[getKeymapID()], fade);
 
     for (int i = 0; i < 5; i++)
     {
@@ -179,12 +171,8 @@ void setLeftHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, cons
 
 void setRightHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    //const RGB_Color_t c  = {(uint8_t) ((double) rgb_normal[getKeymapID()].r * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].g * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].b * fade)};
-    const RGB_Color_t bc = {0x00, 0x00, 0x00};
-    const RGB_Color_t c = gradation(bc, rgb_normal[getKeymapID()], fade);
-
-    // SEGGER_RTT_printf(0, "o(r, g, b) = (%d, %d, %d)\n", color.r, color.g, color.b);
-    // SEGGER_RTT_printf(0, "m(r, g, b) = (%d, %d, %d)\n", c.r, c.g, c.b);
+    const RGB_Color_t bc = rgb_blank;
+    const RGB_Color_t c  = gradation(rgb_blank, rgb_normal[getKeymapID()], fade);
 
     for (int i = 5; i < 10; i++)
     {
