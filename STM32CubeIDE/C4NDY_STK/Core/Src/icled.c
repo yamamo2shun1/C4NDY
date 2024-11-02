@@ -531,6 +531,15 @@ void loadLEDColorsFromFlash(void)
 void setMark(const uint8_t index, const uint8_t state)
 {
     SEGGER_RTT_printf(0, "setMark(%d, %d)\n", index, state);
+
+    if (isMixMarked)
+    {
+        //fadeMixMark = 0.0;
+        isMixMarked = false;
+        setLedMarkForMix(255);
+        HAL_Delay(5);
+    }
+
     if (index == 0)
     {
         isLeftMarked  = false;
@@ -542,6 +551,7 @@ void setMark(const uint8_t index, const uint8_t state)
     else if (index == 1)
     {
         isMouseMarked  = false;
+
         isRightMarked  = false;
         countRightMark = 0;
         fadeRightMark  = 1.0;
@@ -573,6 +583,8 @@ void clearMark(const uint8_t index, const uint8_t state)
 
 void setMouseMark(const uint8_t state)
 {
+    isMixMarked = false;
+
     isMouseMarked  = false;
     countMouseMark = 0;
     fadeMouseMark  = 1.0;
@@ -590,6 +602,10 @@ void clearMouseMark(void)
 
 void setMixMark(const uint16_t xfade)
 {
+    isLeftMarked  = false;
+    isRightMarked = false;
+    isMouseMarked = false;
+
     isMixMarked  = true;
     countMixMark = 0;
     fadeMixMark  = 1.0;
