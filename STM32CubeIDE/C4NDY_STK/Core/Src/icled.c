@@ -36,10 +36,6 @@ uint32_t led_buf_prev[LED_NUMS * RGB * COL_BITS + 1] = {0};
 
 uint32_t counter = 0;
 
-bool isGradation = false;
-int count        = 0;
-double g_rate    = 0.0;
-
 bool isLeftMarked     = false;
 int countLeftMark     = 0;
 double fadeLeftMark   = 0.0;
@@ -111,6 +107,15 @@ double getIntensity(const uint8_t keymapId)
     return intensity[keymapId];
 }
 
+RGB_Color_t gradation(const RGB_Color_t color1, const RGB_Color_t color2, const double rate)
+{
+    const uint8_t r         = (uint8_t) ((double) (color2.r - color1.r) * rate + (double) color1.r);
+    const uint8_t g         = (uint8_t) ((double) (color2.g - color1.g) * rate + (double) color1.g);
+    const uint8_t b         = (uint8_t) ((double) (color2.b - color1.b) * rate + (double) color1.b);
+    const RGB_Color_t color = {r, g, b};
+    return color;
+}
+
 void setLedBufDirect(const uint8_t index, const RGB_Color_t rgb_color)
 {
     grb[index][0] = rgb_color.g;
@@ -128,56 +133,16 @@ void setAllLedBufDirect(const RGB_Color_t rgb_color)
     }
 }
 
-void setLedBuf(const uint8_t index, const RGB_Color_t rgb_color)
-{
-    grb_prev[index][0] = grb_current[index][0];
-    grb_prev[index][1] = grb_current[index][1];
-    grb_prev[index][2] = grb_current[index][2];
-
-    grb_current[index][0] = rgb_color.g;
-    grb_current[index][1] = rgb_color.r;
-    grb_current[index][2] = rgb_color.b;
-
-    if (grb_prev[index][0] != grb_current[index][0] ||
-        grb_prev[index][1] != grb_current[index][1] ||
-        grb_prev[index][2] != grb_current[index][2])
-    {
-        isGradation = true;
-        g_rate      = 0.0;
-    }
-}
-
-void setAllLedBuf(const RGB_Color_t rgb_color)
-{
-    for (int i = 0; i < LED_NUMS; i++)
-    {
-        grb_prev[i][0] = grb_current[i][0];
-        grb_prev[i][1] = grb_current[i][1];
-        grb_prev[i][2] = grb_current[i][2];
-
-        grb_current[i][0] = rgb_color.g;
-        grb_current[i][1] = rgb_color.r;
-        grb_current[i][2] = rgb_color.b;
-
-        if (grb_prev[i][0] != grb_current[i][0] ||
-            grb_prev[i][1] != grb_current[i][1] ||
-            grb_prev[i][2] != grb_current[i][2])
-        {
-            isGradation = true;
-            g_rate      = 0.0;
-        }
-    }
-}
-
 void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    const RGB_Color_t c  = {(uint8_t) ((double) rgb_normal[getKeymapID()].r * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].g * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].b * fade)};
+    //const RGB_Color_t c  = {(uint8_t) ((double) rgb_normal[getKeymapID()].r * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].g * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].b * fade)};
     const RGB_Color_t bc = {0x00, 0x00, 0x00};
+    const RGB_Color_t c = gradation(bc, rgb_normal[getKeymapID()], fade);
 
-    // SEGGER_RTT_printf(0, "o(r, g, b) = (%d, %d, %d)\n", color.r, color.g, color.b);
-    // SEGGER_RTT_printf(0, "m(r, g, b) = (%d, %d, %d)\n", c.r, c.g, c.b);
+        // SEGGER_RTT_printf(0, "o(r, g, b) = (%d, %d, %d)\n", color.r, color.g, color.b);
+        // SEGGER_RTT_printf(0, "m(r, g, b) = (%d, %d, %d)\n", c.r, c.g, c.b);
 
-    for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
     {
         if ((column >> (9 - i)) & 0x01)
         {
@@ -192,8 +157,9 @@ void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const double
 
 void setLeftHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    const RGB_Color_t c  = {(uint8_t) ((double) rgb_normal[getKeymapID()].r * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].g * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].b * fade)};
+    //const RGB_Color_t c  = {(uint8_t) ((double) rgb_normal[getKeymapID()].r * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].g * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].b * fade)};
     const RGB_Color_t bc = {0x00, 0x00, 0x00};
+    const RGB_Color_t c = gradation(bc, rgb_normal[getKeymapID()], fade);
 
     // SEGGER_RTT_printf(0, "o(r, g, b) = (%d, %d, %d)\n", color.r, color.g, color.b);
     // SEGGER_RTT_printf(0, "m(r, g, b) = (%d, %d, %d)\n", c.r, c.g, c.b);
@@ -213,8 +179,9 @@ void setLeftHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, cons
 
 void setRightHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    const RGB_Color_t c  = {(uint8_t) ((double) rgb_normal[getKeymapID()].r * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].g * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].b * fade)};
+    //const RGB_Color_t c  = {(uint8_t) ((double) rgb_normal[getKeymapID()].r * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].g * fade), (uint8_t) ((double) rgb_normal[getKeymapID()].b * fade)};
     const RGB_Color_t bc = {0x00, 0x00, 0x00};
+    const RGB_Color_t c = gradation(bc, rgb_normal[getKeymapID()], fade);
 
     // SEGGER_RTT_printf(0, "o(r, g, b) = (%d, %d, %d)\n", color.r, color.g, color.b);
     // SEGGER_RTT_printf(0, "m(r, g, b) = (%d, %d, %d)\n", c.r, c.g, c.b);
@@ -228,25 +195,6 @@ void setRightHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, con
         else
         {
             setLedBufDirect(i + row * 10, bc);
-        }
-    }
-}
-
-void gradation(const uint8_t index, const double rate)
-{
-    for (int k = 0; k < RGB; k++)
-    {
-        grb[index][k] = (uint8_t) ((double) (grb_current[index][k] - grb_prev[index][k]) * rate + (double) grb_prev[index][k]);
-    }
-}
-
-void gradationAll(const double rate)
-{
-    for (int i = 0; i < LED_NUMS; i++)
-    {
-        for (int k = 0; k < RGB; k++)
-        {
-            grb[i][k] = (uint8_t) ((double) (grb_current[i][k] - grb_prev[i][k]) * rate + (double) grb_prev[i][k]);
         }
     }
 }
@@ -511,7 +459,7 @@ void loadLEDColorsFromFlash(void)
     SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 17));
     SEGGER_RTT_printf(0, "]\n");
 
-    setAllLedBuf(rgb_blank);
+    setAllLedBufDirect(rgb_blank);
     renew();
 
     SEGGER_RTT_printf(0, "// LED\n");
@@ -585,23 +533,6 @@ void clearMouseMark(void)
 
 void led_control_task(void)
 {
-    if (isGradation)
-    {
-        count++;
-        if (count > GRADATION_COUNT_MAX)
-        {
-            gradationAll(g_rate);
-            renew();
-
-            count = 0;
-            g_rate += GRADATION_RATE_STEP;
-            if (g_rate > 1.0)
-            {
-                isGradation = false;
-            }
-        }
-    }
-
     if (isLeftMarked)
     {
         countLeftMark++;
@@ -632,8 +563,8 @@ void led_control_task(void)
             fadeRightMark -= 0.075;
             if (fadeRightMark <= 0)
             {
-                fadeRightMark = 0.0;
-                isRightMarked = false;
+                fadeRightMark  = 0.0;
+                isRightMarked  = false;
                 stateMouseMark = 4;
             }
         }
