@@ -671,21 +671,21 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         {
         case 0xF0:
             const RGB_Color_t rgb_normal = getNormalColor(0);
-            buffer_sb[0]                  = rgb_normal.r;
-            buffer_sb[1]                  = rgb_normal.g;
-            buffer_sb[2]                  = rgb_normal.b;
+            buffer_sb[0]                 = rgb_normal.r;
+            buffer_sb[1]                 = rgb_normal.g;
+            buffer_sb[2]                 = rgb_normal.b;
             break;
         case 0xF1:
             const RGB_Color_t rgb_upper = getUpperColor(0);
-            buffer_sb[0]                 = rgb_upper.r;
-            buffer_sb[1]                 = rgb_upper.g;
-            buffer_sb[2]                 = rgb_upper.b;
+            buffer_sb[0]                = rgb_upper.r;
+            buffer_sb[1]                = rgb_upper.g;
+            buffer_sb[2]                = rgb_upper.b;
             break;
         case 0xF2:
             const RGB_Color_t rgb_shift = getShiftColor(0);
-            buffer_sb[0]                 = rgb_shift.r;
-            buffer_sb[1]                 = rgb_shift.g;
-            buffer_sb[2]                 = rgb_shift.b;
+            buffer_sb[0]                = rgb_shift.r;
+            buffer_sb[1]                = rgb_shift.g;
+            buffer_sb[2]                = rgb_shift.b;
             break;
         default:
             break;
@@ -748,21 +748,21 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         {
         case 0xF0:
             const RGB_Color_t rgb_normal = getNormalColor(1);
-            buffer_sb[0]                  = rgb_normal.r;
-            buffer_sb[1]                  = rgb_normal.g;
-            buffer_sb[2]                  = rgb_normal.b;
+            buffer_sb[0]                 = rgb_normal.r;
+            buffer_sb[1]                 = rgb_normal.g;
+            buffer_sb[2]                 = rgb_normal.b;
             break;
         case 0xF1:
             const RGB_Color_t rgb_upper = getUpperColor(1);
-            buffer_sb[0]                 = rgb_upper.r;
-            buffer_sb[1]                 = rgb_upper.g;
-            buffer_sb[2]                 = rgb_upper.b;
+            buffer_sb[0]                = rgb_upper.r;
+            buffer_sb[1]                = rgb_upper.g;
+            buffer_sb[2]                = rgb_upper.b;
             break;
         case 0xF2:
             const RGB_Color_t rgb_shift = getShiftColor(1);
-            buffer_sb[0]                 = rgb_shift.r;
-            buffer_sb[1]                 = rgb_shift.g;
-            buffer_sb[2]                 = rgb_shift.b;
+            buffer_sb[0]                = rgb_shift.r;
+            buffer_sb[1]                = rgb_shift.g;
+            buffer_sb[2]                = rgb_shift.b;
             break;
         default:
             break;
