@@ -165,9 +165,11 @@
 bool isXFadeCutPressed(void);
 uint8_t getKeymapID(void);
 uint8_t getLinePhonoSW(void);
+
 void factoryReset(void);
 void writeAllKeyboardSettings(void);
 void loadKeyboardSettingsFromFlash(void);
+
 void hid_keyscan_task(void);
 
 #endif /* INC_KEYBOARD_H_ */

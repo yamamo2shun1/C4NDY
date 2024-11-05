@@ -44,8 +44,12 @@ uint8_t linePhonoSW       = 0;
 
 bool isMasterGainChanged = false;
 
-bool isUpper         = false;
-bool isShift         = false;
+bool isUpper   = false;
+bool isShift   = false;
+bool isControl = false;
+bool isAlt     = false;
+bool isGui     = false;
+
 bool isClicked       = false;
 bool isWheel         = false;
 bool isXFadeCut      = false;
@@ -980,9 +984,21 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
     {
         keyboardHID.modifiers &= ~(1 << (code - KC_LCONTROL));
 
-        if (code == KC_LSHIFT || code == KC_RSHIFT)
+        if (code == KC_LCONTROL || code == KC_RCONTROL)
+        {
+            isControl = false;
+        }
+        else if (code == KC_LSHIFT || code == KC_RSHIFT)
         {
             isShift = false;
+        }
+        else if (code == KC_LALT || code == KC_RALT)
+        {
+            isAlt = false;
+        }
+        else if (code == KC_LGUI || code == KC_RGUI)
+        {
+            isGui = false;
         }
     }
     else
@@ -1000,9 +1016,21 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
     {
         keyboardHID.modifiers &= ~modifiers;
 
-        if ((((modifiers & M_LS) >> 1) & 0x01) || (((modifiers & M_RS) >> 5) & 0x01))
+        if ((modifiers & M_LC) >> 0 & 0x01 || (modifiers & M_RC) >> 4 & 0x01)
+        {
+            isControl = false;
+        }
+        else if ((modifiers & M_LS) >> 1 & 0x01 || (modifiers & M_RS) >> 5 & 0x01)
         {
             isShift = false;
+        }
+        else if ((modifiers & M_LA) >> 2 & 0x01 || (modifiers & M_RA) >> 6 & 0x01)
+        {
+            isAlt = false;
+        }
+        else if ((modifiers & M_LG) >> 3 & 0x01 || (modifiers & M_RG) >> 7 & 0x01)
+        {
+            isGui = false;
         }
     }
 
@@ -1093,9 +1121,21 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
         if (!((keyboardHID.modifiers >> (KC_LSHIFT - KC_LCONTROL)) & 0x01) &&
             !((keyboardHID.modifiers >> (KC_RSHIFT - KC_LCONTROL)) & 0x01))
         {
-            if (code == KC_LSHIFT || code == KC_RSHIFT)
+            if (code == KC_LCONTROL || code == KC_RCONTROL)
+            {
+                isControl = true;
+            }
+            else if (code == KC_LSHIFT || code == KC_RSHIFT)
             {
                 isShift = true;
+            }
+            else if (code == KC_LALT || code == KC_RALT)
+            {
+                isAlt = true;
+            }
+            else if (code == KC_LGUI || code == KC_RGUI)
+            {
+                isGui = true;
             }
         }
 
@@ -1138,9 +1178,21 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
         if (!((keyboardHID.modifiers >> (KC_LSHIFT - KC_LCONTROL)) & 0x01) &&
             !((keyboardHID.modifiers >> (KC_RSHIFT - KC_LCONTROL)) & 0x01))
         {
-            if ((((modifiers & M_LS) >> 1) & 0x01) || (((modifiers & M_RS) >> 5) & 0x01))
+            if ((modifiers & M_LC) >> 0 & 0x01 || (modifiers & M_RC) >> 4 & 0x01)
+            {
+                isControl = true;
+            }
+            else if ((((modifiers & M_LS) >> 1) & 0x01) || (((modifiers & M_RS) >> 5) & 0x01))
             {
                 isShift = true;
+            }
+            else if ((modifiers & M_LA) >> 2 & 0x01 || (modifiers & M_RA) >> 6 & 0x01)
+            {
+                isAlt = true;
+            }
+            else if ((modifiers & M_LG) >> 3 & 0x01 || (modifiers & M_RG) >> 7 & 0x01)
+            {
+                isGui = true;
             }
         }
 
@@ -1228,7 +1280,7 @@ void controlJoySticks(void)
             else if (theta >= 45 - JOYSTICK_ON_ANGLE2 && theta < 45 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:up right (%d)\n", i, (int) theta);
-                if (isUpper && i == 1)
+                if (isUpper && !(isControl || isShift || isAlt || isGui) && i == 1)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
                     currentStk[i][JOYSTICK_V] = 0;
@@ -1243,7 +1295,7 @@ void controlJoySticks(void)
             else if (theta >= -135 - JOYSTICK_ON_ANGLE2 && theta < -135 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:down left (%d)\n", i, (int) theta);
-                if (isUpper && i == 1)
+                if (isUpper && !(isControl || isShift || isAlt || isGui) && i == 1)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
                     currentStk[i][JOYSTICK_V] = 0;
@@ -1258,7 +1310,7 @@ void controlJoySticks(void)
             else if (theta >= -45 - JOYSTICK_ON_ANGLE2 && theta < -45 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:down right (%d)\n", i, (int) theta);
-                if (isUpper && i == 1)
+                if (isUpper && !(isControl || isShift || isAlt || isGui) && i == 1)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
                     currentStk[i][JOYSTICK_V] = 0;
@@ -1273,7 +1325,7 @@ void controlJoySticks(void)
             else if (theta >= -90 - JOYSTICK_ON_ANGLE && theta < -90 + JOYSTICK_ON_ANGLE)
             {
                 // SEGGER_RTT_printf(0, "%d:down (%d)\n", i, (int) theta);
-                if (isUpper && i == 1)
+                if (isUpper && !(isControl || isShift || isAlt || isGui) && i == 1)
                 {
                     currentStk[i][JOYSTICK_V] = 0;
                     setMouseMark(7);
@@ -1286,7 +1338,7 @@ void controlJoySticks(void)
             else if (theta < -180 + JOYSTICK_ON_ANGLE || theta >= 180 - JOYSTICK_ON_ANGLE)
             {
                 // SEGGER_RTT_printf(0, "%d:left (%d)\n", i, (int) theta);
-                if (isUpper && i == 1)
+                if (isUpper && !(isControl || isShift || isAlt || isGui) && i == 1)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
                     setMouseMark(3);
@@ -1299,7 +1351,7 @@ void controlJoySticks(void)
             else if (theta >= 0 - JOYSTICK_ON_ANGLE && theta < 0 + JOYSTICK_ON_ANGLE)
             {
                 // SEGGER_RTT_printf(0, "%d:right (%d)\n", i, (int) theta);
-                if (isUpper && i == 1)
+                if (isUpper && !(isControl || isShift || isAlt || isGui) && i == 1)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
                     setMouseMark(5);
@@ -1325,7 +1377,7 @@ void controlJoySticks(void)
             currentStk[i][JOYSTICK_H] = 0;
             currentStk[i][JOYSTICK_V] = 0;
 
-            if (isUpper && i == 1 && !isStickReturned)
+            if (isUpper && !(isControl || isShift || isAlt || isGui) && i == 1 && !isStickReturned)
             {
                 SEGGER_RTT_printf(0, "stick returned\n");
                 clearMouseMark();
