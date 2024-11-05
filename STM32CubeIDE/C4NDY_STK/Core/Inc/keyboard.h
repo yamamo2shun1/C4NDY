@@ -20,6 +20,9 @@
 #define MATRIX_ROWS    4
 #define MATRIX_COLUMNS 10
 
+#define STICK_NUM       2
+#define STICK_DIRECTION 9
+
 #define KC_A        0x04  // a
 #define KC_B        0x05  // b
 #define KC_C        0x06  // c
@@ -159,31 +162,14 @@
 #define MIN_MOUSE_THRESHOLD   0
 #define MAX_WHEEL_SENSITIVITY 2
 
-void setKeymapID(const uint8_t val);
+bool isXFadeCutPressed(void);
 uint8_t getKeymapID(void);
-void setLinePhonoSW(const uint8_t val);
 uint8_t getLinePhonoSW(void);
+
 void factoryReset(void);
 void writeAllKeyboardSettings(void);
 void loadKeyboardSettingsFromFlash(void);
-uint8_t getNormalKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y);
-uint8_t getUpperKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y);
-uint8_t getStickKeyCode(const uint8_t keymapId, const uint8_t id, const uint8_t direction);
-void setNormalKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t code);
-void setUpperKeyCode(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t code);
-void setStickKeyCode(const uint8_t keymapId, const uint8_t id, const uint8_t direction, const uint8_t code);
-uint8_t getNormalModifiers(const uint8_t keymapId, const uint8_t x, const uint8_t y);
-uint8_t getUpperModifiers(const uint8_t keymapId, const uint8_t x, const uint8_t y);
-uint8_t getStickModifiers(const uint8_t keymapId, const uint8_t id, const uint8_t direction);
-void setNormalModifiers(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t modifiers);
-void setUpperModifiers(const uint8_t keymapId, const uint8_t x, const uint8_t y, const uint8_t modifiers);
-void setStickModifiers(const uint8_t keymapId, const uint8_t id, const uint8_t direction, const uint8_t modifiers);
-void resetKeys(void);
-void clearKeys(const uint8_t code, const uint8_t modifiers);
-void setKeys(const uint8_t code, const uint8_t modifiers);
-bool isUpperPressed(void);
-bool isShiftPressed(void);
-bool isXFadeCutPressed(void);
+
 void hid_keyscan_task(void);
 
 #endif /* INC_KEYBOARD_H_ */
