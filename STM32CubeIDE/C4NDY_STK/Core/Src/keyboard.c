@@ -44,11 +44,12 @@ uint8_t linePhonoSW       = 0;
 
 bool isMasterGainChanged = false;
 
-bool isUpper      = false;
-bool isShift      = false;
-bool isClicked    = false;
-bool isWheel      = false;
-bool isXFadeCut   = false;
+bool isUpper         = false;
+bool isShift         = false;
+bool isClicked       = false;
+bool isWheel         = false;
+bool isXFadeCut      = false;
+bool isStickReturned = false;
 
 int offset_calibrate_count[JOYSTICK_NUMS] = {0};
 double x_offset[JOYSTICK_NUMS]            = {0.0};
@@ -363,24 +364,24 @@ void writeAllKeyboardSettings(void)
         }
     }
 
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 0, getNormalColor(0)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 1, getNormalColor(0)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 2, getNormalColor(0)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 3, getUpperColor(0)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 4, getUpperColor(0)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 5, getUpperColor(0)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 6, getShiftColor(0)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 7, getShiftColor(0)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 8, getShiftColor(0)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 9, getNormalColor(1)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 10, getNormalColor(1)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 11, getNormalColor(1)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 12, getUpperColor(1)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 13, getUpperColor(1)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 14, getUpperColor(1)->b);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 15, getShiftColor(1)->r);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 16, getShiftColor(1)->g);
-    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 17, getShiftColor(1)->b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 0, getNormalColor(0).r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 1, getNormalColor(0).g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 2, getNormalColor(0).b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 3, getUpperColor(0).r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 4, getUpperColor(0).g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 5, getUpperColor(0).b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 6, getShiftColor(0).r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 7, getShiftColor(0).g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 8, getShiftColor(0).b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 9, getNormalColor(1).r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 10, getNormalColor(1).g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 11, getNormalColor(1).b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 12, getUpperColor(1).r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 13, getUpperColor(1).g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 14, getUpperColor(1).b);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 15, getShiftColor(1).r);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 16, getShiftColor(1).g);
+    write_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 17, getShiftColor(1).b);
 
     HAL_FLASH_Lock();
 }
@@ -669,22 +670,22 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         switch (buffer[0])
         {
         case 0xF0:
-            const RGB_Color_t* rgb_normal = getNormalColor(0);
-            buffer_sb[0]                  = rgb_normal->r;
-            buffer_sb[1]                  = rgb_normal->g;
-            buffer_sb[2]                  = rgb_normal->b;
+            const RGB_Color_t rgb_normal = getNormalColor(0);
+            buffer_sb[0]                 = rgb_normal.r;
+            buffer_sb[1]                 = rgb_normal.g;
+            buffer_sb[2]                 = rgb_normal.b;
             break;
         case 0xF1:
-            const RGB_Color_t* rgb_upper = getUpperColor(0);
-            buffer_sb[0]                 = rgb_upper->r;
-            buffer_sb[1]                 = rgb_upper->g;
-            buffer_sb[2]                 = rgb_upper->b;
+            const RGB_Color_t rgb_upper = getUpperColor(0);
+            buffer_sb[0]                = rgb_upper.r;
+            buffer_sb[1]                = rgb_upper.g;
+            buffer_sb[2]                = rgb_upper.b;
             break;
         case 0xF2:
-            const RGB_Color_t* rgb_shift = getShiftColor(0);
-            buffer_sb[0]                 = rgb_shift->r;
-            buffer_sb[1]                 = rgb_shift->g;
-            buffer_sb[2]                 = rgb_shift->b;
+            const RGB_Color_t rgb_shift = getShiftColor(0);
+            buffer_sb[0]                = rgb_shift.r;
+            buffer_sb[1]                = rgb_shift.g;
+            buffer_sb[2]                = rgb_shift.b;
             break;
         default:
             break;
@@ -746,22 +747,22 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
         switch (buffer[0])
         {
         case 0xF0:
-            const RGB_Color_t* rgb_normal = getNormalColor(1);
-            buffer_sb[0]                  = rgb_normal->r;
-            buffer_sb[1]                  = rgb_normal->g;
-            buffer_sb[2]                  = rgb_normal->b;
+            const RGB_Color_t rgb_normal = getNormalColor(1);
+            buffer_sb[0]                 = rgb_normal.r;
+            buffer_sb[1]                 = rgb_normal.g;
+            buffer_sb[2]                 = rgb_normal.b;
             break;
         case 0xF1:
-            const RGB_Color_t* rgb_upper = getUpperColor(1);
-            buffer_sb[0]                 = rgb_upper->r;
-            buffer_sb[1]                 = rgb_upper->g;
-            buffer_sb[2]                 = rgb_upper->b;
+            const RGB_Color_t rgb_upper = getUpperColor(1);
+            buffer_sb[0]                = rgb_upper.r;
+            buffer_sb[1]                = rgb_upper.g;
+            buffer_sb[2]                = rgb_upper.b;
             break;
         case 0xF2:
-            const RGB_Color_t* rgb_shift = getShiftColor(1);
-            buffer_sb[0]                 = rgb_shift->r;
-            buffer_sb[1]                 = rgb_shift->g;
-            buffer_sb[2]                 = rgb_shift->b;
+            const RGB_Color_t rgb_shift = getShiftColor(1);
+            buffer_sb[0]                = rgb_shift.r;
+            buffer_sb[1]                = rgb_shift.g;
+            buffer_sb[2]                = rgb_shift.b;
             break;
         default:
             break;
@@ -915,67 +916,6 @@ void setStickModifiers(const uint8_t keymapId, const uint8_t id, const uint8_t d
     keymaps_stk[keymapId][id][direction][1] = modifiers;
 }
 
-void switchLEDColorAccordingKeymaps(void)
-{
-    for (int j = 0; j < MATRIX_ROWS; j++)
-    {
-        for (int i = 0; i < MATRIX_COLUMNS; i++)
-        {
-            const int index = MATRIX_COLUMNS * j + i;
-            if (index < 30)
-            {
-                if (isUpper)
-                {
-                    if (getUpperKeyCode(keymapID, j, i) != KC_NULL)
-                    {
-                        setLedBuf(index, getShiftColor(keymapID));
-                    }
-                    else
-                    {
-                        setLedBuf(index, getBlankColor());
-                    }
-                }
-                else
-                {
-                    if (getNormalKeyCode(keymapID, j, i) != KC_NULL)
-                    {
-                        setLedBuf(index, getShiftColor(keymapID));
-                    }
-                    else
-                    {
-                        setLedBuf(index, getBlankColor());
-                    }
-                }
-            }
-            else if (index >= 36)
-            {
-                if (isUpper)
-                {
-                    if (getUpperKeyCode(keymapID, j, i) != KC_NULL)
-                    {
-                        setLedBuf(index - 6, getShiftColor(keymapID));
-                    }
-                    else
-                    {
-                        setLedBuf(index - 6, getBlankColor());
-                    }
-                }
-                else
-                {
-                    if (getNormalKeyCode(keymapID, j, i) != KC_NULL)
-                    {
-                        setLedBuf(index - 6, getShiftColor(keymapID));
-                    }
-                    else
-                    {
-                        setLedBuf(index - 6, getBlankColor());
-                    }
-                }
-            }
-        }
-    }
-}
-
 void resetKeys(void)
 {
     keyboardHID.modifiers = 0;
@@ -1016,20 +956,11 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
         {
             resetKeys();
 
-            isUpper = false;
-            isWheel = false;
+            isUpper         = false;
+            isWheel         = false;
+            isStickReturned = false;
 
             countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
-
-            if (((keyboardHID.modifiers >> (KC_LSHIFT - KC_LCONTROL)) & 0x01) ||
-                ((keyboardHID.modifiers >> (KC_RSHIFT - KC_LCONTROL)) & 0x01))
-            {
-                setAllLedBuf(getShiftColor(keymapID));
-            }
-            else
-            {
-                setAllLedBuf(getNormalColor(keymapID));
-            }
         }
     }
     else if (code == KC_M_WHEEL)
@@ -1047,43 +978,6 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
         if (code == KC_LSHIFT || code == KC_RSHIFT)
         {
             isShift = false;
-
-            if (isUpper)
-            {
-                for (int j = 0; j < MATRIX_ROWS; j++)
-                {
-                    for (int i = 0; i < MATRIX_COLUMNS; i++)
-                    {
-                        const int index = MATRIX_COLUMNS * j + i;
-                        if (index < 30)
-                        {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
-                            {
-                                setLedBuf(index, getUpperColor(keymapID));
-                            }
-                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL || getUpperModifiers(keymapID, j, i) == M_NO)
-                            {
-                                setLedBuf(index, getBlankColor());
-                            }
-                        }
-                        else if (index >= 36)
-                        {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
-                            {
-                                setLedBuf(index - 6, getUpperColor(keymapID));
-                            }
-                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL || getUpperModifiers(keymapID, j, i) == M_NO)
-                            {
-                                setLedBuf(index - 6, getBlankColor());
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                setAllLedBuf(getNormalColor(keymapID));
-            }
         }
     }
     else
@@ -1104,43 +998,6 @@ void clearKeys(const uint8_t code, const uint8_t modifiers)
         if ((((modifiers & M_LS) >> 1) & 0x01) || (((modifiers & M_RS) >> 5) & 0x01))
         {
             isShift = false;
-
-            if (isUpper)
-            {
-                for (int j = 0; j < MATRIX_ROWS; j++)
-                {
-                    for (int i = 0; i < MATRIX_COLUMNS; i++)
-                    {
-                        const int index = MATRIX_COLUMNS * j + i;
-                        if (index < 30)
-                        {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
-                            {
-                                setLedBuf(index, getUpperColor(keymapID));
-                            }
-                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL || getUpperModifiers(keymapID, j, i) == M_NO)
-                            {
-                                setLedBuf(index, getBlankColor());
-                            }
-                        }
-                        else if (index >= 36)
-                        {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
-                            {
-                                setLedBuf(index - 6, getUpperColor(keymapID));
-                            }
-                            else if (getUpperKeyCode(keymapID, j, i) == KC_NULL || getUpperModifiers(keymapID, j, i) == M_NO)
-                            {
-                                setLedBuf(index - 6, getBlankColor());
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                setAllLedBuf(getNormalColor(keymapID));
-            }
         }
     }
 
@@ -1159,15 +1016,6 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
             // writeAllKeyboardSettings();
 
             isKeymapIDChanged = true;
-
-            if (isUpper)
-            {
-                switchLEDColorAccordingKeymaps();
-            }
-            else
-            {
-                setAllLedBuf(getNormalColor(keymapID));
-            }
         }
     }
     else if (code == KC_LNPH)
@@ -1189,6 +1037,7 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
     else if (code == KC_XF_CUT2)
     {
         isXFadeCut = true;
+        HAL_Delay(5);
         send_xfade(0);
     }
     else if (code == KC_MGAIN_UP)
@@ -1224,66 +1073,6 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
         if (!isUpper)
         {
             isUpper = true;
-
-            for (int j = 0; j < MATRIX_ROWS; j++)
-            {
-                for (int i = 0; i < MATRIX_COLUMNS; i++)
-                {
-                    const int index = MATRIX_COLUMNS * j + i;
-                    if (index < 30)
-                    {
-                        if ((((keyboardHID.modifiers >> (KC_LSHIFT - KC_LCONTROL)) & 0x01) ||
-                             ((keyboardHID.modifiers >> (KC_RSHIFT - KC_LCONTROL)) & 0x01)))
-                        {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
-                            {
-                                setLedBuf(index, getShiftColor(keymapID));
-                            }
-                            else
-                            {
-                                setLedBuf(index, getBlankColor());
-                            }
-                        }
-                        else
-                        {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
-                            {
-                                setLedBuf(index, getUpperColor(keymapID));
-                            }
-                            else
-                            {
-                                setLedBuf(index, getBlankColor());
-                            }
-                        }
-                    }
-                    else if (index >= 36)
-                    {
-                        if ((((keyboardHID.modifiers >> (KC_LSHIFT - KC_LCONTROL)) & 0x01) ||
-                             ((keyboardHID.modifiers >> (KC_RSHIFT - KC_LCONTROL)) & 0x01)))
-                        {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
-                            {
-                                setLedBuf(index - 6, getShiftColor(keymapID));
-                            }
-                            else
-                            {
-                                setLedBuf(index - 6, getBlankColor());
-                            }
-                        }
-                        else
-                        {
-                            if (getUpperKeyCode(keymapID, j, i) != KC_NULL || getUpperModifiers(keymapID, j, i) != M_NO)
-                            {
-                                setLedBuf(index - 6, getUpperColor(keymapID));
-                            }
-                            else
-                            {
-                                setLedBuf(index - 6, getBlankColor());
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
     else if (code == KC_M_WHEEL)
@@ -1302,8 +1091,6 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
             if (code == KC_LSHIFT || code == KC_RSHIFT)
             {
                 isShift = true;
-
-                switchLEDColorAccordingKeymaps();
             }
         }
 
@@ -1330,26 +1117,12 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
                 }
                 break;
             }
-            else if (keyboardHID.key[k] == 0x00)
+            if (keyboardHID.key[k] == 0x00)
             {
                 if (code != KC_NULL)
                 {
                     keyboardHID.key[k] = code;
                 }
-
-                if (code == keymaps_stk[keymapID][0][3][0])  // L JoyStick -> Tilt left
-                {
-                    setBackspaceFlag();
-                }
-                else if (code == keymaps_stk[keymapID][1][5][0])  // R JoyStick -> Tilt right
-                {
-                    setSpaceFlag();
-                }
-                else if (code == keymaps_stk[keymapID][0][7][0])  // R JoyStick -> Tilt down
-                {
-                    setEnterFlag();
-                }
-
                 break;
             }
         }
@@ -1363,8 +1136,6 @@ void setKeys(const uint8_t code, const uint8_t modifiers)
             if ((((modifiers & M_LS) >> 1) & 0x01) || (((modifiers & M_RS) >> 5) & 0x01))
             {
                 isShift = true;
-
-                switchLEDColorAccordingKeymaps();
             }
         }
 
@@ -1427,6 +1198,7 @@ void controlJoySticks(void)
                 if (isUpper && i == 1)
                 {
                     currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(1);
                 }
                 else
                 {
@@ -1436,26 +1208,62 @@ void controlJoySticks(void)
             else if (theta >= 135 - JOYSTICK_ON_ANGLE2 && theta < 135 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:up left (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_H] = -1;
-                currentStk[i][JOYSTICK_V] = -1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 0;
+                    currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(0);
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = -1;
+                    currentStk[i][JOYSTICK_V] = -1;
+                }
             }
             else if (theta >= 45 - JOYSTICK_ON_ANGLE2 && theta < 45 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:up right (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_H] = 1;
-                currentStk[i][JOYSTICK_V] = -1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 0;
+                    currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(2);
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = 1;
+                    currentStk[i][JOYSTICK_V] = -1;
+                }
             }
             else if (theta >= -135 - JOYSTICK_ON_ANGLE2 && theta < -135 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:down left (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_H] = -1;
-                currentStk[i][JOYSTICK_V] = 1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 0;
+                    currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(6);
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = -1;
+                    currentStk[i][JOYSTICK_V] = 1;
+                }
             }
             else if (theta >= -45 - JOYSTICK_ON_ANGLE2 && theta < -45 + JOYSTICK_ON_ANGLE2)
             {
                 // SEGGER_RTT_printf(0, "%d:down right (%d)\n", i, (int) theta);
-                currentStk[i][JOYSTICK_H] = 1;
-                currentStk[i][JOYSTICK_V] = 1;
+                if (isUpper && i == 1)
+                {
+                    currentStk[i][JOYSTICK_H] = 0;
+                    currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(8);
+                }
+                else
+                {
+                    currentStk[i][JOYSTICK_H] = 1;
+                    currentStk[i][JOYSTICK_V] = 1;
+                }
             }
             else if (theta >= -90 - JOYSTICK_ON_ANGLE && theta < -90 + JOYSTICK_ON_ANGLE)
             {
@@ -1463,6 +1271,7 @@ void controlJoySticks(void)
                 if (isUpper && i == 1)
                 {
                     currentStk[i][JOYSTICK_V] = 0;
+                    setMouseMark(7);
                 }
                 else
                 {
@@ -1475,6 +1284,7 @@ void controlJoySticks(void)
                 if (isUpper && i == 1)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
+                    setMouseMark(3);
                 }
                 else
                 {
@@ -1487,6 +1297,7 @@ void controlJoySticks(void)
                 if (isUpper && i == 1)
                 {
                     currentStk[i][JOYSTICK_H] = 0;
+                    setMouseMark(5);
                 }
                 else
                 {
@@ -1498,11 +1309,24 @@ void controlJoySticks(void)
                 currentStk[i][JOYSTICK_H] = 0;
                 currentStk[i][JOYSTICK_V] = 0;
             }
+
+            if (i == 1)
+            {
+                isStickReturned = false;
+            }
         }
         else
         {
             currentStk[i][JOYSTICK_H] = 0;
             currentStk[i][JOYSTICK_V] = 0;
+
+            if (isUpper && i == 1 && !isStickReturned)
+            {
+                SEGGER_RTT_printf(0, "stick returned\n");
+                clearMouseMark();
+
+                isStickReturned = true;
+            }
         }
     }
 
@@ -1516,23 +1340,27 @@ void controlJoySticks(void)
 
             if (currentStk[i][JOYSTICK_H] == -1 && currentStk[i][JOYSTICK_V] == -1)
             {
-                // SEGGER_RTT_printf(0, "UL: set upper+shift\n");
+                // SEGGER_RTT_printf(0, "UL: set\n");
                 setKeys(keymaps_stk[keymapID][i][0][0], keymaps_stk[keymapID][i][0][1]);
+                setMark(i, 0);
             }
             else if (currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == -1)
             {
-                // SEGGER_RTT_printf(0, "UR: set upper+shift\n");
+                // SEGGER_RTT_printf(0, "UR: set\n");
                 setKeys(keymaps_stk[keymapID][i][2][0], keymaps_stk[keymapID][i][2][1]);
+                setMark(i, 2);
             }
             else if (currentStk[i][JOYSTICK_H] == -1 && currentStk[i][JOYSTICK_V] == 1)
             {
-                // SEGGER_RTT_printf(0, "DL: set down+shift\n");
+                // SEGGER_RTT_printf(0, "DL: set\n");
                 setKeys(keymaps_stk[keymapID][i][6][0], keymaps_stk[keymapID][i][6][1]);
+                setMark(i, 6);
             }
             else if (currentStk[i][JOYSTICK_H] == 1 && currentStk[i][JOYSTICK_V] == 1)
             {
-                // SEGGER_RTT_printf(0, "DR: set down+shift\n");
+                // SEGGER_RTT_printf(0, "DR: set\n");
                 setKeys(keymaps_stk[keymapID][i][8][0], keymaps_stk[keymapID][i][8][1]);
+                setMark(i, 8);
             }
         }
         else
@@ -1541,33 +1369,37 @@ void controlJoySticks(void)
             {
                 if ((currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == -1 && prevStk[i][JOYSTICK_V] == -1))
                 {
-                    SEGGER_RTT_printf(0, "UL: clear upper+shift\n");
+                    SEGGER_RTT_printf(0, "UL: clear\n");
                     clearKeys(keymaps_stk[keymapID][i][0][0], keymaps_stk[keymapID][i][0][1]);
+                    clearMark(i, 0);
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
                 else if ((currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == -1))
                 {
-                    SEGGER_RTT_printf(0, "UR: clear upper+shift\n");
+                    SEGGER_RTT_printf(0, "UR: clear\n");
                     clearKeys(keymaps_stk[keymapID][i][2][0], keymaps_stk[keymapID][i][2][1]);
+                    clearMark(i, 2);
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
                 else if ((currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == -1 && prevStk[i][JOYSTICK_V] == 1))
                 {
-                    SEGGER_RTT_printf(0, "DL: clear down+shift\n");
+                    SEGGER_RTT_printf(0, "DL: clear\n");
                     clearKeys(keymaps_stk[keymapID][i][6][0], keymaps_stk[keymapID][i][6][1]);
+                    clearMark(i, 6);
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
                 else if ((currentStk[i][JOYSTICK_H] == 0 && currentStk[i][JOYSTICK_V] == 0) && (prevStk[i][JOYSTICK_H] == 1 && prevStk[i][JOYSTICK_V] == 1))
                 {
-                    SEGGER_RTT_printf(0, "DR: clear down+shift\n");
+                    SEGGER_RTT_printf(0, "DR: clear\n");
                     clearKeys(keymaps_stk[keymapID][i][8][0], keymaps_stk[keymapID][i][8][1]);
+                    clearMark(i, 8);
 
                     countReturnNeutral = MAX_COUNT_RETURN_NEUTRAL;
                 }
-                if (currentStk[i][j] != prevStk[i][j])
+                else if (currentStk[i][j] != prevStk[i][j])
                 {
                     // SEGGER_RTT_printf(0, "currentStk[%d][%d] = %d (%d, %d, %d, %d)\n", i, j, currentStk[i][j], pot_value[1], pot_value[2], pot_value[3], pot_value[4]);
 
@@ -1575,11 +1407,13 @@ void controlJoySticks(void)
                     {
                         const int direction = (j == JOYSTICK_H) ? (currentStk[i][j] + 4) : (3 * currentStk[i][j] + 4);
                         setKeys(keymaps_stk[keymapID][i][direction][0], keymaps_stk[keymapID][i][direction][1]);
+                        setMark(i, direction);
                     }
                     else if (prevStk[i][j] == -1 || prevStk[i][j] == 1)
                     {
                         const int direction = (j == JOYSTICK_H) ? (prevStk[i][j] + 4) : (3 * prevStk[i][j] + 4);
                         clearKeys(keymaps_stk[keymapID][i][direction][0], keymaps_stk[keymapID][i][direction][1]);
+                        clearMark(i, direction);
 
                         if (keymaps_stk[keymapID][i][direction][0] == KC_UPPER ||
                             (keymaps_stk[keymapID][i][direction][0] >= KC_LCONTROL && keymaps_stk[keymapID][i][direction][0] <= KC_RGUI))

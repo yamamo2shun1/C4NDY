@@ -9,7 +9,6 @@
 #define INC_ICLED_H_
 
 #include <stdint.h>
-#include <stdbool.h>
 
 #define RGB      3
 #define COL_BITS 8
@@ -37,25 +36,26 @@ typedef struct
 void setNormalColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
 void setUpperColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
 void setShiftColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
-RGB_Color_t* getNormalColor(const uint8_t keymapId);
-RGB_Color_t* getUpperColor(const uint8_t keymapId);
-RGB_Color_t* getShiftColor(const uint8_t keymapId);
-RGB_Color_t* getBlankColor(void);
+RGB_Color_t getNormalColor(const uint8_t keymapId);
+RGB_Color_t getUpperColor(const uint8_t keymapId);
+RGB_Color_t getShiftColor(const uint8_t keymapId);
+RGB_Color_t getBlankColor(void);
 
 void setIntensity(const uint8_t keymapId, const uint8_t value);
 double getIntensity(const uint8_t keymapId);
 
-void setSpaceFlag(void);
-void setBackspaceFlag(void);
-void setEnterFlag(void);
-
-void setLedBuf(const uint8_t index, const RGB_Color_t* rgb_color);
-void setAllLedBuf(const RGB_Color_t* rgb_color);
-void setColumn2ColorLedBuf(const uint8_t row, const uint16_t column, const RGB_Color_t* rgb_color1, const RGB_Color_t* rgb_color0);
-void setColumn3ColorLedBuf(const uint8_t row, const uint16_t column0, const uint16_t column1, const RGB_Color_t* rgb_color1, const RGB_Color_t* rgb_color2, const RGB_Color_t* rgb_color0);
 void renew(void);
+
 void checkColor(const uint8_t r, const uint8_t g, const uint8_t b);
+
 void loadLEDColorsFromFlash(void);
+
+void setMark(const uint8_t index, const uint8_t state);
+void clearMark(const uint8_t index, const uint8_t state);
+void setMouseMark(const uint8_t state);
+void clearMouseMark(void);
+void setMixMark(const uint16_t xfade);
+
 void led_control_task(void);
 
 #endif /* INC_ICLED_H_ */
