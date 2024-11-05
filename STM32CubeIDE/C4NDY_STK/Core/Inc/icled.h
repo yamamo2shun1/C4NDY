@@ -9,7 +9,6 @@
 #define INC_ICLED_H_
 
 #include <stdint.h>
-#include <stdbool.h>
 
 #define RGB      3
 #define COL_BITS 8
@@ -37,28 +36,26 @@ typedef struct
 void setNormalColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
 void setUpperColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
 void setShiftColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
-RGB_Color_t* getNormalColor(const uint8_t keymapId);
-RGB_Color_t* getUpperColor(const uint8_t keymapId);
-RGB_Color_t* getShiftColor(const uint8_t keymapId);
-RGB_Color_t* getBlankColor(void);
+RGB_Color_t getNormalColor(const uint8_t keymapId);
+RGB_Color_t getUpperColor(const uint8_t keymapId);
+RGB_Color_t getShiftColor(const uint8_t keymapId);
+RGB_Color_t getBlankColor(void);
 
 void setIntensity(const uint8_t keymapId, const uint8_t value);
 double getIntensity(const uint8_t keymapId);
+
+void renew(void);
+
+void checkColor(const uint8_t r, const uint8_t g, const uint8_t b);
+
+void loadLEDColorsFromFlash(void);
 
 void setMark(const uint8_t index, const uint8_t state);
 void clearMark(const uint8_t index, const uint8_t state);
 void setMouseMark(const uint8_t state);
 void clearMouseMark(void);
-void setMouseOrigin(void);
+void setMixMark(const uint16_t xfade);
 
-void setLedBuf(const uint8_t index, const RGB_Color_t* rgb_color);
-void setAllLedBuf(const RGB_Color_t* rgb_color);
-void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const RGB_Color_t color, const double fade);
-void setLedMarkForJoystick(const uint8_t index, const uint8_t state);
-void setLedMouseMarkForJoystick(const uint8_t state);
-void renew(void);
-void checkColor(const uint8_t r, const uint8_t g, const uint8_t b);
-void loadLEDColorsFromFlash(void);
 void led_control_task(void);
 
 #endif /* INC_ICLED_H_ */
