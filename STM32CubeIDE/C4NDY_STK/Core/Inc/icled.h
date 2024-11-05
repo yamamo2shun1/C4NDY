@@ -9,7 +9,6 @@
 #define INC_ICLED_H_
 
 #include <stdint.h>
-#include <stdbool.h>
 
 #define RGB      3
 #define COL_BITS 8
@@ -17,8 +16,6 @@
 #define WL_LED_BIT_LEN (RGB * COL_BITS)  // g:8,r:8,b:8
 #define WL_LED_ONE     12
 #define WL_LED_ZERO    4
-
-#define LED_INTENSITY_RATE 0.5
 
 #define LED_NUMS 34
 
@@ -36,23 +33,29 @@ typedef struct
     uint8_t b;
 } RGB_Color_t;
 
-void setNormalColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b);
-void setUpperColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b);
-void setShiftColor(uint8_t keymapId, uint8_t r, uint8_t g, uint8_t b);
-RGB_Color_t* getNormalColor(uint8_t keymapId);
-RGB_Color_t* getUpperColor(uint8_t keymapId);
-RGB_Color_t* getShiftColor(uint8_t keymapId);
-RGB_Color_t* getBlankColor(void);
+void setNormalColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
+void setUpperColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
+void setShiftColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, const uint8_t b);
+RGB_Color_t getNormalColor(const uint8_t keymapId);
+RGB_Color_t getUpperColor(const uint8_t keymapId);
+RGB_Color_t getShiftColor(const uint8_t keymapId);
+RGB_Color_t getBlankColor(void);
 
-void setSpaceFlag(void);
-void setBackspaceFlag(void);
-void setEnterFlag(void);
+void setIntensity(const uint8_t keymapId, const uint8_t value);
+double getIntensity(const uint8_t keymapId);
 
-void setLedBuf(uint8_t index, RGB_Color_t* rgb_color);
-void setAllLedBuf(RGB_Color_t* rgb_color);
-void setColumn2ColorLedBuf(uint8_t row, uint16_t column, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color0);
-void setColumn3ColorLedBuf(uint8_t row, uint16_t column0, uint16_t column1, RGB_Color_t* rgb_color1, RGB_Color_t* rgb_color2, RGB_Color_t* rgb_color0);
 void renew(void);
+
+void checkColor(const uint8_t r, const uint8_t g, const uint8_t b);
+
+void loadLEDColorsFromFlash(void);
+
+void setMark(const uint8_t index, const uint8_t state);
+void clearMark(const uint8_t index, const uint8_t state);
+void setMouseMark(const uint8_t state);
+void clearMouseMark(void);
+void setMixMark(const uint16_t xfade);
+
 void led_control_task(void);
 
 #endif /* INC_ICLED_H_ */

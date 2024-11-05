@@ -10,14 +10,13 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include tinyusb/src/typec/subdir.mk
--include tinyusb/src/portable/wch/ch32v307/subdir.mk
+-include tinyusb/src/portable/wch/subdir.mk
 -include tinyusb/src/portable/valentyusb/eptri/subdir.mk
 -include tinyusb/src/portable/ti/msp430x5xx/subdir.mk
 -include tinyusb/src/portable/template/subdir.mk
 -include tinyusb/src/portable/synopsys/dwc2/subdir.mk
 -include tinyusb/src/portable/sunxi/subdir.mk
 -include tinyusb/src/portable/st/typec/subdir.mk
--include tinyusb/src/portable/st/synopsys/subdir.mk
 -include tinyusb/src/portable/st/stm32_fsdev/subdir.mk
 -include tinyusb/src/portable/sony/cxd56/subdir.mk
 -include tinyusb/src/portable/renesas/rusb2/subdir.mk
@@ -44,6 +43,7 @@ RM := rm -rf
 -include tinyusb/src/portable/chipidea/ci_hs/subdir.mk
 -include tinyusb/src/portable/chipidea/ci_fs/subdir.mk
 -include tinyusb/src/portable/bridgetek/ft9xx/subdir.mk
+-include tinyusb/src/portable/analog/max3421/subdir.mk
 -include tinyusb/src/host/subdir.mk
 -include tinyusb/src/device/subdir.mk
 -include tinyusb/src/common/subdir.mk
