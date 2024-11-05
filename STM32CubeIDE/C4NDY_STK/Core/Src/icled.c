@@ -36,10 +36,6 @@ uint32_t led_buf_prev[LED_NUMS * RGB * COL_BITS + 1] = {0};
 
 uint32_t counter = 0;
 
-bool isGradation = false;
-int count        = 0;
-double g_rate    = 0.0;
-
 bool isLeftMarked     = false;
 int countLeftMark     = 0;
 double fadeLeftMark   = 0.0;
@@ -49,6 +45,16 @@ bool isRightMarked     = false;
 int countRightMark     = 0;
 double fadeRightMark   = 0.0;
 uint8_t stateRightMark = 0;
+
+bool isMouseMarked     = false;
+int countMouseMark     = 0;
+double fadeMouseMark   = 0.0;
+uint8_t stateMouseMark = 4;
+
+bool isMixMarked     = false;
+int countMixMark     = 0;
+double fadeMixMark   = 0.0;
+uint8_t stateMixMark = 4;
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef* htim)
 {
@@ -76,24 +82,24 @@ void setShiftColor(const uint8_t keymapId, const uint8_t r, const uint8_t g, con
     rgb_shift[keymapId].b = b;
 }
 
-RGB_Color_t* getNormalColor(const uint8_t keymapId)
+RGB_Color_t getNormalColor(const uint8_t keymapId)
 {
-    return &rgb_normal[keymapId];
+    return rgb_normal[keymapId];
 }
 
-RGB_Color_t* getUpperColor(const uint8_t keymapId)
+RGB_Color_t getUpperColor(const uint8_t keymapId)
 {
-    return &rgb_upper[keymapId];
+    return rgb_upper[keymapId];
 }
 
-RGB_Color_t* getShiftColor(const uint8_t keymapId)
+RGB_Color_t getShiftColor(const uint8_t keymapId)
 {
-    return &rgb_shift[keymapId];
+    return rgb_shift[keymapId];
 }
 
-RGB_Color_t* getBlankColor(void)
+RGB_Color_t getBlankColor(void)
 {
-    return &rgb_blank;
+    return rgb_blank;
 }
 
 void setIntensity(const uint8_t keymapId, const uint8_t value)
@@ -106,185 +112,82 @@ double getIntensity(const uint8_t keymapId)
     return intensity[keymapId];
 }
 
-void setMark(const uint8_t index, const uint8_t state)
+RGB_Color_t gradation(const RGB_Color_t color1, const RGB_Color_t color2, const double rate)
 {
-    SEGGER_RTT_printf(0, "setMark(%d, %d)\n", index, state);
-    if (index == 0)
-    {
-        isLeftMarked  = false;
-        countLeftMark = 0;
-        fadeLeftMark  = 1.0;
-        stateLeftMark = state;
-        setLedMarkForJoystick(0, stateLeftMark);
-    }
-    else if (index == 1)
-    {
-        isRightMarked  = false;
-        countRightMark = 0;
-        fadeRightMark  = 1.0;
-        stateRightMark = state;
-        setLedMarkForJoystick(1, stateRightMark);
-    }
+    const uint8_t r         = (uint8_t) ((double) (color2.r - color1.r) * rate + (double) color1.r);
+    const uint8_t g         = (uint8_t) ((double) (color2.g - color1.g) * rate + (double) color1.g);
+    const uint8_t b         = (uint8_t) ((double) (color2.b - color1.b) * rate + (double) color1.b);
+    const RGB_Color_t color = {r, g, b};
+    return color;
 }
 
-void clearMark(const uint8_t index, const uint8_t state)
+void setLedBufDirect(const uint8_t index, const RGB_Color_t rgb_color)
 {
-    SEGGER_RTT_printf(0, "clearMark(%d, %d)\n", index, state);
-    if (index == 0)
-    {
-        isLeftMarked  = true;
-        countLeftMark = 0;
-        fadeLeftMark  = 1.0;
-        stateLeftMark = state;
-        setLedMarkForJoystick(0, stateLeftMark);
-    }
-    else if (index == 1)
-    {
-        isRightMarked  = true;
-        countRightMark = 0;
-        fadeRightMark  = 1.0;
-        stateRightMark = state;
-        setLedMarkForJoystick(1, stateRightMark);
-    }
+    grb[index][0] = rgb_color.g;
+    grb[index][1] = rgb_color.r;
+    grb[index][2] = rgb_color.b;
 }
 
-void setLedBufDirect(const uint8_t index, const RGB_Color_t* rgb_color)
-{
-    grb[index][0] = (uint8_t) ((double) rgb_color->g);
-    grb[index][1] = (uint8_t) ((double) rgb_color->r);
-    grb[index][2] = (uint8_t) ((double) rgb_color->b);
-}
-
-void setAllLedBufDirect(const RGB_Color_t* rgb_color)
+void setAllLedBufDirect(const RGB_Color_t rgb_color)
 {
     for (int i = 0; i < LED_NUMS; i++)
     {
-        grb[i][0] = (uint8_t) ((double) rgb_color->g);
-        grb[i][1] = (uint8_t) ((double) rgb_color->r);
-        grb[i][2] = (uint8_t) ((double) rgb_color->b);
+        grb[i][0] = rgb_color.g;
+        grb[i][1] = rgb_color.r;
+        grb[i][2] = rgb_color.b;
     }
 }
 
-void setLedBuf(const uint8_t index, const RGB_Color_t* rgb_color)
+void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    grb_prev[index][0] = grb_current[index][0];
-    grb_prev[index][1] = grb_current[index][1];
-    grb_prev[index][2] = grb_current[index][2];
-
-    grb_current[index][0] = (uint8_t) ((double) rgb_color->g);
-    grb_current[index][1] = (uint8_t) ((double) rgb_color->r);
-    grb_current[index][2] = (uint8_t) ((double) rgb_color->b);
-
-    if (grb_prev[index][0] != grb_current[index][0] ||
-        grb_prev[index][1] != grb_current[index][1] ||
-        grb_prev[index][2] != grb_current[index][2])
-    {
-        isGradation = true;
-        g_rate      = 0.0;
-    }
-}
-
-void setAllLedBuf(const RGB_Color_t* rgb_color)
-{
-    for (int i = 0; i < LED_NUMS; i++)
-    {
-        grb_prev[i][0] = grb_current[i][0];
-        grb_prev[i][1] = grb_current[i][1];
-        grb_prev[i][2] = grb_current[i][2];
-
-        grb_current[i][0] = (uint8_t) ((double) rgb_color->g);
-        grb_current[i][1] = (uint8_t) ((double) rgb_color->r);
-        grb_current[i][2] = (uint8_t) ((double) rgb_color->b);
-
-        if (grb_prev[i][0] != grb_current[i][0] ||
-            grb_prev[i][1] != grb_current[i][1] ||
-            grb_prev[i][2] != grb_current[i][2])
-        {
-            isGradation = true;
-            g_rate      = 0.0;
-        }
-    }
-}
-
-void setColumnColorLedBuf(const uint8_t row, const uint16_t column, const RGB_Color_t color, const double fade)
-{
-    const RGB_Color_t c  = {(uint8_t) ((double) color.r * fade), (uint8_t) ((double) color.g * fade), (uint8_t) ((double) color.b * fade)};
-    const RGB_Color_t bc = {0x00, 0x00, 0x00};
-
-    // SEGGER_RTT_printf(0, "o(r, g, b) = (%d, %d, %d)\n", color.r, color.g, color.b);
-    // SEGGER_RTT_printf(0, "m(r, g, b) = (%d, %d, %d)\n", c.r, c.g, c.b);
+    const RGB_Color_t bc = rgb_normal[getKeymapID()];
+    const RGB_Color_t c  = gradation(rgb_normal[getKeymapID()], rgb_upper[getKeymapID()], fade);
 
     for (int i = 0; i < 10; i++)
     {
         if ((column >> (9 - i)) & 0x01)
         {
-            setLedBufDirect(i + row * 10, &c);
+            setLedBufDirect(i + row * 10, c);
         }
         else
         {
-            setLedBufDirect(i + row * 10, &bc);
+            setLedBufDirect(i + row * 10, bc);
         }
     }
 }
 
-void setLeftHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, const RGB_Color_t color, const double fade)
+void setLeftHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    const RGB_Color_t c  = {(uint8_t) ((double) color.r * fade), (uint8_t) ((double) color.g * fade), (uint8_t) ((double) color.b * fade)};
-    const RGB_Color_t bc = {0x00, 0x00, 0x00};
-
-    // SEGGER_RTT_printf(0, "o(r, g, b) = (%d, %d, %d)\n", color.r, color.g, color.b);
-    // SEGGER_RTT_printf(0, "m(r, g, b) = (%d, %d, %d)\n", c.r, c.g, c.b);
+    const RGB_Color_t bc = rgb_normal[getKeymapID()];
+    const RGB_Color_t c  = gradation(rgb_normal[getKeymapID()], rgb_upper[getKeymapID()], fade);
 
     for (int i = 0; i < 5; i++)
     {
         if ((column >> (9 - i)) & 0x01)
         {
-            setLedBufDirect(i + row * 10, &c);
+            setLedBufDirect(i + row * 10, c);
         }
         else
         {
-            setLedBufDirect(i + row * 10, &bc);
+            setLedBufDirect(i + row * 10, bc);
         }
     }
 }
 
-void setRightHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, const RGB_Color_t color, const double fade)
+void setRightHalfColumnColorLedBuf(const uint8_t row, const uint16_t column, const double fade)
 {
-    const RGB_Color_t c  = {(uint8_t) ((double) color.r * fade), (uint8_t) ((double) color.g * fade), (uint8_t) ((double) color.b * fade)};
-    const RGB_Color_t bc = {0x00, 0x00, 0x00};
-
-    // SEGGER_RTT_printf(0, "o(r, g, b) = (%d, %d, %d)\n", color.r, color.g, color.b);
-    // SEGGER_RTT_printf(0, "m(r, g, b) = (%d, %d, %d)\n", c.r, c.g, c.b);
+    const RGB_Color_t bc = rgb_normal[getKeymapID()];
+    const RGB_Color_t c  = gradation(rgb_normal[getKeymapID()], rgb_upper[getKeymapID()], fade);
 
     for (int i = 5; i < 10; i++)
     {
         if ((column >> (9 - i)) & 0x01)
         {
-            setLedBufDirect(i + row * 10, &c);
+            setLedBufDirect(i + row * 10, c);
         }
         else
         {
-            setLedBufDirect(i + row * 10, &bc);
-        }
-    }
-}
-
-
-void gradation(const uint8_t index, const double rate)
-{
-    for (int k = 0; k < RGB; k++)
-    {
-        grb[index][k] = (uint8_t) ((double) (grb_current[index][k] - grb_prev[index][k]) * rate + (double) grb_prev[index][k]);
-    }
-}
-
-void gradationAll(const double rate)
-{
-    for (int i = 0; i < LED_NUMS; i++)
-    {
-        for (int k = 0; k < RGB; k++)
-        {
-            grb[i][k] = (uint8_t) ((double) (grb_current[i][k] - grb_prev[i][k]) * rate + (double) grb_prev[i][k]);
+            setLedBufDirect(i + row * 10, bc);
         }
     }
 }
@@ -298,49 +201,49 @@ void setLedMarkForJoystick(const uint8_t index, const uint8_t state)
         switch (state)
         {
         case 0:
-            setLeftHalfColumnColorLedBuf(0, 0b0110000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(1, 0b0100000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(0, 0b0110000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(1, 0b0100000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(2, 0b0000000000, fadeLeftMark);
             break;
         case 1:
-            setLeftHalfColumnColorLedBuf(0, 0b0010000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(1, 0b0101000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(0, 0b0010000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(1, 0b0101000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(2, 0b0000000000, fadeLeftMark);
             break;
         case 2:
-            setLeftHalfColumnColorLedBuf(0, 0b0011000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(1, 0b0001000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(0, 0b0011000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(1, 0b0001000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(2, 0b0000000000, fadeLeftMark);
             break;
         case 3:
-            setLeftHalfColumnColorLedBuf(0, 0b0010000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(1, 0b0100000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(2, 0b0010000000, rgb_normal[getKeymapID()], fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(0, 0b0010000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(1, 0b0100000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(2, 0b0010000000, fadeLeftMark);
             break;
         case 5:
-            setLeftHalfColumnColorLedBuf(0, 0b0010000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(1, 0b0001000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(2, 0b0010000000, rgb_normal[getKeymapID()], fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(0, 0b0010000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(1, 0b0001000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(2, 0b0010000000, fadeLeftMark);
             break;
         case 6:
-            setLeftHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(1, 0b0100000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(2, 0b0110000000, rgb_normal[getKeymapID()], fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(0, 0b0000000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(1, 0b0100000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(2, 0b0110000000, fadeLeftMark);
             break;
         case 7:
-            setLeftHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(1, 0b0101000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(2, 0b0010000000, rgb_normal[getKeymapID()], fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(0, 0b0000000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(1, 0b0101000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(2, 0b0010000000, fadeLeftMark);
             break;
         case 8:
-            setLeftHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(1, 0b0001000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(2, 0b0011000000, rgb_normal[getKeymapID()], fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(0, 0b0000000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(1, 0b0001000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(2, 0b0011000000, fadeLeftMark);
             break;
         default:
-            setLeftHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(1, 0b0000000000, rgb_normal[getKeymapID()], fadeLeftMark);
-            setLeftHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(0, 0b0000000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(1, 0b0000000000, fadeLeftMark);
+            setLeftHalfColumnColorLedBuf(2, 0b0000000000, fadeLeftMark);
             break;
         }
     }
@@ -349,52 +252,172 @@ void setLedMarkForJoystick(const uint8_t index, const uint8_t state)
         switch (state)
         {
         case 0:
-            setRightHalfColumnColorLedBuf(0, 0b0000011000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(1, 0b0000010000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeRightMark);
+            setRightHalfColumnColorLedBuf(0, 0b0000011000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(1, 0b0000010000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(2, 0b0000000000, fadeRightMark);
             break;
         case 1:
-            setRightHalfColumnColorLedBuf(0, 0b0000001000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(1, 0b0000010100, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeRightMark);
+            setRightHalfColumnColorLedBuf(0, 0b0000001000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(1, 0b0000010100, fadeRightMark);
+            setRightHalfColumnColorLedBuf(2, 0b0000000000, fadeRightMark);
             break;
         case 2:
-            setRightHalfColumnColorLedBuf(0, 0b0000001100, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(1, 0b0000000100, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeRightMark);
+            setRightHalfColumnColorLedBuf(0, 0b0000001100, fadeRightMark);
+            setRightHalfColumnColorLedBuf(1, 0b0000000100, fadeRightMark);
+            setRightHalfColumnColorLedBuf(2, 0b0000000000, fadeRightMark);
             break;
         case 3:
-            setRightHalfColumnColorLedBuf(0, 0b0000001000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(1, 0b0000010000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(2, 0b0000001000, rgb_normal[getKeymapID()], fadeRightMark);
+            setRightHalfColumnColorLedBuf(0, 0b0000001000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(1, 0b0000010000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(2, 0b0000001000, fadeRightMark);
             break;
         case 5:
-            setRightHalfColumnColorLedBuf(0, 0b0000001000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(1, 0b0000000100, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(2, 0b0000001000, rgb_normal[getKeymapID()], fadeRightMark);
+            setRightHalfColumnColorLedBuf(0, 0b0000001000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(1, 0b0000000100, fadeRightMark);
+            setRightHalfColumnColorLedBuf(2, 0b0000001000, fadeRightMark);
             break;
         case 6:
-            setRightHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(1, 0b0000010000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(2, 0b0000011000, rgb_normal[getKeymapID()], fadeRightMark);
+            setRightHalfColumnColorLedBuf(0, 0b0000000000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(1, 0b0000010000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(2, 0b0000011000, fadeRightMark);
             break;
         case 7:
-            setRightHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(1, 0b0000010100, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(2, 0b0000001000, rgb_normal[getKeymapID()], fadeRightMark);
+            setRightHalfColumnColorLedBuf(0, 0b0000000000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(1, 0b0000010100, fadeRightMark);
+            setRightHalfColumnColorLedBuf(2, 0b0000001000, fadeRightMark);
             break;
         case 8:
-            setRightHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(1, 0b0000000100, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(2, 0b0000001100, rgb_normal[getKeymapID()], fadeRightMark);
+            setRightHalfColumnColorLedBuf(0, 0b0000000000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(1, 0b0000000100, fadeRightMark);
+            setRightHalfColumnColorLedBuf(2, 0b0000001100, fadeRightMark);
             break;
         default:
-            setRightHalfColumnColorLedBuf(0, 0b0000000000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(1, 0b0000000000, rgb_normal[getKeymapID()], fadeRightMark);
-            setRightHalfColumnColorLedBuf(2, 0b0000000000, rgb_normal[getKeymapID()], fadeRightMark);
+            setRightHalfColumnColorLedBuf(0, 0b0000000000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(1, 0b0000000000, fadeRightMark);
+            setRightHalfColumnColorLedBuf(2, 0b0000000000, fadeRightMark);
             break;
         }
+    }
+    renew();
+}
 
+void setLedMouseMarkForJoystick(const uint8_t state)
+{
+    // SEGGER_RTT_printf(0, "set: %d, %d, %d\n", index, state, isLeftMarked);
+
+    switch (state)
+    {
+    case 0:
+        setRightHalfColumnColorLedBuf(0, 0b0000010000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, fadeMouseMark);
+        break;
+    case 1:
+        setRightHalfColumnColorLedBuf(0, 0b0000001000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, fadeMouseMark);
+        break;
+    case 2:
+        setRightHalfColumnColorLedBuf(0, 0b0000000100, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, fadeMouseMark);
+        break;
+    case 3:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000010000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, fadeMouseMark);
+        break;
+    case 4:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000001000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, fadeMouseMark);
+        break;
+    case 5:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000100, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, fadeMouseMark);
+        break;
+    case 6:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000010000, fadeMouseMark);
+        break;
+    case 7:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000001000, fadeMouseMark);
+        break;
+    case 8:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000100, fadeMouseMark);
+        break;
+    default:
+        setRightHalfColumnColorLedBuf(0, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(1, 0b0000000000, fadeMouseMark);
+        setRightHalfColumnColorLedBuf(2, 0b0000000000, fadeMouseMark);
+        break;
+    }
+
+    renew();
+}
+
+void setLedMarkForMix(const uint8_t state)
+{
+    // SEGGER_RTT_printf(0, "set: %d, %d, %d\n", index, state, isLeftMarked);
+
+    switch (state)
+    {
+    case 0:
+        setColumnColorLedBuf(0, 0b1100000000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b1100000000, fadeMixMark);
+        break;
+    case 1:
+        setColumnColorLedBuf(0, 0b0110000000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0110000000, fadeMixMark);
+        break;
+    case 2:
+        setColumnColorLedBuf(0, 0b0011000000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0011000000, fadeMixMark);
+        break;
+    case 3:
+        setColumnColorLedBuf(0, 0b0001100000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0001100000, fadeMixMark);
+        break;
+    case 4:
+        setColumnColorLedBuf(0, 0b0000110000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000110000, fadeMixMark);
+        break;
+    case 5:
+        setColumnColorLedBuf(0, 0b0000011000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000011000, fadeMixMark);
+        break;
+    case 6:
+        setColumnColorLedBuf(0, 0b0000001100, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000001100, fadeMixMark);
+        break;
+    case 7:
+        setColumnColorLedBuf(0, 0b0000000110, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000000110, fadeMixMark);
+        break;
+    case 8:
+        setColumnColorLedBuf(0, 0b0000000011, fadeMixMark);
+        setColumnColorLedBuf(1, 0b1111111111, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000000011, fadeMixMark);
+        break;
+    default:
+        setColumnColorLedBuf(0, 0b0000000000, fadeMixMark);
+        setColumnColorLedBuf(1, 0b0000000000, fadeMixMark);
+        setColumnColorLedBuf(2, 0b0000000000, fadeMixMark);
+        break;
     }
     renew();
 }
@@ -435,11 +458,11 @@ void renew(void)
 
 void checkColor(const uint8_t r, const uint8_t g, const uint8_t b)
 {
-    RGB_Color_t rgb_check = {r, g, b};
+    const RGB_Color_t rgb_check = {r, g, b};
 
     SEGGER_RTT_printf(0, "(r, g, b) = (%02X, %02X, %02X)\n", r, g, b);
 
-    setAllLedBufDirect(&rgb_check);
+    setAllLedBufDirect(rgb_check);
     renew();
 }
 
@@ -489,7 +512,11 @@ void loadLEDColorsFromFlash(void)
     SEGGER_RTT_printf(0, "%02X ", read_flash_data(BASIC_PARAMS_NUM + (8 * MATRIX_ROWS * MATRIX_COLUMNS) + (4 * STICK_NUM * STICK_DIRECTION) + 17));
     SEGGER_RTT_printf(0, "]\n");
 
-    setAllLedBuf(&rgb_blank);
+    setAllLedBufDirect(rgb_normal[getKeymapID()]);
+    setLedBufDirect(30, rgb_upper[getKeymapID()]);
+    setLedBufDirect(31, rgb_upper[getKeymapID()]);
+    setLedBufDirect(32, rgb_upper[getKeymapID()]);
+    setLedBufDirect(33, rgb_upper[getKeymapID()]);
     renew();
 
     SEGGER_RTT_printf(0, "// LED\n");
@@ -501,25 +528,93 @@ void loadLEDColorsFromFlash(void)
     SEGGER_RTT_printf(0, "]\n");
 }
 
-void led_control_task(void)
+void setMark(const uint8_t index, const uint8_t state)
 {
-    if (isGradation)
-    {
-        count++;
-        if (count > GRADATION_COUNT_MAX)
-        {
-            gradationAll(g_rate);
-            renew();
+    SEGGER_RTT_printf(0, "setMark(%d, %d)\n", index, state);
 
-            count = 0;
-            g_rate += GRADATION_RATE_STEP;
-            if (g_rate > 1.0)
-            {
-                isGradation = false;
-            }
-        }
+    if (isMixMarked)
+    {
+        //fadeMixMark = 0.0;
+        isMixMarked = false;
+        setLedMarkForMix(255);
+        HAL_Delay(5);
     }
 
+    if (index == 0)
+    {
+        isLeftMarked  = false;
+        countLeftMark = 0;
+        fadeLeftMark  = 1.0;
+        stateLeftMark = state;
+        setLedMarkForJoystick(0, stateLeftMark);
+    }
+    else if (index == 1)
+    {
+        isMouseMarked  = false;
+
+        isRightMarked  = false;
+        countRightMark = 0;
+        fadeRightMark  = 1.0;
+        stateRightMark = state;
+        setLedMarkForJoystick(1, stateRightMark);
+    }
+}
+
+void clearMark(const uint8_t index, const uint8_t state)
+{
+    SEGGER_RTT_printf(0, "clearMark(%d, %d)\n", index, state);
+    if (index == 0)
+    {
+        isLeftMarked  = true;
+        countLeftMark = 0;
+        fadeLeftMark  = 1.0;
+        stateLeftMark = state;
+        setLedMarkForJoystick(0, stateLeftMark);
+    }
+    else if (index == 1)
+    {
+        isRightMarked  = true;
+        countRightMark = 0;
+        fadeRightMark  = 1.0;
+        stateRightMark = state;
+        setLedMarkForJoystick(1, stateRightMark);
+    }
+}
+
+void setMouseMark(const uint8_t state)
+{
+    isMixMarked = false;
+
+    isMouseMarked  = false;
+    countMouseMark = 0;
+    fadeMouseMark  = 1.0;
+    stateMouseMark = state;
+    setLedMouseMarkForJoystick(stateMouseMark);
+}
+
+void clearMouseMark(void)
+{
+    isMouseMarked  = true;
+    countMouseMark = 0;
+    fadeMouseMark  = 1.0;
+    setLedMouseMarkForJoystick(stateMouseMark);
+}
+
+void setMixMark(const uint16_t xfade)
+{
+    isLeftMarked  = false;
+    isRightMarked = false;
+    isMouseMarked = false;
+
+    isMixMarked  = true;
+    countMixMark = 0;
+    fadeMixMark  = 1.0;
+    stateMixMark = (xfade + 64) >> 7;
+    setLedMarkForMix(stateMixMark);
+}
+
+void led_control_task(void)
+{
     if (isLeftMarked)
     {
         countLeftMark++;
@@ -550,8 +645,47 @@ void led_control_task(void)
             fadeRightMark -= 0.075;
             if (fadeRightMark <= 0)
             {
-                fadeRightMark = 0.0;
-                isRightMarked = false;
+                fadeRightMark  = 0.0;
+                isRightMarked  = false;
+                stateMouseMark = 4;
+            }
+        }
+    }
+
+    if (isMouseMarked)
+    {
+        countMouseMark++;
+        if (countMouseMark > ANIMATION_COUNT_MAX)
+        {
+            countMouseMark = 0;
+
+            setLedMouseMarkForJoystick(stateMouseMark);
+
+            fadeMouseMark -= 0.075;
+            if (fadeMouseMark <= 0)
+            {
+                fadeMouseMark  = 0.0;
+                isMouseMarked  = false;
+                stateMouseMark = 4;
+            }
+        }
+    }
+
+    if (isMixMarked)
+    {
+        countMixMark++;
+        if (countMixMark > ANIMATION_COUNT_MAX)
+        {
+            countMixMark = 0;
+
+            setLedMarkForMix(stateMixMark);
+
+            fadeMixMark -= 0.075;
+            if (fadeMixMark <= 0)
+            {
+                fadeMixMark  = 0.0;
+                isMixMarked  = false;
+                stateMixMark = 4;
             }
         }
     }
