@@ -17,6 +17,7 @@
 #include "ADAU1761_IC_1.h"
 #include "SigmaStudioFW.h"
 
+#include <icled.h>
 #include <keyboard.h>
 
 // List of supported sample rates
@@ -575,6 +576,7 @@ void codec_control_task(void)
         if (abs(xfade - xfade_prev) > 2)
         {
             send_xfade(xfade);
+            setMixMark(xfade);
             xfade_prev = xfade;
         }
     }
