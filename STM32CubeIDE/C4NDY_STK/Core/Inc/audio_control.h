@@ -41,7 +41,7 @@ extern int_fast32_t hpout_buf[SAI_BUF_SIZE];
 void start_adc(void);
 void start_sai(void);
 
-void read_audio_data_from_usb(const uint16_t n_bytes_received);
+void read_audio_data_from_usb(void);
 void copybuf_usb2sai(void);
 void copybuf_sai2codec(void);
 
