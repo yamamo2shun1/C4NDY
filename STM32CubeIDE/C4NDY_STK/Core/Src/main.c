@@ -366,8 +366,7 @@ int main(void)
 
     HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
 
-    // SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", HAL_GetDEVID(), HAL_GetDEVID());
-    SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", DBGMCU->IDCODE, DBGMCU->IDCODE);
+    SEGGER_RTT_printf(0, "Unique Device ID = %X-%X-%X\n", HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
 
     // HAL_TIM_Base_Start_IT(&htim6);
 
