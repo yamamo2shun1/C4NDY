@@ -347,9 +347,10 @@ void start_sai(void)
     }
 }
 
-void read_audio_data_from_usb(const uint16_t n_bytes_received)
+void read_audio_data_from_usb(void)
 {
-    spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
+    const uint16_t rcv_buf_size = N_SAMPLES_PER_1_RX * CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX * CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX;
+    spk_data_size = tud_audio_read(spk_buf, rcv_buf_size);
     // SEGGER_RTT_printf(0, "size = %d, %d %d\n", spk_data_size, n_bytes_received, CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX);
 
     if (spk_data_size == 0 && hpout_clear_count < 100)
