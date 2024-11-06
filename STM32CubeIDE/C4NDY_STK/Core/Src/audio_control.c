@@ -286,17 +286,6 @@ bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, ui
 
     return true;
 }
-
-bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, uint8_t cur_alt_setting)
-{
-    (void) rhport;
-    (void) itf;
-    (void) ep_in;
-    (void) cur_alt_setting;
-
-    // This callback could be used to fill microphone data separately
-    return true;
-}
 #endif
 
 void tud_audio_feedback_params_cb(uint8_t func_id, uint8_t alt_itf, audio_feedback_params_t* feedback_param)
@@ -347,9 +336,10 @@ void start_sai(void)
     }
 }
 
-void read_audio_data_from_usb(uint16_t n_bytes_received)
+void read_audio_data_from_usb(void)
 {
-    spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
+    const uint16_t rcv_buf_size = N_SAMPLES_PER_1_RX * CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX * CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX;
+    spk_data_size = tud_audio_read(spk_buf, rcv_buf_size);
     // SEGGER_RTT_printf(0, "size = %d, %d %d\n", spk_data_size, n_bytes_received, CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX);
 
     if (spk_data_size == 0 && hpout_clear_count < 100)
@@ -417,7 +407,7 @@ void copybuf_sai2codec(void)
 
 void send_usb_gain_L(const int16_t usb_db)
 {
-    double usb_rate = pow(10.0, (double) usb_db / 20.0);
+    const double usb_rate = pow(10.0, (double) usb_db / 20.0);
 
     uint8_t usb_gain_array[8] = {0x00};
     usb_gain_array[0]         = ((uint32_t) (usb_rate * pow(2.0, 23.0)) >> 24) & 0x000000FF;
@@ -437,7 +427,7 @@ void send_usb_gain_L(const int16_t usb_db)
 
 void send_usb_gain_R(const int16_t usb_db)
 {
-    double usb_rate = pow(10.0, (double) usb_db / 20.0);
+    const double usb_rate = pow(10.0, (double) usb_db / 20.0);
 
     uint8_t usb_gain_array[8] = {0x00};
     usb_gain_array[0]         = ((uint32_t) (usb_rate * pow(2.0, 23.0)) >> 24) & 0x000000FF;
@@ -457,7 +447,7 @@ void send_usb_gain_R(const int16_t usb_db)
 
 void send_xfade(const uint16_t fader_val)
 {
-    double xf_rate = (double) fader_val / 1023.0;
+    const double xf_rate = (double) fader_val / 1023.0;
 
     uint8_t dc1_array[4] = {0x00};
     dc1_array[0]         = ((uint32_t) ((1.0 - xf_rate) * pow(2, 23)) >> 24) & 0x000000FF;
@@ -478,10 +468,10 @@ void send_xfade(const uint16_t fader_val)
 
 void send_master_gain(const uint16_t master_val)
 {
-    double c_curve_val = 1038.0 * tanh((double) master_val / 448.0);
-    double master_db   = (135.0 / 1023.0) * c_curve_val - 120.0;
+    const double c_curve_val = 1038.0 * tanh((double) master_val / 448.0);
+    const double master_db   = (135.0 / 1023.0) * c_curve_val - 120.0;
 
-    double master_rate = pow(10.0, master_db / 20.0);
+    const double master_rate = pow(10.0, master_db / 20.0);
 
     uint8_t master_gain_array[8] = {0x00};
     master_gain_array[0]         = ((uint32_t) (master_rate * pow(2, 23)) >> 24) & 0x000000FF;
@@ -503,7 +493,7 @@ void send_master_gain(const uint16_t master_val)
 
 void send_master_gain_db(const int master_db)
 {
-    double master_rate = pow(10.0, (double) master_db / 20.0);
+    const double master_rate = pow(10.0, (double) master_db / 20.0);
 
     uint8_t master_gain_array[8] = {0x00};
     master_gain_array[0]         = ((uint32_t) (master_rate * pow(2, 23)) >> 24) & 0x000000FF;
@@ -580,20 +570,4 @@ void codec_control_task(void)
             xfade_prev = xfade;
         }
     }
-#if 0
-    master_gain_buffer[buffer_index] = 1500;  // pot_value[0] >> 2;
-    buffer_index                     = (buffer_index + 1) & (16 - 1);
-    master_gain                      = 0;
-    for (int i = 0; i < 16; i++)
-    {
-        master_gain += master_gain_buffer[i];
-    }
-    master_gain >>= 4;
-
-    if (abs(master_gain - master_gain_prev) > 2)
-    {
-        send_master_gain(master_gain);
-        master_gain_prev = master_gain;
-    }
-#endif
 }
