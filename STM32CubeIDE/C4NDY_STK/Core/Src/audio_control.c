@@ -286,17 +286,6 @@ bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, ui
 
     return true;
 }
-
-bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, uint8_t cur_alt_setting)
-{
-    (void) rhport;
-    (void) itf;
-    (void) ep_in;
-    (void) cur_alt_setting;
-
-    // This callback could be used to fill microphone data separately
-    return true;
-}
 #endif
 
 void tud_audio_feedback_params_cb(uint8_t func_id, uint8_t alt_itf, audio_feedback_params_t* feedback_param)
@@ -581,20 +570,4 @@ void codec_control_task(void)
             xfade_prev = xfade;
         }
     }
-#if 0
-    master_gain_buffer[buffer_index] = 1500;  // pot_value[0] >> 2;
-    buffer_index                     = (buffer_index + 1) & (16 - 1);
-    master_gain                      = 0;
-    for (int i = 0; i < 16; i++)
-    {
-        master_gain += master_gain_buffer[i];
-    }
-    master_gain >>= 4;
-
-    if (abs(master_gain - master_gain_prev) > 2)
-    {
-        send_master_gain(master_gain);
-        master_gain_prev = master_gain;
-    }
-#endif
 }
