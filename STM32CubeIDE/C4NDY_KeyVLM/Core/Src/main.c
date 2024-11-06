@@ -235,8 +235,7 @@ int main(void)
     /* USER CODE BEGIN 2 */
     HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
 
-    // SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", HAL_GetDEVID(), HAL_GetDEVID());
-    SEGGER_RTT_printf(0, "Unique Device ID = 0x%X(%d)\n", DBGMCU->IDCODE, DBGMCU->IDCODE);
+    SEGGER_RTT_printf(0, "Unique Device ID = %X-%X-%X\n", HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
 
     SEGGER_RTT_printf(0, "initialize ADAU1761...\n");
     default_download_IC_1();

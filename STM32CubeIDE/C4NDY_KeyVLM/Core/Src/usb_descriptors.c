@@ -186,10 +186,8 @@ uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid)
 
         if (index == 3)  // serial id
         {
-            char sstr[30]     = "";
-            uint16_t upper_id = (uint16_t) ((DBGMCU->IDCODE >> 16) & 0x0000FFFF);
-            uint16_t lower_id = (uint16_t) (DBGMCU->IDCODE & 0x0000FFFF);
-            sprintf(sstr, "%x%x", upper_id, lower_id);
+            char sstr[30] = "";
+            sprintf(sstr, "%X-%X-%X", HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
 
             // Cap at max char
             chr_count = (uint8_t) strlen(sstr);
