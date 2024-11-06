@@ -347,7 +347,7 @@ void start_sai(void)
     }
 }
 
-void read_audio_data_from_usb(uint16_t n_bytes_received)
+void read_audio_data_from_usb(const uint16_t n_bytes_received)
 {
     spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
     // SEGGER_RTT_printf(0, "size = %d, %d %d\n", spk_data_size, n_bytes_received, CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX);
@@ -417,7 +417,7 @@ void copybuf_sai2codec(void)
 
 void send_usb_gain_L(const int16_t usb_db)
 {
-    double usb_rate = pow(10.0, (double) usb_db / 20.0);
+    const double usb_rate = pow(10.0, (double) usb_db / 20.0);
 
     uint8_t usb_gain_array[8] = {0x00};
     usb_gain_array[0]         = ((uint32_t) (usb_rate * pow(2.0, 23.0)) >> 24) & 0x000000FF;
@@ -437,7 +437,7 @@ void send_usb_gain_L(const int16_t usb_db)
 
 void send_usb_gain_R(const int16_t usb_db)
 {
-    double usb_rate = pow(10.0, (double) usb_db / 20.0);
+    const double usb_rate = pow(10.0, (double) usb_db / 20.0);
 
     uint8_t usb_gain_array[8] = {0x00};
     usb_gain_array[0]         = ((uint32_t) (usb_rate * pow(2.0, 23.0)) >> 24) & 0x000000FF;
@@ -457,7 +457,7 @@ void send_usb_gain_R(const int16_t usb_db)
 
 void send_xfade(const uint16_t fader_val)
 {
-    double xf_rate = (double) fader_val / 1023.0;
+    const double xf_rate = (double) fader_val / 1023.0;
 
     uint8_t dc1_array[4] = {0x00};
     dc1_array[0]         = ((uint32_t) ((1.0 - xf_rate) * pow(2, 23)) >> 24) & 0x000000FF;
@@ -478,10 +478,10 @@ void send_xfade(const uint16_t fader_val)
 
 void send_master_gain(const uint16_t master_val)
 {
-    double c_curve_val = 1038.0 * tanh((double) master_val / 448.0);
-    double master_db   = (135.0 / 1023.0) * c_curve_val - 120.0;
+    const double c_curve_val = 1038.0 * tanh((double) master_val / 448.0);
+    const double master_db   = (135.0 / 1023.0) * c_curve_val - 120.0;
 
-    double master_rate = pow(10.0, master_db / 20.0);
+    const double master_rate = pow(10.0, master_db / 20.0);
 
     uint8_t master_gain_array[8] = {0x00};
     master_gain_array[0]         = ((uint32_t) (master_rate * pow(2, 23)) >> 24) & 0x000000FF;
@@ -503,7 +503,7 @@ void send_master_gain(const uint16_t master_val)
 
 void send_master_gain_db(const int master_db)
 {
-    double master_rate = pow(10.0, (double) master_db / 20.0);
+    const double master_rate = pow(10.0, (double) master_db / 20.0);
 
     uint8_t master_gain_array[8] = {0x00};
     master_gain_array[0]         = ((uint32_t) (master_rate * pow(2, 23)) >> 24) & 0x000000FF;
