@@ -22,6 +22,8 @@ STK is a minimalist keyboard with 37 keys, but with 2 joysticks designed to redu
 
 <iframe class="youtube" src="https://www.youtube.com/embed/TXuELYQbFvI?si=C4ZM-QYwuqbofEQ4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 <br>
+<iframe class="youtube" src="https://www.youtube.com/embed/GJj3aiSIqJE?si=5twpRAXy-AmaJDOT" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<br>
 <iframe class="youtube" src="https://www.youtube.com/embed/NtcGqJvtMxw?si=YaaeqbSABE9DcXNv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 <br>
 <iframe class="youtube" src="https://www.youtube.com/embed/8FVFd6uG3Ts?si=2ghEefk_HB_o5fTh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
