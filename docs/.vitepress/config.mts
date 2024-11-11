@@ -4,7 +4,7 @@ import {
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-	base: '/C4NDY/docs/',
+	base: '/C4NDY/',
 	head:
 		[
 			[
