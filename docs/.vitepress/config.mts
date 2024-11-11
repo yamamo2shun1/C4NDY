@@ -24,6 +24,7 @@ export default defineConfig({
 	{
 		root:
 		{
+			base: '/C4NDY/docs/',
 			label:
 				'English',
 			lang: 'en',
@@ -58,6 +59,7 @@ export default defineConfig({
 		,
 		jp:
 		{
+			base: '/C4NDY/docs/',
 			label:
 				'Japanese',
 			lang: 'jp',
