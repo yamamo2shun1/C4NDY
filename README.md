@@ -1,7 +1,8 @@
 # C4NDY KeyVLM / STK
 
 ## Documentation
-- [See the official documentation on c4ndy.made-in-yamamoto.com](https://c4ndy.made-in-yamamoto.com)
+
+- [See the official documentation on here](https://yamamo2shun1.github.io/C4NDY/)
 
 The docs are powered by [VitePress](https://vitepress.dev/). 
 
